@@ -1,0 +1,36 @@
+application:
+   confluenceBase: https://admin:atlassian_H2Ofire9plaY@mijoco.atlassian.net
+   lightningBase: localhost
+   lightningCertFileName: tls.cert
+   lightningPortAlice: 10001
+   lightningPortBob: 10002
+   bitcoinBase: http://docker.for.mac.localhost:8332
+   bitcoinRpcPasssword: theraininspainstaysmainlyontheplane
+   bitcoinRpcUser: bob
+   bitcoinTestRpcPasssword: buildit
+   bitcoinTestRpcUser: bob
+
+---
+
+spring:
+    profiles: test
+application:
+   bitcoinBase: http://docker.for.mac.localhost:8332
+   blockstackBase: http://docker.for.mac.localhost:6270
+
+---
+
+spring:
+    profiles: docker-dev
+application:
+   bitcoinBase: http://docker.for.mac.localhost:8332
+   blockstackBase: http://docker.for.mac.localhost:6270
+
+---
+
+spring:
+    profiles: parmenides
+application:
+   bitcoinBase: http://172.18.0.1:8332
+   blockstackBase: http://172.18.0.1:6270
+
