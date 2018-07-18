@@ -51,7 +51,7 @@ public class LightningChannelsController {
 		ManagedChannel myChannel = getMyChannel(channel);
 		LightningGrpc.LightningBlockingStub stub = LightningGrpc.newBlockingStub(myChannel);
 		LightningService.ListChannelsRequest request = LightningService.ListChannelsRequest.newBuilder()
-				.build();
+				.setActiveOnly(false).setInactiveOnly(false).setPrivateOnly(false).setPublicOnly(false).build();
 		LightningService.ListChannelsResponse response = stub.listChannels(request);
 		return gson.toJson(response.toBuilder());
     }

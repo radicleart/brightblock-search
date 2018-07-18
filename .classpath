@@ -116,4 +116,8 @@
   <classpathentry kind="var" path="M2_REPO/io/netty/netty-codec-http2/4.1.25.Final/netty-codec-http2-4.1.25.Final.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/google/api/grpc/proto-google-common-protos/0.1.9/proto-google-common-protos-0.1.9.jar"/>
   <classpathentry kind="var" path="M2_REPO/io/netty/netty-tcnative-boringssl-static/2.0.11.Final/netty-tcnative-boringssl-static-2.0.11.Final.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/apache/lucene/lucene-core/7.3.0/lucene-core-7.3.0.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/apache/lucene/lucene-queryparser/7.3.0/lucene-queryparser-7.3.0.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/apache/lucene/lucene-queries/7.3.0/lucene-queries-7.3.0.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/apache/lucene/lucene-sandbox/7.3.0/lucene-sandbox-7.3.0.jar"/>
 </classpath>

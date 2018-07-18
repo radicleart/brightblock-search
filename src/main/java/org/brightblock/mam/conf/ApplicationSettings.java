@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "application")
 public class ApplicationSettings {
 	private String confluenceBase;
+	private String blockstackNamesIndex;
 	private String blockstackBase;
 	private String bitcoinBase;
 	private String lightningCertFileName;
@@ -106,6 +107,14 @@ public class ApplicationSettings {
 
 	public void setLightningPortBob(int lightningPortBob) {
 		this.lightningPortBob = lightningPortBob;
+	}
+
+	public String getBlockstackNamesIndex() {
+		return blockstackNamesIndex;
+	}
+
+	public void setBlockstackNamesIndex(String blockstackNamesIndex) {
+		this.blockstackNamesIndex = blockstackNamesIndex;
 	}
 
 }

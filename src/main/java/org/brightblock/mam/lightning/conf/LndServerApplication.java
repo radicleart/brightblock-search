@@ -25,8 +25,6 @@ public class LndServerApplication {
     private static final Logger logger = LogManager.getLogger(LndServerApplication.class);
     private ManagedChannel aliceChannel;
     private ManagedChannel bobChannel;
-	//private final static String host = "localhost";
-	//private final static int port = 10001;
 	@Autowired ApplicationSettings applicationSettings;
 
 	@PreDestroy
