@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 public class ApplicationSettings {
 	private String confluenceBase;
 	private String blockstackNamesIndex;
+	private String artMarketIndex;
 	private String blockstackBase;
 	private String bitcoinBase;
 	private String lightningCertFileName;
@@ -115,6 +116,14 @@ public class ApplicationSettings {
 
 	public void setBlockstackNamesIndex(String blockstackNamesIndex) {
 		this.blockstackNamesIndex = blockstackNamesIndex;
+	}
+
+	public String getArtMarketIndex() {
+		return artMarketIndex;
+	}
+
+	public void setArtMarketIndex(String artMarketIndex) {
+		this.artMarketIndex = artMarketIndex;
 	}
 
 }

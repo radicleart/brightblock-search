@@ -1,4 +1,4 @@
-package org.brightblock.mam.services.index.names;
+package org.brightblock.mam.services.index;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +19,12 @@ public class NamesSearchServiceImpl extends BaseIndexingServiceImpl implements N
 
 	public List<ZonefileModel> searchIndex(String inField, String query) {
 		try {
-			init();
- 			Query q = new QueryParser(inField, analyzer).parse(query);
+			initNames();
+			QueryParser qp = new QueryParser(inField, namesAnalyzer);
+ 			if (inField.equals("description") || inField.equals("apps")) {
+ 	 			qp.setAllowLeadingWildcard(true);
+ 			}
+ 			Query q = qp.parse(query);
 			IndexReader indexReader = DirectoryReader.open(namesIndex);
 			IndexSearcher searcher = new IndexSearcher(indexReader);
 			TopDocs topDocs = searcher.search(q, 10);
@@ -37,6 +41,7 @@ public class NamesSearchServiceImpl extends BaseIndexingServiceImpl implements N
 				model.setExpireBlock(document.get("expireBlock"));
 				model.setLastTxid(document.get("lastTxid"));
 				model.setName(document.get("name"));
+				model.setDescription(document.get("description"));
 				model.setStatus(document.get("status"));
 				model.setZonefile(document.get("zonefile"));
 				model.setZonefileHash(document.get("zonefileHash"));

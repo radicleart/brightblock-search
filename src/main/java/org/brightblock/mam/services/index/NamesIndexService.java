@@ -1,4 +1,4 @@
-package org.brightblock.mam.services.index.names;
+package org.brightblock.mam.services.index;
 
 import java.util.List;
 

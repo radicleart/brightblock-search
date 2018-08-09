@@ -1,4 +1,4 @@
-package org.brightblock.mam.services.index.names;
+package org.brightblock.mam.services.index;
 
 import java.io.IOException;
 import java.util.Date;
@@ -24,7 +24,7 @@ public class NamesIndexServiceImpl extends BaseIndexingServiceImpl implements Na
     @Override
     public int getNumbDocs() {
 		try {
-			init();
+			initNames();
 			IndexReader indexReader = DirectoryReader.open(namesIndex);
 			return indexReader.numDocs();
 		} catch (IOException e) {
@@ -46,8 +46,8 @@ public class NamesIndexServiceImpl extends BaseIndexingServiceImpl implements Na
 		long freeMemBefore = Runtime.getRuntime().freeMemory();
 		long timeStart = new Date().getTime();
 		try {
-			init();
-			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
+			initNames();
+			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(namesAnalyzer);
 			writer = new IndexWriter(namesIndex, indexWriterConfig);
 			for (String name : names) {
 				int numberAdded = addToIndex(writer, name);
@@ -77,8 +77,8 @@ public class NamesIndexServiceImpl extends BaseIndexingServiceImpl implements Na
 		long freeMemBefore = Runtime.getRuntime().freeMemory();
 		long timeStart = new Date().getTime();
 		try {
-			init();
-			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
+			initNames();
+			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(namesAnalyzer);
 			writer = new IndexWriter(namesIndex, indexWriterConfig);
 			//int page = 0;
 			List<String> names = null;

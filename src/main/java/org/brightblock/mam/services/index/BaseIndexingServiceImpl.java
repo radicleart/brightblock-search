@@ -1,4 +1,4 @@
-package org.brightblock.mam.services.index.names;
+package org.brightblock.mam.services.index;
 
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -19,16 +19,29 @@ public class BaseIndexingServiceImpl {
 	@Autowired ApplicationSettings applicationSettings;
 	@Autowired protected BlockstackApiService blockstackService;
 	protected Directory namesIndex;
-    protected StandardAnalyzer analyzer;
+    protected StandardAnalyzer namesAnalyzer;
+	protected Directory artIndex;
+    protected StandardAnalyzer artAnalyzer;
 
-    protected void init() throws IOException {
+    protected void initNames() throws IOException {
 		if (namesIndex == null) {
-			logger.info("Initialising index from directory at: " + applicationSettings.getBlockstackNamesIndex());
+			logger.info("Initialising names index from directory at: " + applicationSettings.getBlockstackNamesIndex());
 			namesIndex = FSDirectory.open(Paths.get(applicationSettings.getBlockstackNamesIndex()));
 		}
-		if (analyzer == null) {
-			logger.info("Initialising analyser.");
-			analyzer = new StandardAnalyzer();
+		if (namesAnalyzer == null) {
+			logger.info("Initialising names analyser.");
+			namesAnalyzer = new StandardAnalyzer();
+		}
+	}
+
+    protected void initArtMarket() throws IOException {
+		if (artIndex == null) {
+			logger.info("Initialising art index from directory at: " + applicationSettings.getArtMarketIndex());
+			artIndex = FSDirectory.open(Paths.get(applicationSettings.getArtMarketIndex()));
+		}
+		if (artAnalyzer == null) {
+			logger.info("Initialising art analyser.");
+			artAnalyzer = new StandardAnalyzer();
 		}
 	}
 }

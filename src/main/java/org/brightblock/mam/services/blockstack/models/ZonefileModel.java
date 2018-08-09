@@ -17,6 +17,7 @@ public class ZonefileModel extends IndexedModel {
 //address": "126adtBDqoyuPR56dEnJkuK4xntRysyfXs", "
 //zonefile_hash": "fabda66de86f9fe5feada86857bbeb89650fba21"
 	private String name;
+	private String description;
 	private String status;
 	private String zonefile;
 	@JsonProperty("zonefile_txt")
@@ -130,6 +131,14 @@ public class ZonefileModel extends IndexedModel {
 				+ zonefileText + ", expireBlock=" + expireBlock + ", blockchain=" + blockchain + ", lastTxid="
 				+ lastTxid + ", address=" + address + ", zonefileHash=" + zonefileHash + ", profileUrl=" + profileUrl
 				+ ", apps=" + apps + "]";
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 }
