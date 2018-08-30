@@ -30,9 +30,9 @@ public class ArtIndexController {
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/art/index/record", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<ApiModel> indexRecord(HttpServletRequest request, @RequestBody OwnershipRecordModel record) {
-		artIndexService.addToIndex(record);
+	@RequestMapping(value = "/art/index/indexData", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<ApiModel> indexRecord(HttpServletRequest request, @RequestBody OwnershipRecordModel indexData) {
+		artIndexService.addToIndex(indexData);
 		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, "Building in background.");
 		model.setHeaders(request);
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);

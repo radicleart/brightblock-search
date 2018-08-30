@@ -38,8 +38,18 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-websocket</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-cache</artifactId>
+		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>net.sf.ehcache</groupId> -->
+<!-- 			<artifactId>ehcache</artifactId> -->
+<!-- 			<version>2.10.3</version> -->
+<!-- 		</dependency> -->
 
-		<!-- RabbitMQ Starter Dependency (Not required if you're using the simple in-memory broker for STOMP) -->
+		<!-- RabbitMQ Starter Dependency (Not required if you're using the simple 
+			in-memory broker for STOMP) -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-amqp</artifactId>
@@ -47,8 +57,8 @@
 
 		<!-- Following dependency is required for Full Featured STOMP Broker Relay -->
 		<dependency>
-		    <groupId>org.springframework.boot</groupId>
-		    <artifactId>spring-boot-starter-reactor-netty</artifactId>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-reactor-netty</artifactId>
 		</dependency>
 
 		<dependency>
@@ -56,18 +66,18 @@
 			<artifactId>spring-boot-devtools</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.springframework.boot</groupId> -->
-<!-- 			<artifactId>spring-boot-starter-websocket</artifactId> -->
-<!-- 		</dependency> -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.springframework.boot</groupId> -->
-<!-- 			<artifactId>spring-boot-starter-integration</artifactId> -->
-<!-- 		</dependency> -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.springframework.boot</groupId> -->
-<!-- 			<artifactId>spring-boot-starter-webflux</artifactId> -->
-<!-- 		</dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>org.springframework.boot</groupId> -->
+		<!-- <artifactId>spring-boot-starter-websocket</artifactId> -->
+		<!-- </dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>org.springframework.boot</groupId> -->
+		<!-- <artifactId>spring-boot-starter-integration</artifactId> -->
+		<!-- </dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>org.springframework.boot</groupId> -->
+		<!-- <artifactId>spring-boot-starter-webflux</artifactId> -->
+		<!-- </dependency> -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -140,6 +150,27 @@
 			<groupId>org.apache.lucene</groupId>
 			<artifactId>lucene-queryparser</artifactId>
 			<version>7.3.0</version>
+		</dependency>
+		<!-- <dependency> -->
+		<!-- <groupId>com.tokbox</groupId> -->
+		<!-- <artifactId>opentok-server-sdk</artifactId> -->
+		<!-- <version>2.3.2</version> -->
+		<!-- </dependency> -->
+		<dependency>
+			<groupId>com.ning</groupId>
+			<artifactId>async-http-client</artifactId>
+			<version>1.8.17</version>
+		</dependency>
+		<dependency>
+			<groupId>com.tokbox</groupId>
+			<artifactId>opentok-server-sdk</artifactId>
+			<version>2.3.2</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>async-http-client</artifactId>
+					<groupId>com.ning</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 	</dependencies>
 

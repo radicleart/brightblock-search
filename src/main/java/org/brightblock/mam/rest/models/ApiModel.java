@@ -12,7 +12,6 @@ public class ApiModel implements IApiModel {
 	private boolean failed;
 	private long timestamp;
 	private String httpStatus;
-	private IApiModel apiDetails;
 	private Object details;
 	private String message;
 	private String name;
@@ -74,7 +73,7 @@ public class ApiModel implements IApiModel {
 	@JsonIgnore
 	public static ApiModel getSuccess(ResponseCodes apiResponse, ApiModel details) {
 		ApiModel model = new ApiModel();
-		model.setApiDetails(details);
+		model.setDetails(details);
 		model.setMessage(apiResponse.getDescription());
 		model.setHttpStatus(apiResponse.name());
 		return model;
@@ -86,10 +85,6 @@ public class ApiModel implements IApiModel {
 
 	public void setDetails(Object details) {
 		this.details = details;
-	}
-
-	public void setDetails(IApiModel details) {
-		this.apiDetails = details;
 	}
 
 	public String getMessage() {
@@ -130,14 +125,6 @@ public class ApiModel implements IApiModel {
 
 	public void setHttpStatus(String httpStatus) {
 		this.httpStatus = httpStatus;
-	}
-
-	public IApiModel getApiDetails() {
-		return apiDetails;
-	}
-
-	public void setApiDetails(ApiModel apiDetails) {
-		this.apiDetails = apiDetails;
 	}
 
 	public ForwardHeaderModel getHeadersModel() {

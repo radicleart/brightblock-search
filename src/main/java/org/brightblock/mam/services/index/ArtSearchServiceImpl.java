@@ -15,6 +15,7 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.brightblock.mam.services.index.posts.OwnershipRecordModel;
+import org.brightblock.mam.services.index.posts.SaleDataModel;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -78,6 +79,16 @@ public class ArtSearchServiceImpl extends BaseIndexingServiceImpl implements Art
 		model.setRegistered(Boolean.valueOf(document.get("registered")));
 		model.setTitle(document.get("title"));
 		model.setUploader(document.get("uploader"));
+		SaleDataModel saleData = new SaleDataModel();
+		try {
+			saleData.setAmount(Float.valueOf(document.get("amount")));
+			saleData.setReserve(Float.valueOf(document.get("reserve")));
+			saleData.setIncrement(Float.valueOf(document.get("increment")));
+			saleData.setSoid(Integer.valueOf(document.get("soid")));
+		} catch (Exception e) {
+			// no sale data;
+		}
+		model.setSaleData(saleData);
 		return model;
 	}
 }

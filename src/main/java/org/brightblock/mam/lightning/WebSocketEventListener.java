@@ -20,7 +20,7 @@ public class WebSocketEventListener {
 
     @EventListener
     public void handleWebSocketConnectListener(SessionConnectedEvent event) {
-        logger.info("GRPC: Received a new web socket connection");
+        logger.info("GRPC: Received a new web socket connection", event);
     }
 
     @EventListener
@@ -28,7 +28,7 @@ public class WebSocketEventListener {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
 
         String username = (String) headerAccessor.getSessionAttributes().get("username");
-        if(username != null) {
+        if (username != null) {
             logger.info("GRPC: User Disconnected : " + username);
 
             ChannelInfo chatMessage = new ChannelInfo();

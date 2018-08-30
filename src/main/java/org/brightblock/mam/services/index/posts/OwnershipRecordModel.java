@@ -17,6 +17,7 @@ public class OwnershipRecordModel implements Serializable, Comparable<OwnershipR
 	private Boolean registered;
 	private String appUrl;
 	private String gaiaUrl;
+	private SaleDataModel saleData;
 
 	public OwnershipRecordModel() {
 		super();
@@ -125,5 +126,13 @@ public class OwnershipRecordModel implements Serializable, Comparable<OwnershipR
 	public boolean equals(Object model) {
 		OwnershipRecordModel record = (OwnershipRecordModel) model;
 		return this.id.equals(record.getId());
+	}
+
+	public SaleDataModel getSaleData() {
+		return saleData;
+	}
+
+	public void setSaleData(SaleDataModel saleData) {
+		this.saleData = saleData;
 	}
 }

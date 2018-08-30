@@ -17,9 +17,12 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.search.Query;
 import org.brightblock.mam.services.blockstack.models.ZonefileModel;
 import org.brightblock.mam.services.index.posts.OwnershipRecordModel;
 import org.brightblock.mam.services.index.posts.OwnershipRecordsModel;
+import org.brightblock.mam.services.index.posts.SaleDataModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -74,7 +77,7 @@ public class ArtIndexServiceImpl extends BaseIndexingServiceImpl implements ArtI
     }
 
 	@Override
-	public void addToIndex(OwnershipRecordModel record) {
+	public void addToIndex(OwnershipRecordModel indexData) {
 		IndexWriter writer = null;
 		long freeMemBefore = Runtime.getRuntime().freeMemory();
 		long timeStart = new Date().getTime();
@@ -84,8 +87,8 @@ public class ArtIndexServiceImpl extends BaseIndexingServiceImpl implements ArtI
 			initArtMarket();
 			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(artAnalyzer);
 			writer = new IndexWriter(artIndex, indexWriterConfig);
-			addToIndex(writer, record);
-			logger.info("Indexed " + record.toString());
+			addToIndex(writer, indexData);
+			logger.info("Indexed " + indexData.toString());
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		} finally {
@@ -144,8 +147,30 @@ public class ArtIndexServiceImpl extends BaseIndexingServiceImpl implements ArtI
     @Async
 	@Override
 	public void indexUser(String username) {
+    		clearUserDocuments(username);
 		List<ZonefileModel> zonefiles = namesSearchService.searchIndex("name", username);
 		buildIndex(zonefiles);
+	}
+
+	private void clearUserDocuments(String username) {
+		IndexWriter writer = null;
+		try {
+			initArtMarket();
+			QueryParser qp = new QueryParser("uploader", artAnalyzer);
+ 			Query q = qp.parse(username);
+			initArtMarket();
+			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(artAnalyzer);
+			writer = new IndexWriter(artIndex, indexWriterConfig);
+ 			writer.deleteDocuments(q);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		} finally {
+			try {
+				writer.close();
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
 	}
 
     @Async
@@ -282,6 +307,13 @@ public class ArtIndexServiceImpl extends BaseIndexingServiceImpl implements ArtI
 			} else {
 				document.add(new TextField("keywords", "keywords not given", Field.Store.YES));
 			}
+			if (record.getSaleData() == null) {
+				record.setSaleData(new SaleDataModel());
+			}
+			document.add(new TextField("soid", String.valueOf(record.getSaleData().getSoid()), Field.Store.YES));
+			document.add(new TextField("amount", String.valueOf(record.getSaleData().getAmount()), Field.Store.YES));
+			document.add(new TextField("reserve", String.valueOf(record.getSaleData().getReserve()), Field.Store.YES));
+			document.add(new TextField("increment", String.valueOf(record.getSaleData().getIncrement()), Field.Store.YES));
 			Term term = new Term("id", record.getId());
 			writer.updateDocument(term, document);
 		} catch (Exception e) {
