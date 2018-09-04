@@ -1,15 +1,20 @@
 package org.brightblock.mam.lightning.web;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import java.nio.charset.StandardCharsets;
+
 import org.brightblock.mam.lightning.proto.LightningGrpc;
 import org.brightblock.mam.lightning.proto.LightningService;
+import org.brightblock.mam.rest.models.ApiModel;
+import org.brightblock.mam.rest.models.ResponseCodes;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.common.hash.Hashing;
 import com.google.gson.Gson;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -19,10 +24,8 @@ import io.grpc.ManagedChannel;
 @RestController
 public class LightningInvoiceController {
 	
-    private static final Logger logger = LogManager.getLogger(LightningInvoiceController.class);
 	@Autowired ManagedChannel aliceChannel;
 	@Autowired ManagedChannel bobChannel;
-	@Autowired private SimpMessagingTemplate simpMessagingTemplate;
 	private Gson gson = new Gson();
 
 	@RequestMapping("/lnd/{channel}/listInvoices")
@@ -56,19 +59,40 @@ public class LightningInvoiceController {
 	 * @param amt
 	 * @return
 	 */
-	@RequestMapping("/lnd/{channel}/addInvoice/{value}/{descriptionHash}/{memo}")
-	String addInvoice(@PathVariable String channel, @PathVariable Long value, @PathVariable String descriptionHash, @PathVariable String memo) {
-		ManagedChannel myChannel = getMyChannel(channel);
+	@RequestMapping("/lnd/invoice, method = RequestMethod.POST")
+	ResponseEntity<ApiModel> addInvoice(@RequestBody UserInvoiceModel userInvoiceModel) {
+		ManagedChannel myChannel = getMyChannel("alice");
 		LightningGrpc.LightningBlockingStub stub = LightningGrpc.newBlockingStub(myChannel);
-		ByteString descriptionHashBytes = ByteString.copyFromUtf8(descriptionHash);
+		ByteString descriptionHashBytes = ByteString.copyFromUtf8(userInvoiceModel.getDescriptionHash());
+		
 		LightningService.Invoice request = LightningService.Invoice.newBuilder()
-				.setMemo(memo)
-				.setDescriptionHash(descriptionHashBytes)
-				.setValue(value).build();
+				.setMemo(userInvoiceModel.getMemo())
+				//.setDescriptionHash(descriptionHashBytes)
+				.setValue(userInvoiceModel.getAmount()).build();
 		LightningService.AddInvoiceResponse response = stub.addInvoice(request);
-		return gson.toJson(response.toBuilder());
+		//return gson.toJson(response.toBuilder());
+		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, response.toBuilder());
+		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
     }
 
+	@RequestMapping("/lnd/getInvoice/{amount}") ResponseEntity<ApiModel> getInvoice(@PathVariable Long amount)  {
+		ManagedChannel myChannel = getMyChannel("alice");
+		LightningGrpc.LightningBlockingStub stub = LightningGrpc.newBlockingStub(myChannel);
+		String memo = "Reason for payment";
+		String sha256hex = Hashing.sha256()
+				  .hashString(memo, StandardCharsets.UTF_8)
+				  .toString();
+		ByteString descriptionHashBytes = ByteString.copyFromUtf8(sha256hex);
+		LightningService.Invoice request = LightningService.Invoice.newBuilder()
+				.setMemo(memo)
+				//.setDescriptionHash(descriptionHashBytes)
+				.setValue(amount).build();
+		LightningService.AddInvoiceResponse response = stub.addInvoice(request);
+		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, gson.toJson(response.toBuilder()));
+		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
+		//return gson.toJson(response.toBuilder());
+    }
+	
 	private ManagedChannel getMyChannel(String channel) {
 		if (channel.equals("bob")) {
 			return bobChannel;
