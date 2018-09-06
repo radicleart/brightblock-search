@@ -25,7 +25,7 @@ public class MyScheduler {
 	@Autowired private SimpMessagingTemplate simpMessagingTemplate;
 	//private Gson gson = new Gson();
 
-	@Scheduled(fixedDelay=120000)
+	@Scheduled(fixedDelay=43200000)
 	public void fetchExchangeRates() {
 		logger.info(this.getClass() + ": fetchExchangeRates");
 		String uri = "https://blockchain.info/ticker";
