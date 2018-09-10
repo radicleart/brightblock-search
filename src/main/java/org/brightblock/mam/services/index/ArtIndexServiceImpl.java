@@ -177,6 +177,7 @@ public class ArtIndexServiceImpl extends BaseIndexingServiceImpl implements ArtI
 	@Override
 	public void buildIndex() {
 		List<ZonefileModel> zonefiles = namesSearchService.searchIndex("apps", "*www.brightblock.org*");
+		zonefiles.addAll(namesSearchService.searchIndex("apps", "*www.sybella.io*"));
 		zonefiles.addAll(namesSearchService.searchIndex("apps", "*localhost*"));
 		buildIndex(zonefiles);
 	}
