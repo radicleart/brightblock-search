@@ -269,7 +269,7 @@ public class ArtIndexServiceImpl extends BaseIndexingServiceImpl implements ArtI
 		try {
 			document = new Document();
 			document.add(new TextField("title", record.getTitle(), Field.Store.YES));
-			document.add(new StringField("id", record.getId(), Field.Store.YES));
+			document.add(new StringField("id", String.valueOf(record.getId()), Field.Store.YES));
 			if (record.getRegistered() != null) {
 				document.add(new TextField("registered", String.valueOf(record.getRegistered()), Field.Store.YES));
 			} else {
@@ -315,7 +315,7 @@ public class ArtIndexServiceImpl extends BaseIndexingServiceImpl implements ArtI
 			document.add(new TextField("amount", String.valueOf(record.getSaleData().getAmount()), Field.Store.YES));
 			document.add(new TextField("reserve", String.valueOf(record.getSaleData().getReserve()), Field.Store.YES));
 			document.add(new TextField("increment", String.valueOf(record.getSaleData().getIncrement()), Field.Store.YES));
-			Term term = new Term("id", record.getId());
+			Term term = new Term("id", String.valueOf(record.getId()));
 			writer.updateDocument(term, document);
 		} catch (Exception e) {
 			logger.error("Error message: " + e.getMessage());

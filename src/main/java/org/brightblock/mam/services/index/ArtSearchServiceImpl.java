@@ -73,7 +73,7 @@ public class ArtSearchServiceImpl extends BaseIndexingServiceImpl implements Art
 		model.setAppUrl(document.get("appUrl"));
 		model.setDescription(document.get("description"));
 		model.setGaiaUrl(document.get("gaiaUrl"));
-		model.setId(document.get("id"));
+		model.setId(Long.valueOf(document.get("id")));
 		model.setItemType(document.get("itemType"));
 		model.setKeywords(document.get("keywords"));
 		model.setRegistered(Boolean.valueOf(document.get("registered")));

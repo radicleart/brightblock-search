@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class OwnershipRecordModel implements Serializable, Comparable<OwnershipRecordModel> {
 
 	private static final long serialVersionUID = 8617555047178804394L;
-	private String id;
+	private Long id;
 	private String title;
 	private String description;
 	private String uploader;
@@ -32,7 +32,7 @@ public class OwnershipRecordModel implements Serializable, Comparable<OwnershipR
 			@JsonProperty("keywords") String keywords, 
 			@JsonProperty("registered") Boolean registered) {
 		super();
-		this.id = id;
+		this.id = Long.valueOf(id);
 		this.title = title;
 		this.description = description;
 		this.uploader = uploader;
@@ -61,11 +61,11 @@ public class OwnershipRecordModel implements Serializable, Comparable<OwnershipR
 		this.description = description;
 	}
 
-	public String getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
