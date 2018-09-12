@@ -12,6 +12,10 @@ public class SaleDataModel implements Serializable {
 	private Float amount = 0F;
 	private Float reserve = 0F;
 	private Float increment = 0F;
+	private String fiatCurrency = "USD";
+	private Float initialRateBtc = 0F;
+	private Float initialRateEth = 0F;
+	private Float amountInEther = 0F;
 
 	public SaleDataModel() {
 		super();
@@ -20,12 +24,20 @@ public class SaleDataModel implements Serializable {
 	@JsonCreator
 	public SaleDataModel(@JsonProperty("soid") Integer soid, 
 			@JsonProperty("amount") Float amount, 
+			@JsonProperty("fiatCurrency") String fiatCurrency, 
+			@JsonProperty("initialRateBtc") Float initialRateBtc, 
+			@JsonProperty("initialRateEth") Float initialRateEth, 
+			@JsonProperty("amountInEther") Float amountInEther, 
 			@JsonProperty("reserve") Float reserve, 
 			@JsonProperty("increment") Float increment) {
 		super();
 		this.soid = soid;
 		this.amount = amount;
 		this.reserve = reserve;
+		this.fiatCurrency = fiatCurrency;
+		this.initialRateBtc = initialRateBtc;
+		this.initialRateEth = initialRateEth;
+		this.amountInEther = amountInEther;
 		this.increment = increment;
 	}
 
@@ -59,6 +71,38 @@ public class SaleDataModel implements Serializable {
 
 	public void setIncrement(Float increment) {
 		this.increment = increment;
+	}
+
+	public String getFiatCurrency() {
+		return fiatCurrency;
+	}
+
+	public void setFiatCurrency(String fiatCurrency) {
+		this.fiatCurrency = fiatCurrency;
+	}
+
+	public Float getInitialRateBtc() {
+		return initialRateBtc;
+	}
+
+	public void setInitialRateBtc(Float initialRateBtc) {
+		this.initialRateBtc = initialRateBtc;
+	}
+
+	public Float getInitialRateEth() {
+		return initialRateEth;
+	}
+
+	public void setInitialRateEth(Float initialRateEth) {
+		this.initialRateEth = initialRateEth;
+	}
+
+	public Float getAmountInEther() {
+		return amountInEther;
+	}
+
+	public void setAmountInEther(Float amountInEther) {
+		this.amountInEther = amountInEther;
 	}
 
 

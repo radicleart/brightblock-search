@@ -75,16 +75,23 @@ public class ArtSearchServiceImpl extends BaseIndexingServiceImpl implements Art
 		model.setGaiaUrl(document.get("gaiaUrl"));
 		model.setId(Long.valueOf(document.get("id")));
 		model.setItemType(document.get("itemType"));
+		model.setOwner(document.get("owner"));
 		model.setKeywords(document.get("keywords"));
 		model.setRegistered(Boolean.valueOf(document.get("registered")));
+		model.setSold(Boolean.valueOf(document.get("sold")));
 		model.setTitle(document.get("title"));
 		model.setUploader(document.get("uploader"));
 		SaleDataModel saleData = new SaleDataModel();
 		try {
+			saleData.setSoid(Integer.valueOf(document.get("soid")));
 			saleData.setAmount(Float.valueOf(document.get("amount")));
 			saleData.setReserve(Float.valueOf(document.get("reserve")));
 			saleData.setIncrement(Float.valueOf(document.get("increment")));
-			saleData.setSoid(Integer.valueOf(document.get("soid")));
+			saleData.setInitialRateBtc(Float.valueOf(document.get("initialRateBtc")));
+			saleData.setInitialRateEth(Float.valueOf(document.get("initialRateEth")));
+			saleData.setAmountInEther(Float.valueOf(document.get("amountInEther")));
+			saleData.setIncrement(Float.valueOf(document.get("increment")));
+			saleData.setFiatCurrency(String.valueOf(document.get("fiatCurrency")));
 		} catch (Exception e) {
 			// no sale data;
 		}

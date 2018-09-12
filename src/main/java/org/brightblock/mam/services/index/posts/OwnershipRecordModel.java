@@ -12,9 +12,11 @@ public class OwnershipRecordModel implements Serializable, Comparable<OwnershipR
 	private String title;
 	private String description;
 	private String uploader;
+	private String owner;
 	private String itemType;
 	private String keywords;
 	private Boolean registered;
+	private Boolean sold;
 	private String appUrl;
 	private String gaiaUrl;
 	private SaleDataModel saleData;
@@ -29,7 +31,9 @@ public class OwnershipRecordModel implements Serializable, Comparable<OwnershipR
 			@JsonProperty("title") String title, 
 			@JsonProperty("description") String description, 
 			@JsonProperty("itemType") String itemType, 
+			@JsonProperty("owner") String owner, 
 			@JsonProperty("keywords") String keywords, 
+			@JsonProperty("sold") Boolean sold, 
 			@JsonProperty("registered") Boolean registered) {
 		super();
 		this.id = Long.valueOf(id);
@@ -37,11 +41,17 @@ public class OwnershipRecordModel implements Serializable, Comparable<OwnershipR
 		this.description = description;
 		this.uploader = uploader;
 		this.itemType = itemType;
+		this.owner = owner;
 		this.keywords = keywords;
 		if (registered != null) {
 			this.registered = registered;
 		} else {
 			 this.registered = false;
+		}
+		if (sold != null) {
+			this.sold = sold;
+		} else {
+			 this.sold = false;
 		}
 	}
 
@@ -134,5 +144,21 @@ public class OwnershipRecordModel implements Serializable, Comparable<OwnershipR
 
 	public void setSaleData(SaleDataModel saleData) {
 		this.saleData = saleData;
+	}
+
+	public Boolean getSold() {
+		return sold;
+	}
+
+	public void setSold(Boolean sold) {
+		this.sold = sold;
+	}
+
+	public String getOwner() {
+		return owner;
+	}
+
+	public void setOwner(String owner) {
+		this.owner = owner;
 	}
 }

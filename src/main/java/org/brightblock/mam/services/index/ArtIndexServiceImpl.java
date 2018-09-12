@@ -240,7 +240,9 @@ public class ArtIndexServiceImpl extends BaseIndexingServiceImpl implements ArtI
 				for  (OwnershipRecordModel record : userControlRecord.getRecords()) { // index a portion of the namespace for test purposes..
 					record.setAppUrl(userControlRecord.getAppUrl());
 					record.setGaiaUrl(userControlRecord.getGaiaUrl());
-					addToIndex(writer, record);
+					if (!record.getSold()) {
+						addToIndex(writer, record);
+					}
 					indexCount++;
 				}
 				userIndexCount++;
@@ -276,10 +278,20 @@ public class ArtIndexServiceImpl extends BaseIndexingServiceImpl implements ArtI
 				logger.error("Skipping " + record.getId() + "; No registered field.");
 				return;
 			}
+			if (record.getSold() != null) {
+				document.add(new TextField("sold", String.valueOf(record.getSold()), Field.Store.YES));
+			} else {
+				logger.error("Skipping " + record.getId() + "; No sold field.");
+			}
 			if (record.getItemType() != null) {
 				document.add(new TextField("itemType", record.getItemType(), Field.Store.YES));
 			} else {
 				document.add(new TextField("itemType", "itemType not given", Field.Store.YES));
+			}
+			if (record.getOwner() != null) {
+				document.add(new TextField("owner", record.getOwner(), Field.Store.YES));
+			} else {
+				document.add(new TextField("owner", "owner not given", Field.Store.YES));
 			}
 			if (record.getUploader() != null) {
 				document.add(new TextField("uploader", record.getUploader(), Field.Store.YES));
@@ -315,6 +327,10 @@ public class ArtIndexServiceImpl extends BaseIndexingServiceImpl implements ArtI
 			document.add(new TextField("amount", String.valueOf(record.getSaleData().getAmount()), Field.Store.YES));
 			document.add(new TextField("reserve", String.valueOf(record.getSaleData().getReserve()), Field.Store.YES));
 			document.add(new TextField("increment", String.valueOf(record.getSaleData().getIncrement()), Field.Store.YES));
+			document.add(new TextField("fiatCurrency", String.valueOf(record.getSaleData().getFiatCurrency()), Field.Store.YES));
+			document.add(new TextField("initialRateBtc", String.valueOf(record.getSaleData().getInitialRateBtc()), Field.Store.YES));
+			document.add(new TextField("initialRateEth", String.valueOf(record.getSaleData().getInitialRateEth()), Field.Store.YES));
+			document.add(new TextField("amountInEther", String.valueOf(record.getSaleData().getAmountInEther()), Field.Store.YES));
 			Term term = new Term("id", String.valueOf(record.getId()));
 			writer.updateDocument(term, document);
 		} catch (Exception e) {
