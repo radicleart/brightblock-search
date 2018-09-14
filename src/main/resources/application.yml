@@ -37,7 +37,7 @@ spring:
 application:
    bitcoinBase: http://172.18.0.1:8332
    blockstackBase: http://172.18.0.1:6270
-   domainString: www.brightblock.org,localhost
+   domainString: staging.sybella.io
 
 ---
 
