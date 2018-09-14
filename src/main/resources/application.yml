@@ -19,6 +19,7 @@ spring:
 application:
    bitcoinBase: http://localhost:8332
    blockstackBase: http://localhost:6270
+   domainString: www.brightblock.org,localhost
 
 ---
 
@@ -27,12 +28,23 @@ spring:
 application:
    bitcoinBase: http://docker.for.mac.localhost:8332
    blockstackBase: http://docker.for.mac.localhost:6270
+   domainString: www.brightblock.org,localhost
 
 ---
 
 spring:
-    profiles: parmenides
+    profiles: staging
 application:
    bitcoinBase: http://172.18.0.1:8332
    blockstackBase: http://172.18.0.1:6270
+   domainString: www.brightblock.org,localhost
+
+---
+
+spring:
+    profiles: production
+application:
+   bitcoinBase: http://172.18.0.1:8332
+   blockstackBase: http://172.18.0.1:6270
+   domainString: www.sybella.io
 

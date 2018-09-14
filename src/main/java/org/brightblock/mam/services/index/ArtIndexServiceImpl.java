@@ -176,9 +176,13 @@ public class ArtIndexServiceImpl extends BaseIndexingServiceImpl implements ArtI
     @Async
 	@Override
 	public void buildIndex() {
-		List<ZonefileModel> zonefiles = namesSearchService.searchIndex("apps", "*www.brightblock.org*");
-		zonefiles.addAll(namesSearchService.searchIndex("apps", "*www.sybella.io*"));
-		zonefiles.addAll(namesSearchService.searchIndex("apps", "*localhost*"));
+    		String domainString = applicationSettings.getSearchIndexDomains();
+		logger.info("Building index for domains: " + domainString);
+		List<ZonefileModel> zonefiles = new ArrayList<ZonefileModel>();
+		String[] domains = domainString.split(",");
+		for (String domain : domains) {
+			zonefiles.addAll(namesSearchService.searchIndex("apps", "*" + domain + "*"));
+		}
 		buildIndex(zonefiles);
 	}
 
