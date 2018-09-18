@@ -21,7 +21,7 @@ public class ApplicationSettings {
 	private String bitcoinRpcUser;
 	private String bitcoinTestRpcPasssword;
 	private String bitcoinTestRpcUser;
-	private String searchIndexDomains;
+	private String domainString;
 
 	public String getBitcoinRpcUser() {
 		return bitcoinRpcUser;
@@ -127,12 +127,12 @@ public class ApplicationSettings {
 		this.artMarketIndex = artMarketIndex;
 	}
 
-	public String getSearchIndexDomains() {
-		return searchIndexDomains;
+	public String getDomainString() {
+		return domainString;
 	}
 
-	public void setSearchIndexDomains(String searchIndexDomains) {
-		this.searchIndexDomains = searchIndexDomains;
+	public void setDomainString(String domainString) {
+		this.domainString = domainString;
 	}
 
 }

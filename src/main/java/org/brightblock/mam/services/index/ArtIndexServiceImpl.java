@@ -176,7 +176,7 @@ public class ArtIndexServiceImpl extends BaseIndexingServiceImpl implements ArtI
     @Async
 	@Override
 	public void buildIndex() {
-    		String domainString = applicationSettings.getSearchIndexDomains();
+    		String domainString = applicationSettings.getDomainString();
 		logger.info("Building index for domains: " + domainString);
 		List<ZonefileModel> zonefiles = new ArrayList<ZonefileModel>();
 		String[] domains = domainString.split(",");
