@@ -38,7 +38,7 @@ spring:
     profiles: staging
 application:
    bitcoinBase: http://172.18.0.1:8332
-   blockstackBase: http://172.18.0.1:6270
+   blockstackBase: https://core.brightblock.org
    domainString: staging.sybella.io,staging.brightblock.org
 
 ---
