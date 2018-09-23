@@ -22,7 +22,6 @@ public class ApplicationSettings {
 	private String bitcoinTestRpcPasssword;
 	private String bitcoinTestRpcUser;
 	private String domainString;
-	private String gethHttpBase;
 
 	public String getBitcoinRpcUser() {
 		return bitcoinRpcUser;
@@ -135,13 +134,4 @@ public class ApplicationSettings {
 	public void setDomainString(String domainString) {
 		this.domainString = domainString;
 	}
-
-	public String getGethHttpBase() {
-		return gethHttpBase;
-	}
-
-	public void setGethHttpBase(String gethHttpBase) {
-		this.gethHttpBase = gethHttpBase;
-	}
-
 }

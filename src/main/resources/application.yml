@@ -6,13 +6,18 @@ application:
    lightningCertFileName: tls.cert
    lightningPortAlice: 10001
    lightningPortBob: 10002
-   gethHttpBase: http://localhost:8545
-   gethWssBase: http://localhost:8546
    bitcoinBase: http://localhost:8332
    bitcoinRpcPasssword: theraininspainstaysmainlyontheplane
    bitcoinRpcUser: bob
    bitcoinTestRpcPasssword: buildit
    bitcoinTestRpcUser: bob
+ethereum:
+   httpBase: http://localhost:8545
+   wssBase: http://localhost:8546
+   contractAddress: 0xbe01afbd05eb2e4ebc2a6021df202986dc1c08ab
+   walletPassword: theraininspainstaysmainlyintheplain
+   walletPath: /Users/mikey/Library/Ethereum/rinkeby/keystore/UTC--2018-09-23T10-42-32.942770243Z--f587b33d77ba53f3a643db1de174cfc65e1b3090
+
 
 ---
 
@@ -40,6 +45,9 @@ application:
    bitcoinBase: http://172.18.0.1:8332
    blockstackBase: https://core.brightblock.org
    domainString: staging.sybella.io,staging.brightblock.org
+ethereum:
+   contractAddress: 0xbe01afbd05eb2e4ebc2a6021df202986dc1c08ab
+   walletPath: /home/bob/.ethereum/rinkeby/keystore/UTC--2018-09-23T10-34-59.485104214Z--9e5866a31225f8244cb674ea97d2ed87a8ab8a1a
 
 ---
 
@@ -49,4 +57,7 @@ application:
    bitcoinBase: http://172.18.0.1:8332
    blockstackBase: http://172.18.0.1:6270
    domainString: www.sybella.io
+ethereum:
+   contractAddress: 0x3C534b0c2b9773ee0FE9D28d906DB3a2751d798f
+   walletPath: /home/bob/.ethereum/testnet/keystore/.
 
