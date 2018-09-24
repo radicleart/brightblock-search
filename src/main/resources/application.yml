@@ -47,7 +47,7 @@ application:
    blockstackBase: https://core.brightblock.org
    domainString: staging.sybella.io,staging.brightblock.org
 ethereum:
-   httpBase: http://172.18.0.:8545
+   httpBase: http://172.18.0.1:8545
    wssBase: http://172.18.0.1:8546
    contractAddress: 0xbe01afbd05eb2e4ebc2a6021df202986dc1c08ab
    walletPath: /static/ethkeys/staging/UTC--2018-09-23T10-34-59.485104214Z--9e5866a31225f8244cb674ea97d2ed87a8ab8a1a
