@@ -24,9 +24,25 @@ public class EthereumConfiguration {
 	private static final Logger logger = LogManager.getLogger(EthereumConfiguration.class);
 	@Autowired private EthereumSettings ethereumSettings;
 
+//	@Bean
+//	public ArtMarket getArtMarket() {
+//		BigInteger gas = BigInteger.valueOf(2L);
+//		BigInteger gasLimit = BigInteger.valueOf(21000L);
+//		ArtMarket contract = null;
+//		try {
+//			contract = ArtMarket.load(ethereumSettings.getContractAddress(), getWeb3(), getCredentials(), gas, gasLimit);
+//		} catch (IOException e) {
+//			logger.info("Ethereum contract object: IO error: Try deploying the contract", e);
+//		} catch (CipherException e) {
+//			logger.info("Ethereum contract object: Cipher error:  Try re-deploying the contract", e);
+//		}
+//		return contract;
+//	}
+
 	@Bean
 	public Web3j getWeb3() {
-		Web3j web3 = Web3j.build(new HttpService()); // defaults to http://localhost:8545/
+		logger.info("Ethereum web3 connecting to: " + ethereumSettings.getHttpBase());
+		Web3j web3 = Web3j.build(new HttpService(ethereumSettings.getHttpBase())); 
 		return web3;
 	}
 
@@ -36,6 +52,7 @@ public class EthereumConfiguration {
 		FileOutputStream fos = null;
 		File tempFile = null;
 		try {
+			logger.info("Ethereum credentials loading from: " + ethereumSettings.getWalletPath());
 			initialStream = LndServerApplication.class.getResourceAsStream(ethereumSettings.getWalletPath());
 			byte[] data = new byte[initialStream.available()];
 			initialStream.read(data);
@@ -43,12 +60,11 @@ public class EthereumConfiguration {
 			tempFile = File.createTempFile("temp_keyfile", "txt", null);
 			fos = new FileOutputStream(tempFile);
 			fos.write(data);
-			logger.info("Credential object -----------------------------------------------------------------------------------");
 			Credentials credentials = WalletUtils.loadCredentials(ethereumSettings.getWalletPassword(), tempFile);
-			logger.info("Credential object loaded: " + credentials.getEcKeyPair().getPublicKey());
+			logger.info("Ethereum credentials loaded: " + credentials.getEcKeyPair().getPublicKey());
 			return credentials;
 		} catch (Exception e) {
-			logger.info("Credential object: Error getting credentials from: /static/localhostrinkeby", e);
+			logger.info("Ethereum credentials: Error getting credentials.", e);
 			throw new RuntimeException(e);
 		} finally {
 			tempFile.delete();
