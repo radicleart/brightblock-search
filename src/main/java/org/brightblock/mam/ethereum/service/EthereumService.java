@@ -8,7 +8,7 @@ import org.brightblock.mam.ethereum.rest.ArtMarket;
 public interface EthereumService
 {
 	public String getWeb3ClientVersion() throws IOException;
-	public ArtMarket loadContract();
-	public ArtMarket deployContract() throws Exception;
+	public ArtMarket loadContract(Long gasLimit, Long gas);
+	public ArtMarket deployContract(Long gasLimit, Long gas) throws Exception;
 	public BigInteger numbItems();
 }
