@@ -12,8 +12,6 @@ application:
    bitcoinTestRpcPasssword: buildit
    bitcoinTestRpcUser: bob
 ethereum:
-   httpBase: http://localhost:8545
-   wssBase: http://localhost:8546
    contractAddress: 0xbe01afbd05eb2e4ebc2a6021df202986dc1c08ab
    walletPassword: theraininspainstaysmainlyintheplain
    walletPath: /static/ethkeys/localhost/UTC--2018-09-23T10-42-32.942770243Z--f587b33d77ba53f3a643db1de174cfc65e1b3090
@@ -36,6 +34,8 @@ application:
    blockstackBase: http://docker.for.mac.localhost:6270
    domainString: localhost
 ethereum:
+   httpBase: http://localhost:8545
+   wssBase: http://localhost:8546
    contractAddress: 0xbe01afbd05eb2e4ebc2a6021df202986dc1c08ab
 
 ---
@@ -47,6 +47,8 @@ application:
    blockstackBase: https://core.brightblock.org
    domainString: staging.sybella.io,staging.brightblock.org
 ethereum:
+   httpBase: http://172.18.0.1:8545
+   wssBase: http://172.18.0.1:8546
    contractAddress: 0xbe01afbd05eb2e4ebc2a6021df202986dc1c08ab
    walletPath: /static/ethkeys/staging/UTC--2018-09-23T10-34-59.485104214Z--9e5866a31225f8244cb674ea97d2ed87a8ab8a1a
                
@@ -59,6 +61,8 @@ application:
    blockstackBase: http://172.18.0.1:6270
    domainString: www.sybella.io
 ethereum:
+   httpBase: http://172.18.0.1:8545
+   wssBase: http://172.18.0.1:8546
    contractAddress: 0x3C534b0c2b9773ee0FE9D28d906DB3a2751d798f
    walletPath: /static/ethkeys/staging/UTC--2018-09-23T10-34-59.485104214Z--9e5866a31225f8244cb674ea97d2ed87a8ab8a1a
 

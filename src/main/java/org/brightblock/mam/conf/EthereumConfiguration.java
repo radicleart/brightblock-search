@@ -12,7 +12,6 @@ import org.brightblock.mam.lightning.conf.LndServerApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ResourceLoader;
 import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
@@ -23,10 +22,7 @@ import org.web3j.protocol.http.HttpService;
 public class EthereumConfiguration {
 
 	private static final Logger logger = LogManager.getLogger(EthereumConfiguration.class);
-	@Autowired
-	private EthereumSettings ethereumSettings;
-	@Autowired
-	private ResourceLoader resourceLoader;
+	@Autowired private EthereumSettings ethereumSettings;
 
 	@Bean
 	public Web3j getWeb3() {
