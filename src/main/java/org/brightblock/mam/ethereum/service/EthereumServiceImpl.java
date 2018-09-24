@@ -6,7 +6,6 @@ import java.math.BigInteger;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.brightblock.mam.conf.settings.EthereumSettings;
-import org.brightblock.mam.ethereum.rest.ArtMarket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;

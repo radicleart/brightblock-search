@@ -38,7 +38,7 @@ public class Web3EthereumClient {
 
 	@RequestMapping(value = "/api/ethereum/load/{gasLimit}/{gas}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<ApiModel> load(HttpServletRequest request, @PathVariable Long gasLimit, @PathVariable Long gas) throws Exception {
-		ArtMarket contract = ethereumService.loadContract(gasLimit, gas);
+		org.brightblock.mam.ethereum.service.ArtMarket contract = ethereumService.loadContract(gasLimit, gas);
 		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, contract);
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
 	}

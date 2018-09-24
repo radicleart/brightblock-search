@@ -3,7 +3,6 @@ package org.brightblock.mam.ethereum.service;
 import java.io.IOException;
 import java.math.BigInteger;
 
-import org.brightblock.mam.ethereum.rest.ArtMarket;
 
 public interface EthereumService
 {
