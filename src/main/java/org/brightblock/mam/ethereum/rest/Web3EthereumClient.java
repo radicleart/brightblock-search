@@ -31,8 +31,8 @@ public class Web3EthereumClient {
 
 	@RequestMapping(value = "/api/ethereum/deploy/{gasLimit}/{gas}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<ApiModel> deploy(HttpServletRequest request, @PathVariable Long gasLimit, @PathVariable Long gas) throws Exception {
-		ArtMarket contract = ethereumService.deployContract(gasLimit, gas);
-		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, contract);
+		ethereumService.deployContract(gasLimit, gas);
+		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, "Deploying contract in the background.");
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
 	}
 

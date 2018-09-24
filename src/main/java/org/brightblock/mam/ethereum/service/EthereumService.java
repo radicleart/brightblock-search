@@ -9,6 +9,6 @@ public interface EthereumService
 {
 	public String getWeb3ClientVersion() throws IOException;
 	public ArtMarket loadContract(Long gasLimit, Long gas);
-	public ArtMarket deployContract(Long gasLimit, Long gas) throws Exception;
+	public void deployContract(Long gasLimit, Long gas) throws Exception;
 	public BigInteger numbItems();
 }

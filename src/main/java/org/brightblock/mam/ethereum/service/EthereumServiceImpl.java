@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import org.brightblock.mam.conf.settings.EthereumSettings;
 import org.brightblock.mam.ethereum.rest.ArtMarket;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
@@ -21,6 +22,7 @@ public class EthereumServiceImpl implements EthereumService {
 	@Autowired private EthereumSettings ethereumSettings;
 	@Autowired private Web3j web3;
 	@Autowired private Credentials credentials;
+	private String contractAddress;
 	private ArtMarket contract;
 
 	@Override
@@ -29,6 +31,7 @@ public class EthereumServiceImpl implements EthereumService {
 		return web3ClientVersion.getWeb3ClientVersion();
 	}
 
+    @Async
 	@Override
 	public ArtMarket loadContract(Long gasLimit, Long gas) {
 		BigInteger bgGas = BigInteger.valueOf(gas);
@@ -38,13 +41,18 @@ public class EthereumServiceImpl implements EthereumService {
 		return contract;
 	}
 
+    @Async
 	@Override
-	public ArtMarket deployContract(Long gasLimit, Long gas) throws Exception {
+	public void deployContract(Long gasLimit, Long gas) throws Exception {
 		BigInteger bgGas = BigInteger.valueOf(gas);
 		BigInteger bgGasLimit = BigInteger.valueOf(gasLimit);
-		contract = ArtMarket.deploy(web3, credentials, bgGas, bgGasLimit).send();
-		logger.info("Deployed Contract: gas=" + gas + " gasLimit=" + gasLimit);
-		return contract;
+		ArtMarket contract = ArtMarket.deploy(web3, credentials, bgGas, bgGasLimit).sendAsync().get();
+//		CompletableFuture<Void> future = completableFuture.thenAccept(s -> logger.info("Deployed Contract: s=" + s));
+//		future.get();
+		contractAddress = contract.getContractAddress();
+		logger.info("Deployed Contract: contract=" + contract.getContractAddress());
+		logger.info("Deployed Contract: contract=" + contract.getDeployedAddress("4"));
+		return;
 	}
 
 	@Override
