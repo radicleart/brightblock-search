@@ -16,8 +16,7 @@ ethereum:
    wssBase: http://localhost:8546
    contractAddress: 0xbe01afbd05eb2e4ebc2a6021df202986dc1c08ab
    walletPassword: theraininspainstaysmainlyintheplain
-   walletPath: /Users/mikey/Library/Ethereum/rinkeby/keystore/UTC--2018-09-23T10-42-32.942770243Z--f587b33d77ba53f3a643db1de174cfc65e1b3090
-
+   walletPath: /static/ethkeys/localhost/UTC--2018-09-23T10-42-32.942770243Z--f587b33d77ba53f3a643db1de174cfc65e1b3090
 
 ---
 
@@ -36,7 +35,8 @@ application:
    bitcoinBase: http://docker.for.mac.localhost:8332
    blockstackBase: http://docker.for.mac.localhost:6270
    domainString: localhost
-   walletPath: /static/ethkeys/localhost/UTC--2018-09-23T10-42-32.942770243Z--f587b33d77ba53f3a643db1de174cfc65e1b3090
+ethereum:
+   contractAddress: 0xbe01afbd05eb2e4ebc2a6021df202986dc1c08ab
 
 ---
 
@@ -48,7 +48,7 @@ application:
    domainString: staging.sybella.io,staging.brightblock.org
 ethereum:
    contractAddress: 0xbe01afbd05eb2e4ebc2a6021df202986dc1c08ab
-   walletPath: BOOT-INF/classes/static/ethkeys/staging/UTC--2018-09-23T10-34-59.485104214Z--9e5866a31225f8244cb674ea97d2ed87a8ab8a1a
+   walletPath: /static/ethkeys/staging/UTC--2018-09-23T10-34-59.485104214Z--9e5866a31225f8244cb674ea97d2ed87a8ab8a1a
                
 ---
 
@@ -60,5 +60,5 @@ application:
    domainString: www.sybella.io
 ethereum:
    contractAddress: 0x3C534b0c2b9773ee0FE9D28d906DB3a2751d798f
-   walletPath: /home/bob/.ethereum/testnet/keystore/.
+   walletPath: /static/ethkeys/staging/UTC--2018-09-23T10-34-59.485104214Z--9e5866a31225f8244cb674ea97d2ed87a8ab8a1a
 
