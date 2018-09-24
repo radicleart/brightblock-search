@@ -48,8 +48,8 @@ application:
    domainString: staging.sybella.io,staging.brightblock.org
 ethereum:
    contractAddress: 0xbe01afbd05eb2e4ebc2a6021df202986dc1c08ab
-   walletPath: /static/ethkeys/staging/UTC--2018-09-23T10-34-59.485104214Z--9e5866a31225f8244cb674ea97d2ed87a8ab8a1a
-
+   walletPath: BOOT-INF/classes/static/ethkeys/staging/UTC--2018-09-23T10-34-59.485104214Z--9e5866a31225f8244cb674ea97d2ed87a8ab8a1a
+               
 ---
 
 spring:
