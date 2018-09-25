@@ -21,23 +21,42 @@ public class EthereumServiceImpl implements EthereumService {
 	@Autowired private EthereumSettings ethereumSettings;
 	@Autowired private Web3j web3;
 	@Autowired private Credentials credentials;
-	private String contractAddress;
+	public static String contractAddress;
 	private ArtMarket contract;
 
 	@Override
-	public String getWeb3ClientVersion() throws IOException {
+	public ArtMarketJson getContractInfo() throws IOException {
+		ArtMarketJson amj = new ArtMarketJson();
 		Web3ClientVersion web3ClientVersion = web3.web3ClientVersion().send();
-		return web3ClientVersion.getWeb3ClientVersion();
+		amj.setClient(web3ClientVersion.getWeb3ClientVersion());
+		if (contract == null || !contract.isValid()) {
+			loadContract(EthereumService.remixGasLimit, EthereumService.remixGas);
+		}
+		amj.setContractAddress(contract.getContractAddress());
+		amj.setValid(contract.isValid());
+		amj.setNetwork("rinkeby - need to run geth with admin module!");
+		amj.setNumbItems(numbItems().longValue());
+		return amj;
 	}
 
-    @Async
 	@Override
 	public ArtMarket loadContract(Long gasLimit, Long gas) {
-		BigInteger bgGas = BigInteger.valueOf(gas);
-		BigInteger bgGasLimit = BigInteger.valueOf(gasLimit);
-		contract = ArtMarket.load(ethereumSettings.getContractAddress(), web3, credentials, bgGas, bgGasLimit);
-		logger.info("Deployed Contract: contract=" + contract.getContractAddress());
-		logger.info("Loaded Contract: gas=" + gas + " gasLimit=" + gasLimit);
+		try {
+			BigInteger bgGas = BigInteger.valueOf(gas);
+			BigInteger bgGasLimit = BigInteger.valueOf(gasLimit);
+			if (contractAddress == null) {
+				contractAddress = ethereumSettings.getContractAddress();
+			}
+			if (!contractAddress.startsWith("0x")) {
+				contractAddress = "0x" + contractAddress;
+			}
+			logger.info("Loading contract from: " + contractAddress);
+			contract = ArtMarket.load(contractAddress, web3, credentials, bgGas, bgGasLimit);
+			logger.info("Loaded Contract: gas=" + gas + " gasLimit=" + gasLimit);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return contract;
 	}
 
@@ -46,18 +65,21 @@ public class EthereumServiceImpl implements EthereumService {
 	public void deployContract(Long gasLimit, Long gas) throws Exception {
 		BigInteger bgGas = BigInteger.valueOf(gas);
 		BigInteger bgGasLimit = BigInteger.valueOf(gasLimit);
-		ArtMarket contract = ArtMarket.deploy(web3, credentials, bgGas, bgGasLimit).sendAsync().get();
-//		CompletableFuture<Void> future = completableFuture.thenAccept(s -> logger.info("Deployed Contract: s=" + s));
-//		future.get();
+		contract = ArtMarket.deploy(web3, credentials, bgGas, bgGasLimit).send();
+		logger.info("Deployed Contract: contract=" + contract);
+//		future.thenAccept(s -> logger.info("Deployed Contract: s=" + s));
+		// future.get();
 		contractAddress = contract.getContractAddress();
 		logger.info("Deployed Contract: contract=" + contract.getContractAddress());
-		logger.info("Deployed Contract: contract=" + contract.getDeployedAddress("4"));
 		return;
 	}
 
 	@Override
 	public BigInteger numbItems() {
 		try {
+			if (contract == null) {
+				loadContract(EthereumService.remixGasLimit, EthereumService.remixGas);
+			}
 			BigInteger result;
 			RemoteCall<BigInteger> numbItems = contract.itemIndex();
 			result = numbItems.send();

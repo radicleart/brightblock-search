@@ -23,17 +23,14 @@ public class EthereumConfiguration {
 
 	private static final Logger logger = LogManager.getLogger(EthereumConfiguration.class);
 	@Autowired private EthereumSettings ethereumSettings;
+//	@Autowired private EthereumService ethereumService;
 
 //	@Bean
 //	public ArtMarket getArtMarket() {
-//		BigInteger gas = BigInteger.valueOf(2L);
-//		BigInteger gasLimit = BigInteger.valueOf(21000L);
 //		ArtMarket contract = null;
 //		try {
-//			contract = ArtMarket.load(ethereumSettings.getContractAddress(), getWeb3(), getCredentials(), gas, gasLimit);
-//		} catch (IOException e) {
-//			logger.info("Ethereum contract object: IO error: Try deploying the contract", e);
-//		} catch (CipherException e) {
+//			ethereumService.loadContract(EthereumService.remixGasLimit, EthereumService.remixGas);
+//		} catch (Exception e) {
 //			logger.info("Ethereum contract object: Cipher error:  Try re-deploying the contract", e);
 //		}
 //		return contract;

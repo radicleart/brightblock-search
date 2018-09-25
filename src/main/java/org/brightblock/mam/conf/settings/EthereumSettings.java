@@ -53,5 +53,4 @@ public class EthereumSettings {
 	public void setWssBase(String wssBase) {
 		this.wssBase = wssBase;
 	}
-
 }
