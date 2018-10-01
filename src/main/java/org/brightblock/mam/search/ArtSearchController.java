@@ -1,10 +1,11 @@
 package org.brightblock.mam.search;
 
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.brightblock.mam.ethereum.service.EthereumService;
+import org.brightblock.mam.ethereum.service.Item;
 import org.brightblock.mam.rest.models.ApiModel;
 import org.brightblock.mam.rest.models.ResponseCodes;
 import org.brightblock.mam.services.index.ArtSearchService;
@@ -21,7 +22,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class ArtSearchController {
 
-	@Autowired private ArtSearchService artSearchService;
+	@Autowired
+	private ArtSearchService artSearchService;
+	@Autowired
+	private EthereumService ethereumService;
 
 	@RequestMapping(value = "/art/search/{field}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<ApiModel> search(HttpServletRequest request, @PathVariable String field) {
@@ -29,18 +33,31 @@ public class ArtSearchController {
 		if (query == null) {
 			query = request.getParameter("q");
 		}
-		List<OwnershipRecordModel> response = artSearchService.searchIndex(field, query);
-		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, response);
+		List<OwnershipRecordModel> records = artSearchService.searchIndex(100, field, query);
+		setBlockchainIndex(records);
+		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, records);
 		model.setHeaders(request);
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/art/fetch", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<ApiModel> fetch(HttpServletRequest request) {
-		Set<OwnershipRecordModel> response = artSearchService.fetchAll();
-		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, response);
+		List<OwnershipRecordModel> records = artSearchService.fetchAll();
+		setBlockchainIndex(records);
+		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, records);
 		model.setHeaders(request);
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
+	}
+	
+	private void setBlockchainIndex(List<OwnershipRecordModel> records) {
+		List<Item> items = ethereumService.fetchItems();
+		for (OwnershipRecordModel model : records) {
+			for (Item item : items) {
+				if (item.getTitle().equals(model.getTitle())) {
+					model.setItem(item);
+				}
+			}
+		}
 	}
 
 }

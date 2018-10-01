@@ -2,6 +2,8 @@ package org.brightblock.mam.services.index.posts;
 
 import java.io.Serializable;
 
+import org.brightblock.mam.ethereum.service.Item;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -9,17 +11,20 @@ public class OwnershipRecordModel implements Serializable, Comparable<OwnershipR
 
 	private static final long serialVersionUID = 8617555047178804394L;
 	private Long id;
+	private Long editions;
 	private String title;
 	private String description;
 	private String uploader;
+	private String artist;
 	private String owner;
 	private String itemType;
 	private String keywords;
-	private Boolean registered;
-	private Boolean sold;
+	private Long blockchainIndex = -1L;
+	private String registered;
 	private String appUrl;
 	private String gaiaUrl;
 	private SaleDataModel saleData;
+	private Item item;
 
 	public OwnershipRecordModel() {
 		super();
@@ -32,27 +37,24 @@ public class OwnershipRecordModel implements Serializable, Comparable<OwnershipR
 			@JsonProperty("description") String description, 
 			@JsonProperty("itemType") String itemType, 
 			@JsonProperty("owner") String owner, 
+			@JsonProperty("artist") String artist, 
 			@JsonProperty("keywords") String keywords, 
+			@JsonProperty("editions") Long editions, 
+			@JsonProperty("blockchainIndex") Long blockchainIndex, 
 			@JsonProperty("sold") Boolean sold, 
-			@JsonProperty("registered") Boolean registered) {
+			@JsonProperty("registered") String registered) {
 		super();
 		this.id = Long.valueOf(id);
 		this.title = title;
 		this.description = description;
 		this.uploader = uploader;
-		this.itemType = itemType;
+		this.artist = artist;
 		this.owner = owner;
+		this.itemType = itemType;
+		this.editions = editions;
+		this.blockchainIndex = blockchainIndex;
 		this.keywords = keywords;
-		if (registered != null) {
-			this.registered = registered;
-		} else {
-			 this.registered = false;
-		}
-		if (sold != null) {
-			this.sold = sold;
-		} else {
-			 this.sold = false;
-		}
+		this.registered = registered;
 	}
 
 	public String getTitle() {
@@ -87,11 +89,11 @@ public class OwnershipRecordModel implements Serializable, Comparable<OwnershipR
 		this.uploader = uploader;
 	}
 
-	public Boolean getRegistered() {
+	public String getRegistered() {
 		return registered;
 	}
 
-	public void setRegistered(Boolean registered) {
+	public void setRegistered(String registered) {
 		this.registered = registered;
 	}
 
@@ -146,19 +148,43 @@ public class OwnershipRecordModel implements Serializable, Comparable<OwnershipR
 		this.saleData = saleData;
 	}
 
-	public Boolean getSold() {
-		return sold;
-	}
-
-	public void setSold(Boolean sold) {
-		this.sold = sold;
-	}
-
 	public String getOwner() {
 		return owner;
 	}
 
 	public void setOwner(String owner) {
 		this.owner = owner;
+	}
+
+	public Long getEditions() {
+		return editions;
+	}
+
+	public void setEditions(Long editions) {
+		this.editions = editions;
+	}
+
+	public String getArtist() {
+		return artist;
+	}
+
+	public void setArtist(String artist) {
+		this.artist = artist;
+	}
+
+	public Long getBlockchainIndex() {
+		return blockchainIndex;
+	}
+
+	public void setBlockchainIndex(Long blockchainIndex) {
+		this.blockchainIndex = blockchainIndex;
+	}
+
+	public Item getItem() {
+		return item;
+	}
+
+	public void setItem(Item item) {
+		this.item = item;
 	}
 }

@@ -2,12 +2,14 @@ package org.brightblock.mam.ethereum.rest;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.brightblock.mam.ethereum.service.ArtMarket;
 import org.brightblock.mam.ethereum.service.ArtMarketJson;
 import org.brightblock.mam.ethereum.service.EthereumService;
+import org.brightblock.mam.ethereum.service.Item;
 import org.brightblock.mam.rest.models.ApiModel;
 import org.brightblock.mam.rest.models.ResponseCodes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +66,20 @@ public class Web3EthereumClient {
 	public ResponseEntity<ApiModel> items() throws Exception {
 		BigInteger result = ethereumService.numbItems();
 		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, result);
+		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/api/ethereum/fetch", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<ApiModel> fetch() throws Exception {
+		List<Item> items = ethereumService.fetchItems();
+		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, items);
+		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/api/ethereum/fetch/{hash}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<ApiModel> items(HttpServletRequest request, @PathVariable String hash) throws Exception {
+		Item item = ethereumService.lookupItemByHash(hash);
+		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, item);
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
 	}
 }

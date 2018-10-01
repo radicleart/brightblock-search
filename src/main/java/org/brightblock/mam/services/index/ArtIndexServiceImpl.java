@@ -40,14 +40,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class ArtIndexServiceImpl extends BaseIndexingServiceImpl implements ArtIndexService {
 
-    private static final String RECORDS_V01_JSON = "/records_v01.json";
+	private static final String RECORDS_V01_JSON = "/records_v01.json";
 	private static final Logger logger = LogManager.getLogger(ArtIndexServiceImpl.class);
-	@Autowired private NamesSearchService namesSearchService;
-	@Autowired private RestOperations restTemplate1;
-	@Autowired private ObjectMapper mapper;
+	@Autowired
+	private NamesSearchService namesSearchService;
+	@Autowired
+	private RestOperations restTemplate1;
+	@Autowired
+	private ObjectMapper mapper;
 
 	@Override
-    public int clear() {
+	public int clear() {
 		IndexWriter writer = null;
 		try {
 			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(artAnalyzer);
@@ -58,15 +61,16 @@ public class ArtIndexServiceImpl extends BaseIndexingServiceImpl implements ArtI
 			throw new RuntimeException(e);
 		} finally {
 			try {
-				if (writer != null) writer.close();
+				if (writer != null)
+					writer.close();
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
 		}
-    }
+	}
 
 	@Override
-    public int getNumbDocs() {
+	public int getNumbDocs() {
 		try {
 			initArtMarket();
 			IndexReader indexReader = DirectoryReader.open(artIndex);
@@ -74,36 +78,41 @@ public class ArtIndexServiceImpl extends BaseIndexingServiceImpl implements ArtI
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-    }
+	}
 
 	@Override
-	public void addToIndex(OwnershipRecordModel indexData) {
-		IndexWriter writer = null;
-		long freeMemBefore = Runtime.getRuntime().freeMemory();
-		long timeStart = new Date().getTime();
-		try {
-			logger.info("-----------------------------------------------------------------------------------------");
-			logger.info("Current index size: " + getNumbDocs() + " documents");
-			initArtMarket();
-			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(artAnalyzer);
-			writer = new IndexWriter(artIndex, indexWriterConfig);
-			addToIndex(writer, indexData);
-			logger.info("Indexed " + indexData.toString());
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		} finally {
-			try {
-				writer.close();
-				long timeEnd = new Date().getTime();
-				long freeMemAfter = Runtime.getRuntime().freeMemory();
-				logger.info("New indexed size " + getNumbDocs() + " documents");
-				logger.info("Time to build index = " + (timeEnd - timeStart) / 1000);
-				logger.info("Memory use (free memory) - before: " + freeMemBefore + " after: " + freeMemAfter);
-				logger.info("-----------------------------------------------------------------------------------------");
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
-		}
+	public void indexSingleRecord(OwnershipRecordModel indexData) {
+		clearUserDocuments("uploader", indexData.getUploader());
+		List<ZonefileModel> zonefiles = namesSearchService.searchIndex("name", indexData.getUploader());
+		buildIndex(zonefiles);
+		// no gaia url on below path which leads to a bug fetching the provenance record in the ui.
+//		IndexWriter writer = null;
+//		long freeMemBefore = Runtime.getRuntime().freeMemory();
+//		long timeStart = new Date().getTime();
+//		try {
+//			logger.info("-----------------------------------------------------------------------------------------");
+//			logger.info("Current index size: " + getNumbDocs() + " documents");
+//			initArtMarket();
+//			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(artAnalyzer);
+//			writer = new IndexWriter(artIndex, indexWriterConfig);
+//			addToIndex(writer, indexData);
+//			logger.info("Indexed " + indexData.toString());
+//		} catch (Exception e) {
+//			throw new RuntimeException(e);
+//		} finally {
+//			try {
+//				writer.close();
+//				long timeEnd = new Date().getTime();
+//				long freeMemAfter = Runtime.getRuntime().freeMemory();
+//				logger.info("New indexed size " + getNumbDocs() + " documents");
+//				logger.info("Time to build index = " + (timeEnd - timeStart) / 1000);
+//				logger.info("Memory use (free memory) - before: " + freeMemBefore + " after: " + freeMemAfter);
+//				logger.info(
+//						"-----------------------------------------------------------------------------------------");
+//			} catch (IOException e) {
+//				throw new RuntimeException(e);
+//			}
+//		}
 	}
 
 	@Override
@@ -119,7 +128,8 @@ public class ArtIndexServiceImpl extends BaseIndexingServiceImpl implements ArtI
 			writer = new IndexWriter(artIndex, indexWriterConfig);
 			int userIndexCount = 0;
 			int indexCount = 0;
-			for  (OwnershipRecordModel record : userRecords.getRecords()) { // index a portion of the namespace for test purposes..
+			for (OwnershipRecordModel record : userRecords.getRecords()) { // index a portion of the namespace for test
+																			// purposes..
 				record.setAppUrl(userRecords.getAppUrl());
 				record.setGaiaUrl(userRecords.getGaiaUrl());
 				addToIndex(writer, record);
@@ -137,31 +147,39 @@ public class ArtIndexServiceImpl extends BaseIndexingServiceImpl implements ArtI
 				logger.info("New indexed size " + getNumbDocs() + " documents");
 				logger.info("Time to build index = " + (timeEnd - timeStart) / 1000);
 				logger.info("Memory use (free memory) - before: " + freeMemBefore + " after: " + freeMemAfter);
-				logger.info("-----------------------------------------------------------------------------------------");
+				logger.info(
+						"-----------------------------------------------------------------------------------------");
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
 		}
 	}
 
-    @Async
+	@Async
 	@Override
 	public void indexUser(String username) {
-    		clearUserDocuments(username);
+		clearUserDocuments("uploader", username);
 		List<ZonefileModel> zonefiles = namesSearchService.searchIndex("name", username);
 		buildIndex(zonefiles);
 	}
 
-	private void clearUserDocuments(String username) {
+	@Async
+	@Override
+	public void remove(String field, String value) {
+		clearUserDocuments(field, value);
+	}
+
+	private void clearUserDocuments(String field, String value) {
 		IndexWriter writer = null;
 		try {
 			initArtMarket();
-			QueryParser qp = new QueryParser("uploader", artAnalyzer);
- 			Query q = qp.parse(username);
+			QueryParser qp = new QueryParser(field, artAnalyzer);
+			Query q = qp.parse(value);
 			initArtMarket();
 			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(artAnalyzer);
 			writer = new IndexWriter(artIndex, indexWriterConfig);
- 			writer.deleteDocuments(q);
+			long size = writer.deleteDocuments(q);
+			logger.info("Number of items removed from search index: " + size);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		} finally {
@@ -173,10 +191,10 @@ public class ArtIndexServiceImpl extends BaseIndexingServiceImpl implements ArtI
 		}
 	}
 
-    @Async
+	@Async
 	@Override
 	public void buildIndex() {
-    		String domainString = applicationSettings.getDomainString();
+		String domainString = applicationSettings.getDomainString();
 		logger.info("Building index for domains: " + domainString);
 		List<ZonefileModel> zonefiles = new ArrayList<ZonefileModel>();
 		String[] domains = domainString.split(",");
@@ -214,22 +232,27 @@ public class ArtIndexServiceImpl extends BaseIndexingServiceImpl implements ArtI
 		reindex(userRecords);
 	}
 
-	private OwnershipRecordsModel fetchArtworkInfo(String url) throws JsonParseException, JsonMappingException, IOException {
+	private OwnershipRecordsModel fetchArtworkInfo(String url)
+			throws JsonParseException, JsonMappingException, IOException {
 		OwnershipRecordsModel model = null;
 		HttpHeaders httpHeaders = new HttpHeaders();
-	    httpHeaders.setAccept(Collections.singletonList(MediaType.parseMediaType("text/plain")));
-	    HttpEntity<Object> requestEntity = new HttpEntity<Object>(httpHeaders);
-	    String jsonFile = restTemplate1.exchange(url, HttpMethod.GET, requestEntity, String.class).getBody();
-		model = mapper.readValue(jsonFile, OwnershipRecordsModel.class);
-	    return model;
+		httpHeaders.setAccept(Collections.singletonList(MediaType.parseMediaType("text/plain")));
+		HttpEntity<Object> requestEntity = new HttpEntity<Object>(httpHeaders);
+		String jsonFile = null;
+		try {
+			jsonFile = restTemplate1.exchange(url, HttpMethod.GET, requestEntity, String.class).getBody();
+			model = mapper.readValue(jsonFile, OwnershipRecordsModel.class);
+		} catch (Exception e) {
+			logger.error("Error reading from: " + url + " Error thrown: " + e.getMessage());
+			logger.error(jsonFile);
+		}
+		return model;
 	}
 
-
-    /** 
-     * 1. Find the users who have visited the application.
-     * 2. Fetch their gaia url
-     * 3. Read the art market app specific data. 
-     */
+	/**
+	 * 1. Find the users who have visited the application. 2. Fetch their gaia url
+	 * 3. Read the art market app specific data.
+	 */
 	private void reindex(List<OwnershipRecordsModel> userRecords) {
 		IndexWriter writer = null;
 		long freeMemBefore = Runtime.getRuntime().freeMemory();
@@ -239,14 +262,14 @@ public class ArtIndexServiceImpl extends BaseIndexingServiceImpl implements ArtI
 			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(artAnalyzer);
 			writer = new IndexWriter(artIndex, indexWriterConfig);
 			int userIndexCount = 0;
-			for  (OwnershipRecordsModel userControlRecord : userRecords) { // index a portion of the namespace for test purposes..
+			for (OwnershipRecordsModel userControlRecord : userRecords) { // index a portion of the namespace for test
+																			// purposes..
 				int indexCount = 0;
-				for  (OwnershipRecordModel record : userControlRecord.getRecords()) { // index a portion of the namespace for test purposes..
+				for (OwnershipRecordModel record : userControlRecord.getRecords()) { // index a portion of the namespace
+																						// for test purposes..
 					record.setAppUrl(userControlRecord.getAppUrl());
 					record.setGaiaUrl(userControlRecord.getGaiaUrl());
-					if (!record.getSold()) {
-						addToIndex(writer, record);
-					}
+					addToIndex(writer, record);
 					indexCount++;
 				}
 				userIndexCount++;
@@ -259,43 +282,55 @@ public class ArtIndexServiceImpl extends BaseIndexingServiceImpl implements ArtI
 				writer.close();
 				long timeEnd = new Date().getTime();
 				long freeMemAfter = Runtime.getRuntime().freeMemory();
-				logger.info("-----------------------------------------------------------------------------------------");
+				logger.info(
+						"-----------------------------------------------------------------------------------------");
 				logger.info("(Re) Indexed " + getNumbDocs() + " documents");
 				logger.info("Time to build index = " + (timeEnd - timeStart) / 1000);
 				logger.info("Memory use (free memory) - before: " + freeMemBefore + " after: " + freeMemAfter);
-				logger.info("-----------------------------------------------------------------------------------------");
+				logger.info(
+						"-----------------------------------------------------------------------------------------");
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
 		}
 	}
-	
+
 	private void addToIndex(IndexWriter writer, OwnershipRecordModel record) throws IOException {
 		Document document = null;
 		try {
 			document = new Document();
 			document.add(new TextField("title", record.getTitle(), Field.Store.YES));
 			document.add(new StringField("id", String.valueOf(record.getId()), Field.Store.YES));
-			if (record.getRegistered() != null) {
-				document.add(new TextField("registered", String.valueOf(record.getRegistered()), Field.Store.YES));
+			if (record.getBlockchainIndex() != null) {
+				document.add(
+						new TextField("blockchainIndex", String.valueOf(record.getBlockchainIndex()), Field.Store.YES));
 			} else {
-				logger.error("Skipping " + record.getId() + "; No registered field.");
-				return;
+				document.add(new TextField("blockchainIndex", "-1", Field.Store.YES));
 			}
-			if (record.getSold() != null) {
-				document.add(new TextField("sold", String.valueOf(record.getSold()), Field.Store.YES));
+			if (record.getEditions() != null) {
+				document.add(new TextField("editions", String.valueOf(record.getEditions()), Field.Store.YES));
 			} else {
-				logger.error("Skipping " + record.getId() + "; No sold field.");
+				document.add(new TextField("editions", "editions not given", Field.Store.YES));
+			}
+			if (record.getRegistered() != null) {
+				document.add(new TextField("registered", record.getRegistered(), Field.Store.YES));
+			} else {
+				document.add(new TextField("registered", "", Field.Store.YES));
 			}
 			if (record.getItemType() != null) {
 				document.add(new TextField("itemType", record.getItemType(), Field.Store.YES));
 			} else {
-				document.add(new TextField("itemType", "itemType not given", Field.Store.YES));
+				document.add(new TextField("itemType", "digiart", Field.Store.YES));
+			}
+			if (record.getArtist() != null) {
+				document.add(new TextField("artist", record.getArtist(), Field.Store.YES));
+			} else {
+				document.add(new TextField("artist", record.getUploader(), Field.Store.YES));
 			}
 			if (record.getOwner() != null) {
 				document.add(new TextField("owner", record.getOwner(), Field.Store.YES));
 			} else {
-				document.add(new TextField("owner", "owner not given", Field.Store.YES));
+				document.add(new TextField("owner", record.getUploader(), Field.Store.YES));
 			}
 			if (record.getUploader() != null) {
 				document.add(new TextField("uploader", record.getUploader(), Field.Store.YES));
@@ -330,11 +365,16 @@ public class ArtIndexServiceImpl extends BaseIndexingServiceImpl implements ArtI
 			document.add(new TextField("soid", String.valueOf(record.getSaleData().getSoid()), Field.Store.YES));
 			document.add(new TextField("amount", String.valueOf(record.getSaleData().getAmount()), Field.Store.YES));
 			document.add(new TextField("reserve", String.valueOf(record.getSaleData().getReserve()), Field.Store.YES));
-			document.add(new TextField("increment", String.valueOf(record.getSaleData().getIncrement()), Field.Store.YES));
-			document.add(new TextField("fiatCurrency", String.valueOf(record.getSaleData().getFiatCurrency()), Field.Store.YES));
-			document.add(new TextField("initialRateBtc", String.valueOf(record.getSaleData().getInitialRateBtc()), Field.Store.YES));
-			document.add(new TextField("initialRateEth", String.valueOf(record.getSaleData().getInitialRateEth()), Field.Store.YES));
-			document.add(new TextField("amountInEther", String.valueOf(record.getSaleData().getAmountInEther()), Field.Store.YES));
+			document.add(
+					new TextField("increment", String.valueOf(record.getSaleData().getIncrement()), Field.Store.YES));
+			document.add(new TextField("fiatCurrency", String.valueOf(record.getSaleData().getFiatCurrency()),
+					Field.Store.YES));
+			document.add(new TextField("initialRateBtc", String.valueOf(record.getSaleData().getInitialRateBtc()),
+					Field.Store.YES));
+			document.add(new TextField("initialRateEth", String.valueOf(record.getSaleData().getInitialRateEth()),
+					Field.Store.YES));
+			document.add(new TextField("amountInEther", String.valueOf(record.getSaleData().getAmountInEther()),
+					Field.Store.YES));
 			Term term = new Term("id", String.valueOf(record.getId()));
 			writer.updateDocument(term, document);
 		} catch (Exception e) {

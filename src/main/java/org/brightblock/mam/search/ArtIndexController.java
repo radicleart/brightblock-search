@@ -23,8 +23,8 @@ public class ArtIndexController {
 	@Autowired private ArtIndexService artIndexService;
 
 	@RequestMapping(value = "/art/index/root", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<ApiModel> indexRootFile(HttpServletRequest request, @RequestBody OwnershipRecordsModel record) {
-		artIndexService.addToIndex(record);
+	public ResponseEntity<ApiModel> indexRootFile(HttpServletRequest request, @RequestBody OwnershipRecordsModel records) {
+		artIndexService.addToIndex(records);
 		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, "Building in background.");
 		model.setHeaders(request);
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
@@ -32,7 +32,7 @@ public class ArtIndexController {
 	
 	@RequestMapping(value = "/art/index/indexData", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<ApiModel> indexRecord(HttpServletRequest request, @RequestBody OwnershipRecordModel indexData) {
-		artIndexService.addToIndex(indexData);
+		artIndexService.indexSingleRecord(indexData);
 		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, "Building in background.");
 		model.setHeaders(request);
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
@@ -42,6 +42,14 @@ public class ArtIndexController {
 	public ResponseEntity<ApiModel> indexUser(HttpServletRequest request, @PathVariable String username) {
 		artIndexService.indexUser(username);
 		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, "Building in background.");
+		model.setHeaders(request);
+		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/art/index/remove/{field}/{value}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<ApiModel> remove(HttpServletRequest request, @PathVariable String field, @PathVariable String value) {
+		artIndexService.remove(field, value);
+		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, "Removing field " + field + " with value " + value + " in background.");
 		model.setHeaders(request);
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
 	}
