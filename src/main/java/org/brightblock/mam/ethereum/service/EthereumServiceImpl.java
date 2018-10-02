@@ -126,6 +126,9 @@ public class EthereumServiceImpl implements EthereumService {
 				loadContract(EthereumService.remixGasLimit, EthereumService.remixGas);
 			}
 			Long numbItems = numbItems().longValue();
+			if (numbItems > 100) {
+				numbItems = 100L;
+			}
 			Tuple6<String, String, byte[], BigInteger, BigInteger, Boolean> tuple = null;
 			for (Long itemIndex = numbItems; itemIndex > -1; itemIndex--) {
 				try {

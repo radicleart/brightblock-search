@@ -76,19 +76,12 @@ public class ArtSearchServiceImpl extends BaseIndexingServiceImpl implements Art
 		model.setArtist(document.get("artist"));
 		model.setOwner(document.get("owner"));
 		model.setKeywords(document.get("keywords"));
-		String blockchainIndex = document.get("blockchainIndex");
-		if (blockchainIndex != null) {
-			model.setBlockchainIndex(Long.valueOf(blockchainIndex));
-		} else {
-			model.setBlockchainIndex(-1L);
-		}
 		String editions = document.get("editions");
 		if (editions != null) {
 			model.setEditions(Long.valueOf(editions));
 		} else {
 			model.setEditions(1L);
 		}
-		model.setRegistered(document.get("registered"));
 		model.setTitle(document.get("title"));
 		model.setUploader(document.get("uploader"));
 		SaleDataModel saleData = new SaleDataModel();

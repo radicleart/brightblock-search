@@ -7,7 +7,7 @@ import java.security.NoSuchAlgorithmException;
 import org.springframework.security.crypto.codec.Hex;
 import org.web3j.tuples.generated.Tuple6;
 
-public class Item implements Serializable {
+public class Item implements Serializable, Comparable<Item> {
 	private static final long serialVersionUID = -907471625497750800L;
 	private Long itemIndex;
 	private String title;
@@ -96,5 +96,10 @@ public class Item implements Serializable {
 
 	public void setTimestamp(String timestamp) {
 		this.timestamp = timestamp;
+	}
+
+	@Override
+	public int compareTo(Item item) {
+		return this.itemIndex.compareTo(item.itemIndex);
 	}
 }

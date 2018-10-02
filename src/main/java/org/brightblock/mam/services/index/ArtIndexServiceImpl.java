@@ -301,21 +301,10 @@ public class ArtIndexServiceImpl extends BaseIndexingServiceImpl implements ArtI
 			document = new Document();
 			document.add(new TextField("title", record.getTitle(), Field.Store.YES));
 			document.add(new StringField("id", String.valueOf(record.getId()), Field.Store.YES));
-			if (record.getBlockchainIndex() != null) {
-				document.add(
-						new TextField("blockchainIndex", String.valueOf(record.getBlockchainIndex()), Field.Store.YES));
-			} else {
-				document.add(new TextField("blockchainIndex", "-1", Field.Store.YES));
-			}
 			if (record.getEditions() != null) {
 				document.add(new TextField("editions", String.valueOf(record.getEditions()), Field.Store.YES));
 			} else {
-				document.add(new TextField("editions", "editions not given", Field.Store.YES));
-			}
-			if (record.getRegistered() != null) {
-				document.add(new TextField("registered", record.getRegistered(), Field.Store.YES));
-			} else {
-				document.add(new TextField("registered", "", Field.Store.YES));
+				document.add(new TextField("editions", "1", Field.Store.YES));
 			}
 			if (record.getItemType() != null) {
 				document.add(new TextField("itemType", record.getItemType(), Field.Store.YES));

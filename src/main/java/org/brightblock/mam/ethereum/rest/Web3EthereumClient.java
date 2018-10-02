@@ -2,6 +2,7 @@ package org.brightblock.mam.ethereum.rest;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -72,6 +73,7 @@ public class Web3EthereumClient {
 	@RequestMapping(value = "/api/ethereum/fetch", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<ApiModel> fetch() throws Exception {
 		List<Item> items = ethereumService.fetchItems();
+		Collections.sort(items, Collections.reverseOrder());
 		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, items);
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
 	}

@@ -19,8 +19,6 @@ public class OwnershipRecordModel implements Serializable, Comparable<OwnershipR
 	private String owner;
 	private String itemType;
 	private String keywords;
-	private Long blockchainIndex = -1L;
-	private String registered;
 	private String appUrl;
 	private String gaiaUrl;
 	private SaleDataModel saleData;
@@ -40,9 +38,7 @@ public class OwnershipRecordModel implements Serializable, Comparable<OwnershipR
 			@JsonProperty("artist") String artist, 
 			@JsonProperty("keywords") String keywords, 
 			@JsonProperty("editions") Long editions, 
-			@JsonProperty("blockchainIndex") Long blockchainIndex, 
-			@JsonProperty("sold") Boolean sold, 
-			@JsonProperty("registered") String registered) {
+			@JsonProperty("sold") Boolean sold) {
 		super();
 		this.id = Long.valueOf(id);
 		this.title = title;
@@ -52,9 +48,7 @@ public class OwnershipRecordModel implements Serializable, Comparable<OwnershipR
 		this.owner = owner;
 		this.itemType = itemType;
 		this.editions = editions;
-		this.blockchainIndex = blockchainIndex;
 		this.keywords = keywords;
-		this.registered = registered;
 	}
 
 	public String getTitle() {
@@ -87,14 +81,6 @@ public class OwnershipRecordModel implements Serializable, Comparable<OwnershipR
 
 	public void setUploader(String uploader) {
 		this.uploader = uploader;
-	}
-
-	public String getRegistered() {
-		return registered;
-	}
-
-	public void setRegistered(String registered) {
-		this.registered = registered;
 	}
 
 	public String getItemType() {
@@ -170,14 +156,6 @@ public class OwnershipRecordModel implements Serializable, Comparable<OwnershipR
 
 	public void setArtist(String artist) {
 		this.artist = artist;
-	}
-
-	public Long getBlockchainIndex() {
-		return blockchainIndex;
-	}
-
-	public void setBlockchainIndex(Long blockchainIndex) {
-		this.blockchainIndex = blockchainIndex;
 	}
 
 	public Item getItem() {
