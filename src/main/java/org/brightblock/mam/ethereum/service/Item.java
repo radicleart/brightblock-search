@@ -3,6 +3,8 @@ package org.brightblock.mam.ethereum.service;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.security.crypto.codec.Hex;
 import org.web3j.tuples.generated.Tuple6;
@@ -16,6 +18,7 @@ public class Item implements Serializable, Comparable<Item> {
 	private BigInteger ownerIndex; // index into array of owners
 	private BigInteger price;
 	private Boolean inAuction;
+	private List<String> owners;
 
 	public Item() {
 		super();
@@ -31,6 +34,7 @@ public class Item implements Serializable, Comparable<Item> {
 		this.ownerIndex = tuple.getValue4();
 		this.price = tuple.getValue5();
 		this.inAuction = tuple.getValue6();
+		owners = new ArrayList<String>();
 	}
 
 	public String getTitle() {
@@ -101,5 +105,17 @@ public class Item implements Serializable, Comparable<Item> {
 	@Override
 	public int compareTo(Item item) {
 		return this.itemIndex.compareTo(item.itemIndex);
+	}
+
+	public List<String> getOwners() {
+		return owners;
+	}
+
+	public boolean addOwner(String address) {
+		return owners.add(address);
+	}
+
+	public void setOwners(List<String> owners) {
+		this.owners = owners;
 	}
 }

@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.brightblock.mam.conf.settings.EthereumSettings;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.codec.Hex;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,8 @@ import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.RemoteCall;
 import org.web3j.protocol.core.methods.response.Web3ClientVersion;
 import org.web3j.tuples.generated.Tuple6;
+
+import rx.Subscription;
 
 @Service
 public class EthereumServiceImpl implements EthereumService {
@@ -27,7 +30,21 @@ public class EthereumServiceImpl implements EthereumService {
 	@Autowired private Credentials credentials;
 	public static String contractAddress;
 	private ArtMarket contract;
+	@Autowired private SimpMessagingTemplate simpMessagingTemplate;
+	private Subscription blockSubscription;
 
+	@Override
+	public void subscribeBlocks() {
+		blockSubscription = web3.blockObservable(false).subscribe(block -> {
+		    simpMessagingTemplate.convertAndSend("/topic/exchanges", block.getJsonrpc());
+		});
+	}
+	
+	@Override
+	public void unSubscribeBlocks() {
+		blockSubscription.unsubscribe();
+	}
+	
 	@Override
 	public ArtMarketJson getContractInfo() throws IOException {
 		ArtMarketJson amj = new ArtMarketJson();
@@ -130,10 +147,13 @@ public class EthereumServiceImpl implements EthereumService {
 				numbItems = 100L;
 			}
 			Tuple6<String, String, byte[], BigInteger, BigInteger, Boolean> tuple = null;
+			Item item = null;
 			for (Long itemIndex = numbItems; itemIndex > -1; itemIndex--) {
 				try {
 					tuple = contract.items(BigInteger.valueOf(itemIndex)).send();
-					items.add(new Item(itemIndex, tuple));
+					item = new Item(itemIndex, tuple);
+					addOwners(item);
+					items.add(item);
 				} catch (Exception e) {
 					logger.error("Item at " + itemIndex +  " threw error in contract: " + contract.getContractAddress(), e);
 				}
@@ -142,6 +162,13 @@ public class EthereumServiceImpl implements EthereumService {
 		} catch (Exception e) {
 			logger.error("Fetch Item threw error in contract: " + contract.getContractAddress(), e);
 			return items;
+		}
+	}
+	
+	private void addOwners(Item item) throws Exception {
+		Long owners = item.getOwnerIndex().longValue() + 1;
+		for (int i = 0; i < owners; i++) {
+			item.addOwner(contract.getItemOwner(BigInteger.valueOf(item.getItemIndex()), BigInteger.valueOf(i)).send());
 		}
 	}
 

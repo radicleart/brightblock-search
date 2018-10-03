@@ -27,6 +27,20 @@ public class Web3EthereumClient {
 
 	@Autowired private EthereumService ethereumService;
 
+	@RequestMapping(value = "/api/ethereum/subscribe/blocks", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<ApiModel> subscribeBlocks() throws IOException {
+		ethereumService.subscribeBlocks();;
+		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, "Subscribed to block events");
+		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/api/ethereum/unsubscribe/blocks", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<ApiModel> unsubscribeBlocks() throws IOException {
+		ethereumService.unSubscribeBlocks();;
+		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, "Unsubscribed to block events");
+		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
+	}
+
 	@RequestMapping(value = "/api/ethereum/client", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<ApiModel> client1() throws IOException {
 		ArtMarketJson amj = ethereumService.getContractInfo();

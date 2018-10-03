@@ -11,6 +11,8 @@ public interface EthereumService
 	public static final Long remixGas = 101000000000L;
 	public static final String _0X = "0x";
 
+	public void subscribeBlocks();
+	public void unSubscribeBlocks();
 	public ArtMarketJson getContractInfo() throws IOException; 
 	public ArtMarket loadContract(Long gasLimit, Long gas);
 	public void deployContract(Long gasLimit, Long gas) throws Exception;
