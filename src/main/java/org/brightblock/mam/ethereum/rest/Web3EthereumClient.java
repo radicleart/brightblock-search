@@ -27,6 +27,20 @@ public class Web3EthereumClient {
 
 	@Autowired private EthereumService ethereumService;
 
+	@RequestMapping(value = "/api/ethereum/load/{gasLimit}/{gas}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<ApiModel> loadWithGas(HttpServletRequest request, @PathVariable Long gasLimit, @PathVariable Long gas) throws Exception {
+		ArtMarket contract = ethereumService.loadContract(gasLimit, gas);
+		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, contract);
+		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/api/ethereum/load/{contractAddress}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<ApiModel> load(HttpServletRequest request, @PathVariable String contractAddress) throws Exception {
+		ArtMarket contract = ethereumService.loadContract(contractAddress, EthereumService.remixGasLimit, EthereumService.remixGas);
+		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, contract);
+		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
+	}
+	
 	@RequestMapping(value = "/api/ethereum/subscribe/blocks", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<ApiModel> subscribeBlocks() throws IOException {
 		ethereumService.subscribeBlocks();;
@@ -63,20 +77,6 @@ public class Web3EthereumClient {
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/api/ethereum/load/{gasLimit}/{gas}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<ApiModel> loadWithGas(HttpServletRequest request, @PathVariable Long gasLimit, @PathVariable Long gas) throws Exception {
-		ArtMarket contract = ethereumService.loadContract(gasLimit, gas);
-		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, contract);
-		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
-	}
-	
-	@RequestMapping(value = "/api/ethereum/load", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<ApiModel> load(HttpServletRequest request) throws Exception {
-		ArtMarket contract = ethereumService.loadContract(EthereumService.remixGasLimit, EthereumService.remixGas);
-		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, contract);
-		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
-	}
-	
 	@RequestMapping(value = "/api/ethereum/numberOfItems", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<ApiModel> items() throws Exception {
 		BigInteger result = ethereumService.numbItems();

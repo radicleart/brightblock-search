@@ -81,6 +81,30 @@ public class EthereumServiceImpl implements EthereumService {
 	}
 
 	@Override
+	public ArtMarket loadContract(String contractAddress, Long gasLimit, Long gas) {
+		try {
+			BigInteger bgGas = BigInteger.valueOf(gas);
+			BigInteger bgGasLimit = BigInteger.valueOf(gasLimit);
+			if (contractAddress == null) {
+				contractAddress = ethereumSettings.getContractAddress();
+			} else {
+				if (!contractAddress.startsWith(_0X)) {
+					contractAddress = _0X + contractAddress;
+				}
+				EthereumServiceImpl.contractAddress = contractAddress;
+				ethereumSettings.setContractAddress(contractAddress);
+			}
+			logger.info("Loading contract from: " + contractAddress);
+			contract = ArtMarket.load(contractAddress, web3, credentials, bgGas, bgGasLimit);
+			logger.info("Loaded Contract: gas=" + gas + " gasLimit=" + gasLimit);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return contract;
+	}
+
+	@Override
 	public String deployContract(Long gasLimit, Long gas) throws Exception {
 		BigInteger bgGas = BigInteger.valueOf(gas);
 		BigInteger bgGasLimit = BigInteger.valueOf(gasLimit);
