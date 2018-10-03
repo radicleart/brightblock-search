@@ -224,13 +224,17 @@ public class ArtIndexServiceImpl extends BaseIndexingServiceImpl implements ArtI
 				appParts = appLine.split("=");
 				try {
 					String appUrl = appParts[0];
-					if (appUrl.indexOf(domainString) > -1) {
-						url = appParts[1].trim() + RECORDS_V01_JSON;
-						OwnershipRecordsModel ownershipRecordsModel = fetchArtworkInfo(url);
-						if (ownershipRecordsModel != null && ownershipRecordsModel.getRecords().size() > 0) {
-							ownershipRecordsModel.setAppUrl(appParts[0].trim());
-							ownershipRecordsModel.setGaiaUrl(url);
-							userRecords.add(ownershipRecordsModel);
+					logger.info("Building index for domains: " + domainString + " and appUrl: " + appUrl);
+					String[] domains = domainString.split(",");
+					for (String domain : domains) {
+						if (appUrl.indexOf(domain) > -1) {
+							url = appParts[1].trim() + RECORDS_V01_JSON;
+							OwnershipRecordsModel ownershipRecordsModel = fetchArtworkInfo(url);
+							if (ownershipRecordsModel != null && ownershipRecordsModel.getRecords().size() > 0) {
+								ownershipRecordsModel.setAppUrl(appParts[0].trim());
+								ownershipRecordsModel.setGaiaUrl(url);
+								userRecords.add(ownershipRecordsModel);
+							}
 						}
 					}
 				} catch (HttpClientErrorException e) {
