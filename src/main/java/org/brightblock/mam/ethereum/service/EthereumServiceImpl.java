@@ -10,7 +10,6 @@ import org.apache.logging.log4j.Logger;
 import org.brightblock.mam.conf.settings.EthereumSettings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.codec.Hex;
 import org.springframework.stereotype.Service;
 import org.web3j.crypto.Credentials;
@@ -81,9 +80,8 @@ public class EthereumServiceImpl implements EthereumService {
 		return contract;
 	}
 
-    @Async
 	@Override
-	public void deployContract(Long gasLimit, Long gas) throws Exception {
+	public String deployContract(Long gasLimit, Long gas) throws Exception {
 		BigInteger bgGas = BigInteger.valueOf(gas);
 		BigInteger bgGasLimit = BigInteger.valueOf(gasLimit);
 		contract = ArtMarket.deploy(web3, credentials, bgGas, bgGasLimit).send();
@@ -92,7 +90,7 @@ public class EthereumServiceImpl implements EthereumService {
 		// future.get();
 		contractAddress = contract.getContractAddress();
 		logger.info("Deployed Contract: contract=" + contract.getContractAddress());
-		return;
+		return contractAddress;
 	}
 
 	@Override

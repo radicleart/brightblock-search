@@ -15,7 +15,7 @@ public interface EthereumService
 	public void unSubscribeBlocks();
 	public ArtMarketJson getContractInfo() throws IOException; 
 	public ArtMarket loadContract(Long gasLimit, Long gas);
-	public void deployContract(Long gasLimit, Long gas) throws Exception;
+	public String deployContract(Long gasLimit, Long gas) throws Exception;
 	public BigInteger numbItems();
 	public Item lookupItemByHash(String hash);
 	public List<Item> fetchItems();

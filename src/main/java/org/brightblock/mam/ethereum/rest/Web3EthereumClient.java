@@ -51,15 +51,15 @@ public class Web3EthereumClient {
 
 	@RequestMapping(value = "/api/ethereum/deploy/{gasLimit}/{gas}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<ApiModel> deployWithGas(HttpServletRequest request, @PathVariable Long gasLimit, @PathVariable Long gas) throws Exception {
-		ethereumService.deployContract(gasLimit, gas);
-		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, "Deploying contract in the background.");
+		String contractAddress = ethereumService.deployContract(gasLimit, gas);
+		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, "Deployed contract: " + contractAddress);
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/api/ethereum/deploy", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<ApiModel> deploy(HttpServletRequest request) throws Exception {
-		ethereumService.deployContract(EthereumService.remixGasLimit, EthereumService.remixGas);
-		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, "Deploying contract in the background.");
+		String contractAddress = ethereumService.deployContract(EthereumService.remixGasLimit, EthereumService.remixGas);
+		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, "Deployed contract: " + contractAddress);
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
 	}
 
