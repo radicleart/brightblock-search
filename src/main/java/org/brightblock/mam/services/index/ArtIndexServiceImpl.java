@@ -227,7 +227,7 @@ public class ArtIndexServiceImpl extends BaseIndexingServiceImpl implements ArtI
 					logger.info("Building index for domains: " + domainString + " and appUrl: " + appUrl);
 					String[] domains = domainString.split(",");
 					for (String domain : domains) {
-						if (appUrl.indexOf(domain) > -1) {
+						if (appUrl.indexOf(domain) > -1 || domain.indexOf(appUrl) > -1) {
 							url = appParts[1].trim() + RECORDS_V01_JSON;
 							OwnershipRecordsModel ownershipRecordsModel = fetchArtworkInfo(url);
 							if (ownershipRecordsModel != null && ownershipRecordsModel.getRecords().size() > 0) {
