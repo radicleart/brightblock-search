@@ -17,6 +17,6 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 
     @Override
 	public void addCorsMappings(CorsRegistry registry) {
-		registry.addMapping("/**").allowedOrigins("http://localhost:8080", "https://www.brightblock.org");
+		registry.addMapping("/**").allowedOrigins("http://localhost:8080", "https://www.brightblock.org", "https://staging.brightblock.org");
 	}
 }
