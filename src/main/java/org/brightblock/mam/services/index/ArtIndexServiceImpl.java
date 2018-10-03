@@ -53,10 +53,16 @@ public class ArtIndexServiceImpl extends BaseIndexingServiceImpl implements ArtI
 	public int clear() {
 		IndexWriter writer = null;
 		try {
+			logger.info("-----------------------------------------------------------------------------------------");
+			logger.info("Clear index - current size: " + getNumbDocs() + " documents");
 			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(artAnalyzer);
 			indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
 			writer = new IndexWriter(artIndex, indexWriterConfig);
-			return getNumbDocs();
+			writer.deleteAll();
+			int numbDocs = getNumbDocs();
+			logger.info("Clear index - new size: " + numbDocs + " documents");
+			logger.info("-----------------------------------------------------------------------------------------");
+			return numbDocs;
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		} finally {
@@ -128,8 +134,7 @@ public class ArtIndexServiceImpl extends BaseIndexingServiceImpl implements ArtI
 			writer = new IndexWriter(artIndex, indexWriterConfig);
 			int userIndexCount = 0;
 			int indexCount = 0;
-			for (OwnershipRecordModel record : userRecords.getRecords()) { // index a portion of the namespace for test
-																			// purposes..
+			for (OwnershipRecordModel record : userRecords.getRecords()) { 
 				record.setAppUrl(userRecords.getAppUrl());
 				record.setGaiaUrl(userRecords.getGaiaUrl());
 				addToIndex(writer, record);
@@ -196,15 +201,18 @@ public class ArtIndexServiceImpl extends BaseIndexingServiceImpl implements ArtI
 	public void buildIndex() {
 		String domainString = applicationSettings.getDomainString();
 		logger.info("Building index for domains: " + domainString);
-		List<ZonefileModel> zonefiles = new ArrayList<ZonefileModel>();
+		List<ZonefileModel> zonefiles = null;
 		String[] domains = domainString.split(",");
 		for (String domain : domains) {
-			zonefiles.addAll(namesSearchService.searchIndex("apps", "*" + domain + "*"));
+			logger.info("Building index for domains: " + domainString);
+			zonefiles = namesSearchService.searchIndex("apps", "*" + domain + "*");
+			zonefiles.addAll(zonefiles);
 		}
 		buildIndex(zonefiles);
 	}
 
 	private void buildIndex(List<ZonefileModel> zonefiles) {
+		String domainString = applicationSettings.getDomainString();
 		String[] appHttpLines = null;
 		String[] appParts = null;
 		List<OwnershipRecordsModel> userRecords = new ArrayList<>();
@@ -215,12 +223,15 @@ public class ArtIndexServiceImpl extends BaseIndexingServiceImpl implements ArtI
 			for (String appLine : appHttpLines) {
 				appParts = appLine.split("=");
 				try {
-					url = appParts[1].trim() + RECORDS_V01_JSON;
-					OwnershipRecordsModel ownershipRecordsModel = fetchArtworkInfo(url);
-					if (ownershipRecordsModel.getRecords().size() > 0) {
-						ownershipRecordsModel.setAppUrl(appParts[0].trim());
-						ownershipRecordsModel.setGaiaUrl(url);
-						userRecords.add(ownershipRecordsModel);
+					String appUrl = appParts[0];
+					if (appUrl.indexOf(domainString) > -1) {
+						url = appParts[1].trim() + RECORDS_V01_JSON;
+						OwnershipRecordsModel ownershipRecordsModel = fetchArtworkInfo(url);
+						if (ownershipRecordsModel != null && ownershipRecordsModel.getRecords().size() > 0) {
+							ownershipRecordsModel.setAppUrl(appParts[0].trim());
+							ownershipRecordsModel.setGaiaUrl(url);
+							userRecords.add(ownershipRecordsModel);
+						}
 					}
 				} catch (HttpClientErrorException e) {
 					logger.error("Error reading from: " + url + " Error thrown: " + e.getMessage());

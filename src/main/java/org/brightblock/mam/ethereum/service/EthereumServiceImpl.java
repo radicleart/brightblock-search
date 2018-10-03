@@ -52,6 +52,8 @@ public class EthereumServiceImpl implements EthereumService {
 		if (contract == null || !contract.isValid()) {
 			loadContract(EthereumService.remixGasLimit, EthereumService.remixGas);
 		}
+		logger.info("Loading client version data from contract: " + contractAddress);
+		logger.info("Loading client version data from contract: " + contract.getContractAddress());
 		amj.setContractAddress(contract.getContractAddress());
 		amj.setValid(contract.isValid());
 		amj.setNetwork("rinkeby - need to run geth with admin module!");
@@ -138,6 +140,8 @@ public class EthereumServiceImpl implements EthereumService {
 			if (contract == null) {
 				loadContract(EthereumService.remixGasLimit, EthereumService.remixGas);
 			}
+			logger.info("Looking up by hash from contract: " + contractAddress);
+			logger.info("Looking up by hash from contract: " + contract.getContractAddress());
 			Item item = null;
 			Long numbItems = numbItems().longValue();
 			Tuple6<String, String, byte[], BigInteger, BigInteger, Boolean> tuple = null;
@@ -164,6 +168,8 @@ public class EthereumServiceImpl implements EthereumService {
 			if (contract == null) {
 				loadContract(EthereumService.remixGasLimit, EthereumService.remixGas);
 			}
+			logger.info("Fetching items from contract: " + contractAddress);
+			logger.info("Fetching items from contract: " + contract.getContractAddress());
 			Long numbItems = numbItems().longValue();
 			if (numbItems > 100) {
 				numbItems = 100L;
