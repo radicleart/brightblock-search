@@ -38,8 +38,19 @@ public class EthereumConfiguration {
 
 	@Bean
 	public Web3j getWeb3() {
-		logger.info("Ethereum web3 connecting to: " + ethereumSettings.getHttpBase());
-		Web3j web3 = Web3j.build(new HttpService(ethereumSettings.getHttpBase())); 
+		Web3j web3;
+		try {
+			logger.info("Ethereum web3 connecting to: " + ethereumSettings.getHttpBase());
+			web3 = Web3j.build(new HttpService(ethereumSettings.getHttpBase()));
+		} catch (Exception e) {
+			logger.info("Ethereum web3 connecting to: http://172.17.0.1:8545");
+			try {
+				web3 = Web3j.build(new HttpService("http://172.17.0.1:8545"));
+			} catch (Exception e1) {
+				logger.info("Ethereum web3 connecting to: http://localhost:8545");
+				web3 = Web3j.build(new HttpService("http://localhost:8545"));
+			}
+		} 
 		return web3;
 	}
 
