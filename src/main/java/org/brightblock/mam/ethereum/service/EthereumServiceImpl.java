@@ -112,9 +112,8 @@ public class EthereumServiceImpl implements EthereumService {
 		BigInteger bgGasLimit = BigInteger.valueOf(gasLimit);
 		contract = ArtMarket.deploy(web3, credentials, bgGas, bgGasLimit).send();
 		logger.info("Deployed Contract: contract=" + contract);
-//		future.thenAccept(s -> logger.info("Deployed Contract: s=" + s));
-		// future.get();
 		contractAddress = contract.getContractAddress();
+		ethereumSettings.setContractAddress(contractAddress);
 		logger.info("Deployed Contract: contract=" + contract.getContractAddress());
 		return contractAddress;
 	}

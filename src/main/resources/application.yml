@@ -39,7 +39,7 @@ application:
 ethereum:
    httpBase: http://localhost:7545
    wssBase: http://localhost:7546
-   contractAddress: 73b5657373dfc685ed8a2a4bebdd39d7b3677def
+   contractAddress: 6950aee85a2350dDA299ff0C521aB66D4AA2B86A
    ganache: true
    ganacheSeed: hazard wage already drip call uphold tobacco ordinary butter boost cream expose
    ganachePassword: 

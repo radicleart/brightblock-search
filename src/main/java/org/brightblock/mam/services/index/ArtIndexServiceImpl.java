@@ -89,8 +89,8 @@ public class ArtIndexServiceImpl extends BaseIndexingServiceImpl implements ArtI
 	@Override
 	public void indexSingleRecord(OwnershipRecordModel indexData) {
 		clearUserDocuments("uploader", indexData.getUploader());
-		List<ZonefileModel> zonefiles = namesSearchService.searchIndex("name", indexData.getUploader());
-		buildIndex(zonefiles);
+		List<ZonefileModel> zonefiles = namesSearchService.searchIndex("name", indexData.getOwner());
+		buildIndex(zonefiles, indexData);
 		// no gaia url on below path which leads to a bug fetching the provenance record in the ui.
 //		IndexWriter writer = null;
 //		long freeMemBefore = Runtime.getRuntime().freeMemory();
@@ -165,7 +165,7 @@ public class ArtIndexServiceImpl extends BaseIndexingServiceImpl implements ArtI
 	public void indexUser(String username) {
 		clearUserDocuments("uploader", username);
 		List<ZonefileModel> zonefiles = namesSearchService.searchIndex("name", username);
-		buildIndex(zonefiles);
+		buildIndex(zonefiles, null);
 	}
 
 	@Async
@@ -208,10 +208,10 @@ public class ArtIndexServiceImpl extends BaseIndexingServiceImpl implements ArtI
 			zonefiles = namesSearchService.searchIndex("apps", "*" + domain + "*");
 			zonefiles.addAll(zonefiles);
 		}
-		buildIndex(zonefiles);
+		buildIndex(zonefiles, null);
 	}
 
-	private void buildIndex(List<ZonefileModel> zonefiles) {
+	private void buildIndex(List<ZonefileModel> zonefiles, OwnershipRecordModel indexData) {
 		String domainString = applicationSettings.getDomainString();
 		String[] appHttpLines = null;
 		String[] appParts = null;
@@ -244,7 +244,7 @@ public class ArtIndexServiceImpl extends BaseIndexingServiceImpl implements ArtI
 				}
 			}
 		}
-		reindex(userRecords);
+		reindex(userRecords, indexData);
 	}
 
 	private OwnershipRecordsModel fetchArtworkInfo(String url)
@@ -267,8 +267,9 @@ public class ArtIndexServiceImpl extends BaseIndexingServiceImpl implements ArtI
 	/**
 	 * 1. Find the users who have visited the application. 2. Fetch their gaia url
 	 * 3. Read the art market app specific data.
+	 * @param indexData TODO
 	 */
-	private void reindex(List<OwnershipRecordsModel> userRecords) {
+	private void reindex(List<OwnershipRecordsModel> userRecords, OwnershipRecordModel indexData) {
 		IndexWriter writer = null;
 		long freeMemBefore = Runtime.getRuntime().freeMemory();
 		long timeStart = new Date().getTime();
@@ -277,15 +278,19 @@ public class ArtIndexServiceImpl extends BaseIndexingServiceImpl implements ArtI
 			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(artAnalyzer);
 			writer = new IndexWriter(artIndex, indexWriterConfig);
 			int userIndexCount = 0;
-			for (OwnershipRecordsModel userControlRecord : userRecords) { // index a portion of the namespace for test
-																			// purposes..
+			for (OwnershipRecordsModel userControlRecord : userRecords) { // index a portion of the namespace for test  purposes..
 				int indexCount = 0;
-				for (OwnershipRecordModel record : userControlRecord.getRecords()) { // index a portion of the namespace
-																						// for test purposes..
+				for (OwnershipRecordModel record : userControlRecord.getRecords()) {
 					record.setAppUrl(userControlRecord.getAppUrl());
 					record.setGaiaUrl(userControlRecord.getGaiaUrl());
-					addToIndex(writer, record);
-					indexCount++;
+					if (indexData != null && record.getId().longValue() == indexData.getId().longValue()) {
+						record.setSaleData(indexData.getSaleData());
+						addToIndex(writer, record);
+						indexCount++;
+					} else {
+						addToIndex(writer, record);
+						indexCount++;
+					}
 				}
 				userIndexCount++;
 				logger.info("Indexed " + userIndexCount + " users and " + indexCount + " user records.");
