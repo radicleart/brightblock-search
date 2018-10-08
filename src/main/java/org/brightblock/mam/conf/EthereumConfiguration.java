@@ -23,18 +23,6 @@ public class EthereumConfiguration {
 
 	private static final Logger logger = LogManager.getLogger(EthereumConfiguration.class);
 	@Autowired private EthereumSettings ethereumSettings;
-//	@Autowired private EthereumService ethereumService;
-
-//	@Bean
-//	public ArtMarket getArtMarket() {
-//		ArtMarket contract = null;
-//		try {
-//			ethereumService.loadContract(EthereumService.remixGasLimit, EthereumService.remixGas);
-//		} catch (Exception e) {
-//			logger.info("Ethereum contract object: Cipher error:  Try re-deploying the contract", e);
-//		}
-//		return contract;
-//	}
 
 	@Bean
 	public Web3j getWeb3() {
@@ -56,6 +44,12 @@ public class EthereumConfiguration {
 
 	@Bean
 	public Credentials getCredentials() throws IOException, CipherException {
+		if (ethereumSettings.isGanache()) {
+			Credentials credentials = WalletUtils.loadBip39Credentials(ethereumSettings.getGanachePassword(), ethereumSettings.getGanacheSeed());
+			logger.info("Ethereum ganache credentials address: " + credentials.getAddress());
+			logger.info("Ethereum ganache credentials pubkey: " + credentials.getEcKeyPair().getPublicKey());
+			return credentials;
+		}
 		InputStream initialStream = null;
 		FileOutputStream fos = null;
 		File tempFile = null;

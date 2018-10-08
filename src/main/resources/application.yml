@@ -15,6 +15,9 @@ ethereum:
    contractAddress: be01afbd05eb2e4ebc2a6021df202986dc1c08ab
    walletPassword: theraininspainstaysmainlyintheplain
    walletPath: /static/ethkeys/localhost/UTC--2018-09-23T10-42-32.942770243Z--f587b33d77ba53f3a643db1de174cfc65e1b3090
+   useGanache: false
+   ganacheSeed: 
+   ganachePassword: 
 
 ---
 
@@ -34,9 +37,12 @@ application:
    blockstackBase: http://docker.for.mac.localhost:6270
    domainString: localhost
 ethereum:
-   httpBase: http://localhost:8545
-   wssBase: http://localhost:8546
-   contractAddress: 5D06B6b6653dbB62A4dC6CbABCBc719d7C5A3B46
+   httpBase: http://localhost:7545
+   wssBase: http://localhost:7546
+   contractAddress: 73b5657373dfc685ed8a2a4bebdd39d7b3677def
+   ganache: true
+   ganacheSeed: hazard wage already drip call uphold tobacco ordinary butter boost cream expose
+   ganachePassword: 
 
 ---
 

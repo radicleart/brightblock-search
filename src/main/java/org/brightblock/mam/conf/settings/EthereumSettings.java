@@ -13,6 +13,9 @@ public class EthereumSettings {
 	private String walletPath;
 	private String httpBase;
 	private String wssBase;
+	private boolean ganache;
+	private String ganachePassword;
+	private String ganacheSeed;
 
 	public String getContractAddress() {
 		return contractAddress;
@@ -52,5 +55,29 @@ public class EthereumSettings {
 
 	public void setWssBase(String wssBase) {
 		this.wssBase = wssBase;
+	}
+
+	public boolean isGanache() {
+		return ganache;
+	}
+
+	public void setGanache(boolean ganache) {
+		this.ganache = ganache;
+	}
+
+	public String getGanacheSeed() {
+		return ganacheSeed;
+	}
+
+	public void setGanacheSeed(String ganacheSeed) {
+		this.ganacheSeed = ganacheSeed;
+	}
+
+	public String getGanachePassword() {
+		return ganachePassword;
+	}
+
+	public void setGanachePassword(String ganachePassword) {
+		this.ganachePassword = ganachePassword;
 	}
 }
