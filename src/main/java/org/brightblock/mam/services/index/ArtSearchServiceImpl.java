@@ -93,6 +93,7 @@ public class ArtSearchServiceImpl extends BaseIndexingServiceImpl implements Art
 			saleData.setInitialRateBtc(Float.valueOf(document.get("initialRateBtc")));
 			saleData.setInitialRateEth(Float.valueOf(document.get("initialRateEth")));
 			saleData.setAmountInEther(Float.valueOf(document.get("amountInEther")));
+			saleData.setAuctionId(Long.valueOf(document.get("auctionId")));
 			saleData.setIncrement(Float.valueOf(document.get("increment")));
 			saleData.setFiatCurrency(String.valueOf(document.get("fiatCurrency")));
 		} catch (Exception e) {

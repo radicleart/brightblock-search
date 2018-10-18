@@ -384,6 +384,8 @@ public class ArtIndexServiceImpl extends BaseIndexingServiceImpl implements ArtI
 					Field.Store.YES));
 			document.add(new TextField("amountInEther", String.valueOf(record.getSaleData().getAmountInEther()),
 					Field.Store.YES));
+			document.add(new TextField("auctionId", String.valueOf(record.getSaleData().getAuctionId()),
+					Field.Store.YES));
 			Term term = new Term("id", String.valueOf(record.getId()));
 			writer.updateDocument(term, document);
 		} catch (Exception e) {

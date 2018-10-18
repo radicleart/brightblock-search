@@ -51,7 +51,7 @@ spring:
 application:
    bitcoinBase: http://172.18.0.1:8332
    blockstackBase: https://core.brightblock.org
-   domainString: staging.sybella.io,staging.brightblock.org,www.brightblock.org
+   domainString: staging.transit8.com,staging.brightblock.org,www.brightblock.org
 ethereum:
    httpBase: http://172.18.0.1:8545
    wssBase: http://172.18.0.1:8546
@@ -65,7 +65,7 @@ spring:
 application:
    bitcoinBase: http://172.18.0.1:8332
    blockstackBase: http://172.18.0.1:6270
-   domainString: www.sybella.io
+   domainString: www.transit8.com
 ethereum:
    httpBase: http://172.18.0.1:8545
    wssBase: http://172.18.0.1:8546

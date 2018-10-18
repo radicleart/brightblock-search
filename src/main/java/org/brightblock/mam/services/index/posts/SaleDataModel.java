@@ -16,6 +16,7 @@ public class SaleDataModel implements Serializable {
 	private Float initialRateBtc = 0F;
 	private Float initialRateEth = 0F;
 	private Float amountInEther = 0F;
+	private Long auctionId;
 
 	public SaleDataModel() {
 		super();
@@ -29,6 +30,7 @@ public class SaleDataModel implements Serializable {
 			@JsonProperty("initialRateEth") Float initialRateEth, 
 			@JsonProperty("amountInEther") Float amountInEther, 
 			@JsonProperty("reserve") Float reserve, 
+			@JsonProperty("auctionId") Long auctionId, 
 			@JsonProperty("increment") Float increment) {
 		super();
 		this.soid = soid;
@@ -39,6 +41,7 @@ public class SaleDataModel implements Serializable {
 		this.initialRateEth = initialRateEth;
 		this.amountInEther = amountInEther;
 		this.increment = increment;
+		this.auctionId = auctionId;
 	}
 
 	public Integer getSoid() {
@@ -103,6 +106,14 @@ public class SaleDataModel implements Serializable {
 
 	public void setAmountInEther(Float amountInEther) {
 		this.amountInEther = amountInEther;
+	}
+
+	public Long getAuctionId() {
+		return auctionId;
+	}
+
+	public void setAuctionId(Long auctionId) {
+		this.auctionId = auctionId;
 	}
 
 
