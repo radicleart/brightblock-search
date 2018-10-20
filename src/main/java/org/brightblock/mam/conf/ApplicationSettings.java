@@ -11,6 +11,7 @@ public class ApplicationSettings {
 	private String confluenceBase;
 	private String blockstackNamesIndex;
 	private String artMarketIndex;
+	private String auctionIndex;
 	private String blockstackBase;
 	private String bitcoinBase;
 	private String lightningCertFileName;
@@ -133,5 +134,13 @@ public class ApplicationSettings {
 
 	public void setDomainString(String domainString) {
 		this.domainString = domainString;
+	}
+
+	public String getAuctionIndex() {
+		return auctionIndex;
+	}
+
+	public void setAuctionIndex(String auctionIndex) {
+		this.auctionIndex = auctionIndex;
 	}
 }

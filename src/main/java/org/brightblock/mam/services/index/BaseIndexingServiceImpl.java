@@ -22,6 +22,8 @@ public class BaseIndexingServiceImpl {
     protected StandardAnalyzer namesAnalyzer;
 	protected Directory artIndex;
     protected StandardAnalyzer artAnalyzer;
+	protected Directory auctionIndex;
+    protected StandardAnalyzer auctionAnalyzer;
 
     protected void initNames() throws IOException {
 		if (namesIndex == null) {
@@ -42,6 +44,17 @@ public class BaseIndexingServiceImpl {
 		if (artAnalyzer == null) {
 			logger.info("Initialising art analyser.");
 			artAnalyzer = new StandardAnalyzer();
+		}
+	}
+
+    protected void initAuctionMarket() throws IOException {
+		if (auctionIndex == null) {
+			logger.info("Initialising auction index from directory at: " + applicationSettings.getAuctionIndex());
+			auctionIndex = FSDirectory.open(Paths.get(applicationSettings.getAuctionIndex()));
+		}
+		if (auctionAnalyzer == null) {
+			logger.info("Initialising auction analyser.");
+			auctionAnalyzer = new StandardAnalyzer();
 		}
 	}
 }

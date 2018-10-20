@@ -2,6 +2,7 @@ application:
    confluenceBase: https://admin:atlassian_H2Ofire9plaY@mijoco.atlassian.net
    blockstackNamesIndex: /var/index/names
    artMarketIndex: /var/index/artmarket
+   auctionIndex: /var/index/auction
    lightningBase: localhost
    lightningCertFileName: tls.cert
    lightningPortAlice: 10001
