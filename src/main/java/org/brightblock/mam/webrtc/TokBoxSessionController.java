@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.brightblock.mam.rest.models.ApiModel;
 import org.brightblock.mam.rest.models.ResponseCodes;
+import org.brightblock.mam.services.webrtc.TimestampModel;
 import org.brightblock.mam.services.webrtc.TokenModel;
 import org.brightblock.mam.services.webrtc.WebrtcService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,21 +31,9 @@ public class TokBoxSessionController {
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
 	}
 
-//	private TokenModel getToken(HttpServletRequest request, String username, String recordId) throws OpenTokException {
-//		Session session = getSession(recordId);
-//		String token = (String) request.getSession().getAttribute(recordId + WEBRTC_TOKEN + username);
-//		if (token != null) {
-//			return new TokenModel(session.getSessionId(), token);
-//		}
-//		double expiration = (System.currentTimeMillis() / 1000L) + (7 * 24 * 60 * 60);
-//		TokenOptions options = new TokenOptions.Builder()
-//				.role(Role.PUBLISHER)
-//				.expireTime(expiration)
-//				.data("username=" + username)
-//				.build();
-//		token = session.generateToken(options);
-//		request.getSession().setAttribute(recordId + WEBRTC_TOKEN + username, token);
-//		return new TokenModel(session.getSessionId(), token);
-//	}
-
+	@RequestMapping(value = "/api/server/time", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<ApiModel> servertime() {
+		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, new TimestampModel());
+		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
+	}
 }

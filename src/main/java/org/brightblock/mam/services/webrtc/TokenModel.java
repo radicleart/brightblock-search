@@ -4,6 +4,10 @@ import java.io.Serializable;
 
 public class TokenModel implements Serializable {
 
+	private static final long serialVersionUID = -3414640374223584587L;
+	private String sessionId;
+	private String token;
+
 	public TokenModel() {
 		super();
 	}
@@ -13,10 +17,6 @@ public class TokenModel implements Serializable {
 		this.sessionId = sessionId;
 		this.token = token;
 	}
-
-	private static final long serialVersionUID = -3414640374223584587L;
-	private String sessionId;
-	private String token;
 
 	public String getSessionId() {
 		return sessionId;
