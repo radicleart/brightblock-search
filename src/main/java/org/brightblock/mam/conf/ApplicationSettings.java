@@ -13,6 +13,7 @@ public class ApplicationSettings {
 	private String artMarketIndex;
 	private String auctionIndex;
 	private String blockstackBase;
+	private String blockstackOrgBase;
 	private String bitcoinBase;
 	private String lightningCertFileName;
 	private String lightningBase;
@@ -142,5 +143,13 @@ public class ApplicationSettings {
 
 	public void setAuctionIndex(String auctionIndex) {
 		this.auctionIndex = auctionIndex;
+	}
+
+	public String getBlockstackOrgBase() {
+		return blockstackOrgBase;
+	}
+
+	public void setBlockstackOrgBase(String blockstackOrgBase) {
+		this.blockstackOrgBase = blockstackOrgBase;
 	}
 }

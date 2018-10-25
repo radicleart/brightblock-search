@@ -1,6 +1,7 @@
 application:
    confluenceBase: https://admin:atlassian_H2Ofire9plaY@mijoco.atlassian.net
    blockstackNamesIndex: /var/index/names
+   blockstackOrgBase: https://core.blockstack.org
    artMarketIndex: /var/index/artmarket
    auctionIndex: /var/index/auction
    lightningBase: localhost

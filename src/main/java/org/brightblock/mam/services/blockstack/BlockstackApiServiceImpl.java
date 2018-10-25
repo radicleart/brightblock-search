@@ -16,6 +16,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestOperations;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,34 +30,60 @@ public class BlockstackApiServiceImpl implements BlockstackApiService {
 
 	@Override
 	public String ping() {
-		ResponseEntity<String> response = restTemplate1.getForEntity(applicationSettings.getBlockstackBase() + "/v1/node/ping", String.class);
+		ResponseEntity<String> response;
+		try {
+			response = restTemplate1.getForEntity(applicationSettings.getBlockstackBase() + "/v1/node/ping", String.class);
+		} catch (RestClientException e) {
+			response = restTemplate1.getForEntity(applicationSettings.getBlockstackOrgBase() + "/v1/node/ping", String.class);
+		}
 		return response.getBody();
 	}
 
 	@Override
 	public List<String> names(Integer page) {
-		ResponseEntity<List<String>> response =
-				restTemplate1.exchange(applicationSettings.getBlockstackBase() + "/v1/names?page=" + page,
-		                    HttpMethod.GET, null, new ParameterizedTypeReference<List<String>>() {});
+		ResponseEntity<List<String>> response;
+		try {
+			response = restTemplate1.exchange(applicationSettings.getBlockstackBase() + "/v1/names?page=" + page,
+			            HttpMethod.GET, null, new ParameterizedTypeReference<List<String>>() {});
+		} catch (RestClientException e) {
+			response = restTemplate1.exchange(applicationSettings.getBlockstackOrgBase() + "/v1/names?page=" + page,
+		            HttpMethod.GET, null, new ParameterizedTypeReference<List<String>>() {});
+		}
 		List<String> names = response.getBody();
 		return names;
 	}
 
 	@Override
 	public ZonefileModel name(String name) {
-		ResponseEntity<ZonefileModel> response = restTemplate1.getForEntity(applicationSettings.getBlockstackBase() + "/v1/names/"+name, ZonefileModel.class);
+		ResponseEntity<ZonefileModel> response;
+		try {
+			response = restTemplate1.getForEntity(applicationSettings.getBlockstackBase() + "/v1/names/"+name, ZonefileModel.class);
+		} catch (RestClientException e) {
+			response = restTemplate1.getForEntity(applicationSettings.getBlockstackOrgBase() + "/v1/names/"+name, ZonefileModel.class);
+		}
 		return response.getBody();
 	}
 
 	@Override
 	public String nameHistory(String name) {
-		ResponseEntity<String> response = restTemplate1.getForEntity(applicationSettings.getBlockstackBase() + "/v1/names/" + name + "/history", String.class);
+		ResponseEntity<String> response;
+		try {
+			response = restTemplate1.getForEntity(applicationSettings.getBlockstackBase() + "/v1/names/" + name + "/history", String.class);
+		} catch (RestClientException e) {
+			response = restTemplate1.getForEntity(applicationSettings.getBlockstackOrgBase() + "/v1/names/" + name + "/history", String.class);
+		}
 		return response.getBody();
 	}
 
 	@Override
 	public String nameZonefile(String name, String zoneFileHash) {
-		ResponseEntity<String> response = restTemplate1.getForEntity(applicationSettings.getBlockstackBase() + "/v1/names/" + name + "/zonefile/" + zoneFileHash, String.class);
+		ResponseEntity<String> response;
+		try {
+			response = restTemplate1.getForEntity(applicationSettings.getBlockstackBase() + "/v1/names/" + name + "/zonefile/" + zoneFileHash, String.class);
+		} catch (RestClientException e) {
+			response = restTemplate1.getForEntity(applicationSettings.getBlockstackOrgBase() + "/v1/names/" + name + "/zonefile/" + zoneFileHash, String.class);
+			e.printStackTrace();
+		}
 		return response.getBody();
 	}
 
