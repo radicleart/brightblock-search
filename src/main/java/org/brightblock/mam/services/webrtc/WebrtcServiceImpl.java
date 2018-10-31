@@ -28,16 +28,16 @@ public class WebrtcServiceImpl implements WebrtcService {
 	@Override
 	@Cacheable(value="tokens", key="{#username, #recordId}")
 	public TokenModel getToken(Session session, String username, String recordId) {
-		return generateToken(session, username);
+		return generateToken(session, username, recordId);
 	}
 
-	private TokenModel generateToken(Session session, String username) {
+	private TokenModel generateToken(Session session, String username, String recordId) {
 		try {
 			double expiration = (System.currentTimeMillis() / 1000L) + (7 * 24 * 60 * 60);
 			TokenOptions options = new TokenOptions.Builder()
 					.role(Role.PUBLISHER)
 					.expireTime(expiration)
-					.data("username=" + username)
+					.data("username=" + username + ",auctionId=" + recordId)
 					.build();
 			String token = session.generateToken(options);
 			logger.info("New token generated: " + username);

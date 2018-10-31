@@ -34,6 +34,7 @@ public class BlockstackApiServiceImpl implements BlockstackApiService {
 		try {
 			response = restTemplate1.getForEntity(applicationSettings.getBlockstackBase() + "/v1/node/ping", String.class);
 		} catch (RestClientException e) {
+			logger.warn("Failed to call local blockstack. Falling back to external node.");
 			response = restTemplate1.getForEntity(applicationSettings.getBlockstackOrgBase() + "/v1/node/ping", String.class);
 		}
 		return response.getBody();
@@ -46,6 +47,7 @@ public class BlockstackApiServiceImpl implements BlockstackApiService {
 			response = restTemplate1.exchange(applicationSettings.getBlockstackBase() + "/v1/names?page=" + page,
 			            HttpMethod.GET, null, new ParameterizedTypeReference<List<String>>() {});
 		} catch (RestClientException e) {
+			logger.warn("Failed to call local blockstack. Falling back to external node.");
 			response = restTemplate1.exchange(applicationSettings.getBlockstackOrgBase() + "/v1/names?page=" + page,
 		            HttpMethod.GET, null, new ParameterizedTypeReference<List<String>>() {});
 		}
@@ -59,6 +61,7 @@ public class BlockstackApiServiceImpl implements BlockstackApiService {
 		try {
 			response = restTemplate1.getForEntity(applicationSettings.getBlockstackBase() + "/v1/names/"+name, ZonefileModel.class);
 		} catch (RestClientException e) {
+			logger.warn("Failed to call local blockstack. Falling back to external node.");
 			response = restTemplate1.getForEntity(applicationSettings.getBlockstackOrgBase() + "/v1/names/"+name, ZonefileModel.class);
 		}
 		return response.getBody();
@@ -70,6 +73,7 @@ public class BlockstackApiServiceImpl implements BlockstackApiService {
 		try {
 			response = restTemplate1.getForEntity(applicationSettings.getBlockstackBase() + "/v1/names/" + name + "/history", String.class);
 		} catch (RestClientException e) {
+			logger.warn("Failed to call local blockstack. Falling back to external node.");
 			response = restTemplate1.getForEntity(applicationSettings.getBlockstackOrgBase() + "/v1/names/" + name + "/history", String.class);
 		}
 		return response.getBody();
@@ -81,8 +85,8 @@ public class BlockstackApiServiceImpl implements BlockstackApiService {
 		try {
 			response = restTemplate1.getForEntity(applicationSettings.getBlockstackBase() + "/v1/names/" + name + "/zonefile/" + zoneFileHash, String.class);
 		} catch (RestClientException e) {
+			logger.warn("Failed to call local blockstack. Falling back to external node.");
 			response = restTemplate1.getForEntity(applicationSettings.getBlockstackOrgBase() + "/v1/names/" + name + "/zonefile/" + zoneFileHash, String.class);
-			e.printStackTrace();
 		}
 		return response.getBody();
 	}
