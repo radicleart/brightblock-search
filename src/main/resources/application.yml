@@ -1,32 +1,14 @@
 application:
-   confluenceBase: https://admin:atlassian_H2Ofire9plaY@mijoco.atlassian.net
-   blockstackNamesIndex: /var/index/names
+   blockstackNamesIndex: /var/index/dapps
    blockstackOrgBase: https://core-staging.brightblock.org
    artMarketIndex: /var/index/artmarket
    auctionIndex: /var/index/auction
-   lightningBase: localhost
-   lightningCertFileName: tls.cert
-   lightningPortAlice: 10001
-   lightningPortBob: 10002
-   bitcoinBase: http://localhost:8332
-   bitcoinRpcPasssword: theraininspainstaysmainlyontheplane
-   bitcoinRpcUser: bob
-   bitcoinTestRpcPasssword: buildit
-   bitcoinTestRpcUser: bob
-ethereum:
-   contractAddress: be01afbd05eb2e4ebc2a6021df202986dc1c08ab
-   walletPassword: theraininspainstaysmainlyintheplain
-   walletPath: /static/ethkeys/localhost/UTC--2018-09-23T10-42-32.942770243Z--f587b33d77ba53f3a643db1de174cfc65e1b3090
-   useGanache: false
-   ganacheSeed: 
-   ganachePassword: 
 
 ---
 
 spring:
     profiles: test
 application:
-   bitcoinBase: http://localhost:8332
    blockstackBase: http://localhost:6270
    domainString: localhost
 
@@ -35,42 +17,22 @@ application:
 spring:
     profiles: docker-dev
 application:
-   bitcoinBase: http://docker.for.mac.localhost:8332
    blockstackBase: https://core-staging.brightblock.org
    domainString: localhost
-ethereum:
-   httpBase: http://localhost:7545
-   wssBase: http://localhost:7546
-   contractAddress: 6950aee85a2350dDA299ff0C521aB66D4AA2B86A
-   ganache: true
-   ganacheSeed: hazard wage already drip call uphold tobacco ordinary butter boost cream expose
-   ganachePassword: 
 
 ---
 
 spring:
     profiles: staging
 application:
-   bitcoinBase: http://172.18.0.1:8332
    blockstackBase: https://core-staging.brightblock.org
-   domainString: staging.transit8.com,staging.brightblock.org
-ethereum:
-   httpBase: http://172.18.0.1:8545
-   wssBase: http://172.18.0.1:8546
-   contractAddress: 5f26bc5373f0cb8874c43da82508903131d4211e
-   walletPath: /static/ethkeys/staging/UTC--2018-09-23T10-34-59.485104214Z--9e5866a31225f8244cb674ea97d2ed87a8ab8a1a
+   domainString: staging.brightblock.org
                
 ---
 
 spring:
     profiles: production
 application:
-   bitcoinBase: http://172.18.0.1:8332
    blockstackBase: https://core.brightblock.org
-   domainString: www.transit8.com
-ethereum:
-   httpBase: http://172.18.0.1:8545
-   wssBase: http://172.18.0.1:8546
-   contractAddress: 3C534b0c2b9773ee0FE9D28d906DB3a2751d798f
-   walletPath: /static/ethkeys/staging/UTC--2018-09-23T10-34-59.485104214Z--9e5866a31225f8244cb674ea97d2ed87a8ab8a1a
+   domainString: www.brightblock.org
 

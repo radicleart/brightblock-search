@@ -42,18 +42,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-cache</artifactId>
 		</dependency>
-		<!-- <dependency> -->
-		<!-- <groupId>net.sf.ehcache</groupId> -->
-		<!-- <artifactId>ehcache</artifactId> -->
-		<!-- <version>2.10.3</version> -->
-		<!-- </dependency> -->
-
-		<!-- RabbitMQ Starter Dependency (Not required if you're using the simple 
-			in-memory broker for STOMP) -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-amqp</artifactId>
-		</dependency>
 
 		<!-- Following dependency is required for Full Featured STOMP Broker Relay -->
 		<dependency>
@@ -66,18 +54,6 @@
 			<artifactId>spring-boot-devtools</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-		<!-- <dependency> -->
-		<!-- <groupId>org.springframework.boot</groupId> -->
-		<!-- <artifactId>spring-boot-starter-websocket</artifactId> -->
-		<!-- </dependency> -->
-		<!-- <dependency> -->
-		<!-- <groupId>org.springframework.boot</groupId> -->
-		<!-- <artifactId>spring-boot-starter-integration</artifactId> -->
-		<!-- </dependency> -->
-		<!-- <dependency> -->
-		<!-- <groupId>org.springframework.boot</groupId> -->
-		<!-- <artifactId>spring-boot-starter-webflux</artifactId> -->
-		<!-- </dependency> -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -90,55 +66,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.google.protobuf</groupId>
-			<artifactId>protobuf-java-util</artifactId>
-			<version>3.6.0</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.protobuf</groupId>
-			<artifactId>protobuf-java</artifactId>
-			<version>3.6.0</version>
-		</dependency>
-		<dependency>
-			<groupId>com.googlecode.protobuf-java-format</groupId>
-			<artifactId>protobuf-java-format</artifactId>
-			<version>1.4</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.api.grpc</groupId>
-			<artifactId>googleapis-common-protos</artifactId>
-			<version>0.0.3</version>
-		</dependency>
-		<dependency>
-			<groupId>io.grpc</groupId>
-			<artifactId>grpc-netty</artifactId>
-			<version>1.7.0</version>
-		</dependency>
-		<dependency>
-			<groupId>io.grpc</groupId>
-			<artifactId>grpc-protobuf</artifactId>
-			<version>1.7.0</version>
-		</dependency>
-		<dependency>
-			<groupId>io.grpc</groupId>
-			<artifactId>grpc-stub</artifactId>
-			<version>1.7.0</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.xml.bind</groupId>
-			<artifactId>jaxb-api</artifactId>
-			<version>2.1</version>
-		</dependency>
-		<dependency>
 			<groupId>javax.json</groupId>
 			<artifactId>javax.json-api</artifactId>
 			<version>1.1.2</version>
-		</dependency>
-		<!-- needed to get around Openssl not found error. -->
-		<dependency>
-			<groupId>io.netty</groupId>
-			<artifactId>netty-tcnative-boringssl-static</artifactId>
-			<version>2.0.11.Final</version>
 		</dependency>
 
 		<dependency>
@@ -151,36 +81,11 @@
 			<artifactId>lucene-queryparser</artifactId>
 			<version>7.3.0</version>
 		</dependency>
-		<!-- <dependency> -->
-		<!-- <groupId>com.tokbox</groupId> -->
-		<!-- <artifactId>opentok-server-sdk</artifactId> -->
-		<!-- <version>2.3.2</version> -->
-		<!-- </dependency> -->
+
 		<dependency>
 			<groupId>com.ning</groupId>
 			<artifactId>async-http-client</artifactId>
 			<version>1.8.17</version>
-		</dependency>
-		<dependency>
-			<groupId>com.tokbox</groupId>
-			<artifactId>opentok-server-sdk</artifactId>
-			<version>2.3.2</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>async-http-client</artifactId>
-					<groupId>com.ning</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>20.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.web3j</groupId>
-			<artifactId>core</artifactId>
-			<version>3.5.0</version>
 		</dependency>
 	</dependencies>
 
@@ -196,24 +101,6 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.xolstice.maven.plugins</groupId>
-				<artifactId>protobuf-maven-plugin</artifactId>
-				<version>0.5.0</version>
-				<configuration>
-					<protocArtifact>com.google.protobuf:protoc:3.4.0:exe:${os.detected.classifier}</protocArtifact>
-					<pluginId>grpc-java</pluginId>
-					<pluginArtifact>io.grpc:protoc-gen-grpc-java:1.7.0:exe:${os.detected.classifier}</pluginArtifact>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>compile</goal>
-							<goal>compile-custom</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>

@@ -2,8 +2,6 @@ package org.brightblock.mam.services.index.posts;
 
 import java.io.Serializable;
 
-import org.brightblock.mam.ethereum.service.Item;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -22,7 +20,6 @@ public class OwnershipRecordModel implements Serializable, Comparable<OwnershipR
 	private String appUrl;
 	private String gaiaUrl;
 	private SaleDataModel saleData;
-	private Item item;
 
 	public OwnershipRecordModel() {
 		super();
@@ -156,13 +153,5 @@ public class OwnershipRecordModel implements Serializable, Comparable<OwnershipR
 
 	public void setArtist(String artist) {
 		this.artist = artist;
-	}
-
-	public Item getItem() {
-		return item;
-	}
-
-	public void setItem(Item item) {
-		this.item = item;
 	}
 }
