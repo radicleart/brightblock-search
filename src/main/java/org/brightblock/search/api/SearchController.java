@@ -6,7 +6,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.brightblock.search.rest.models.ApiModel;
 import org.brightblock.search.rest.models.ResponseCodes;
-import org.brightblock.search.service.IndexableModel;
 import org.brightblock.search.service.blockstack.models.ZonefileModel;
 import org.brightblock.search.service.index.DappsSearchService;
 import org.brightblock.search.service.index.NamesSearchService;

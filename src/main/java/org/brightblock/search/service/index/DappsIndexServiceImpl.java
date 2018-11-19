@@ -19,10 +19,10 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.Query;
+import org.brightblock.search.api.IndexableContainerModel;
+import org.brightblock.search.api.IndexableModel;
 import org.brightblock.search.conf.settings.DomainModel;
 import org.brightblock.search.conf.settings.IndexFileModel;
-import org.brightblock.search.service.IndexableContainerModel;
-import org.brightblock.search.service.IndexableModel;
 import org.brightblock.search.service.blockstack.models.ZonefileModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -261,7 +261,7 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 		try {
 			document = new Document();
 			document.add(new TextField("title", record.getTitle(), Field.Store.YES));
-			document.add(new StringField("id", String.valueOf(record.getId()), Field.Store.YES));
+			document.add(new StringField("id", record.getId(), Field.Store.YES));
 			if (record.getObjType() != null) {
 				document.add(new TextField("objType", record.getObjType(), Field.Store.YES));
 			} else {

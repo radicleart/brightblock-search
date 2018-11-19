@@ -12,7 +12,7 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
-import org.brightblock.search.service.IndexableModel;
+import org.brightblock.search.api.IndexableModel;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -72,7 +72,7 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 	private IndexableModel convertToRecord(Document document) {
 		IndexableModel model = new IndexableModel();
 		model.setDescription(document.get("description"));
-		model.setId(Long.valueOf(document.get("id")));
+		model.setId(document.get("id"));
 		model.setObjType(document.get("objType"));
 		model.setOwner(document.get("owner"));
 		model.setKeywords(document.get("keywords"));

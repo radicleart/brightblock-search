@@ -2,7 +2,7 @@ package org.brightblock.search.service.index;
 
 import java.util.List;
 
-import org.brightblock.search.service.IndexableModel;
+import org.brightblock.search.api.IndexableModel;
 
 
 public interface DappsSearchService

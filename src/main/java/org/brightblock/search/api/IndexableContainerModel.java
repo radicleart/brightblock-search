@@ -1,4 +1,4 @@
-package org.brightblock.search.service;
+package org.brightblock.search.api;
 
 import java.io.Serializable;
 import java.util.ArrayList;
