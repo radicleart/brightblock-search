@@ -12,7 +12,7 @@ For information about the Blockstack project please refer to [Blockstack](https:
 - [Purpose this Package?](#what-is-this)
 - [API Endpoints?](#api-endpoints)
 
-## Purpose of the microservice?
+## What is This?
 
 This package runs in docker container on a cloud server. It provides search index services to applications building on blockstack.
 
@@ -22,7 +22,7 @@ To run:
 # Install blockstack
 $ docker run
 ```
-On CentOS 7 & RHEL:
+## Purpose this Package:
 
 ```
 # Install dependencies
