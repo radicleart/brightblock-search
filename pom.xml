@@ -4,12 +4,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.brightblock</groupId>
-	<artifactId>makeamess</artifactId>
+	<artifactId>brightblock-search</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>mam</name>
-	<description>Make a Mess includes bitcoin rpc and grpc client for lightning</description>
+	<name>brightblock-search</name>
+	<description>brightblock-search provides decentralised apps with a search indexing service.</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
