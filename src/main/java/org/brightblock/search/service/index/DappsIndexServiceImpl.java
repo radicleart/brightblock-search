@@ -125,7 +125,25 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 		buildIndex(zonefile);
 	}
 
-	@Async
+	@Override
+	public void indexSingleRecord(IndexableModel indexData) {
+		IndexWriter writer = null;
+		long freeMemBefore = Runtime.getRuntime().freeMemory();
+		long timeStart = new Date().getTime();
+		int indexCount = 0;
+		try {
+			initArtMarket();
+			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(artAnalyzer);
+			writer = new IndexWriter(artIndex, indexWriterConfig);
+			addToIndex(writer, indexData);
+			indexCount++;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		} finally {
+			wrapUp(writer, indexCount, freeMemBefore, timeStart);
+		}
+	}
+
 	@Override
 	public void remove(String field, String value) {
 		clearUserDocuments(field, value);
@@ -192,6 +210,10 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 			httpHeaders.setAccept(Collections.singletonList(MediaType.parseMediaType("text/plain")));
 			HttpEntity<Object> requestEntity = new HttpEntity<Object>(httpHeaders);
 			jsonFile = restTemplate1.exchange(gaiaIndexFileUrl + "/" + fileName, HttpMethod.GET, requestEntity, String.class).getBody();
+			logger.info("Index fetching from: " + gaiaIndexFileUrl + "/" + fileName);
+			if (fileName.equals("auctions_v01.json")) {
+				logger.info(jsonFile);
+			}
 			model = mapper.readValue(jsonFile, IndexableContainerModel.class);
 			for (IndexableModel indexable : model.getRecords()) {
 				indexable.setDomain(domain);

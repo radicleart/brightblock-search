@@ -1,9 +1,6 @@
 package org.brightblock.search.service.blockstack.models;
 
 
-import java.util.List;
-
-import org.brightblock.search.conf.settings.DomainModel;
 import org.brightblock.search.rest.models.IndexedModel;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -150,22 +147,4 @@ public class ZonefileModel extends IndexedModel {
 		return domainGaiaPairs;
 	}
 	
-	public void updateGaiaIndexFileUrl(List<DomainModel> domains) {
-		String[] domainGaiaPairs = this.getDomainGaiaPairs();
-		for (String domainGaiaPair : domainGaiaPairs) {
-			String[] appParts = domainGaiaPair.split("=");
-			try {
-				String appUrl = appParts[0];
-				for (DomainModel domain : domains) {
-					if (appUrl.indexOf(domain.getDomain()) > -1 || domain.getDomain().indexOf(appUrl) > -1) {
-						domain.setGaiaIndexFileUrl(appParts[1].trim());
-					}
-				}
-			} catch (Exception e) {
-				// continue
-			}
-		}
-		return;
-	}
-
 }

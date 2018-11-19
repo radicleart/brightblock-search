@@ -56,19 +56,6 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 			IndexReader indexReader = DirectoryReader.open(artIndex);
 			IndexSearcher searcher = new IndexSearcher(indexReader);
 			TopDocs topDocs = searcher.search(q, limit);
-
-//			QueryParser qp = new QueryParser(inField, artAnalyzer);
-//			qp.setAllowLeadingWildcard(true);
-//			Query q1 = qp.parse(searchTerm);
-//			Query q2 = new QueryParser("objType", artAnalyzer).parse(objType);
-//			Query q3 = new QueryParser("domain", artAnalyzer).parse(domain);
-//			BooleanQuery.Builder booleanQuery = new BooleanQuery.Builder();
-//		    booleanQuery.add(q1, BooleanClause.Occur.MUST);
-//		    booleanQuery.add(q2, BooleanClause.Occur.MUST);
-//		    booleanQuery.add(q3, BooleanClause.Occur.MUST);
-//			IndexReader indexReader = DirectoryReader.open(artIndex);
-//			IndexSearcher searcher = new IndexSearcher(indexReader);
-//			TopDocs topDocs = searcher.search(booleanQuery.build(), limit);
 			List<IndexableModel> models = new ArrayList<IndexableModel>();
 			Document document = null;
 			for (ScoreDoc scoreDoc : topDocs.scoreDocs) {

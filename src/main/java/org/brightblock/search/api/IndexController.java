@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.brightblock.search.rest.models.ApiModel;
 import org.brightblock.search.rest.models.ResponseCodes;
+import org.brightblock.search.service.IndexableModel;
 import org.brightblock.search.service.index.DappsIndexService;
 import org.brightblock.search.service.index.NamesIndexService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -63,4 +65,22 @@ public class IndexController {
 		model.setHeaders(request);
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
 	}
+
+	@RequestMapping(value = "/index/addRecord", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<ApiModel> indexRecord(HttpServletRequest request, @RequestBody IndexableModel indexData) {
+		dappsIndexService.indexSingleRecord(indexData);
+		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, "Building in background.");
+		model.setHeaders(request);
+		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/index/removeRecord/{field}/{value}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<ApiModel> remove(HttpServletRequest request, @PathVariable String field, @PathVariable String value) {
+		dappsIndexService.remove(field, value);
+		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, "Removing field " + field + " with value " + value + " in background.");
+		model.setHeaders(request);
+		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
+	}
+	
+
 }
