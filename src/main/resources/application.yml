@@ -62,7 +62,7 @@ spring:
 application:
    blockstackBase: https://core-staging.brightblock.org
    domains:
-      -  domain: www.brightblock.org
+      -  domain: staging.transit8.com
          indexFiles: 
             - indexFileName: records_v01.json
               indexObjType: artwork
@@ -83,7 +83,7 @@ spring:
 application:
    blockstackBase: https://core.brightblock.org
    domains:
-      -  domain: www.brightblock.org
+      -  domain: www.transit8.com
          fields:
             - title
             - description

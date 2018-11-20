@@ -29,7 +29,7 @@ public class BaseIndexingServiceImpl {
 
     protected void wrapUp(IndexWriter writer, int indexCount, long freeMemBefore, long timeStart) {
 		try {
-			writer.close();
+			if (writer != null) writer.close();
 			long timeEnd = new Date().getTime();
 			long freeMemAfter = Runtime.getRuntime().freeMemory();
 			logger.info("-----------------------------------------------------------------------------------------");
