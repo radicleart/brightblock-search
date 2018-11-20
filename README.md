@@ -35,9 +35,9 @@ Other options inlcude running the indexer in your own infrastructure via pulling
 ## Privacy
 
 The indexer can only access unencrypted user data which is publicly visible by default. The intention is to only index data in specific
-fields such as 'title', 'description', 'keywords' and possibly some name/value pairs to enabled more advanced range/location search. It's
-hoped a conversation can ensue within the community about the balance between the utility of providing bespoke searches over decentralised
-data on the one hand and privacy concerns on the other.  
+fields such as 'title', 'description', 'keywords' and possibly some name/value pairs to enable some advanced range search and filtering. 
+It's hoped the community can help standardise both the formats and the allowed fields in such a way that this develops 
+transparently to end users going forward - for example standardising end points that enable users to removed their data from index in a straightforward manner.
 
 ## Configuration
 
@@ -74,7 +74,9 @@ will attempt to index data stored under two domains 'localhost' and 'www.brightb
 domains it will read from gaia storage the files;
 - records_v01.json
 - auctions_v01.json
+
 and within these files it will expect to find an array of json objects at the root of the file in format;
+
 ```records [
 	{ id: 'some id', title: 'some title', description: 'some description' ...
 ]
@@ -106,6 +108,7 @@ Index blockstack names - comma separated list.
 > value = "/index/addRecord", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE }
 
 Add the given indexable object to the index. Post data:
+
 ```{
 	title: '',
 	description: '',
@@ -115,6 +118,7 @@ Add the given indexable object to the index. Post data:
 	domain: '...',  // the domain of the d-app
 }
 ```
+
 > value = "/index/removeRecord/{field}/{value}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE }
 
 Remove the given record from the index.
@@ -123,6 +127,7 @@ Remove the given record from the index.
 field = 'id'
 value = 'value of unique identifier'
 ```
+
 Note: this needs more information as single identifier can't be relied on to locate a record uniquely with multiple domains.
 
 
