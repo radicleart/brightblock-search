@@ -28,6 +28,7 @@ The indexer can be used in either of two ways:
 
 Option 1. assumes multiple d-app domains added to the yaml configuration of a shared search indexer. For the art auction platform
 this indexer is hosted on linode.com servers and runs inside a docker container at;
+
 > search.brightblock.org
 
 Other options inlcude running the indexer in your own infrastructure via pulling a docker image or forking this project.
@@ -77,10 +78,12 @@ domains it will read from gaia storage the files;
 
 and within these files it will expect to find an array of json objects at the root of the file in format;
 
-```records [
+```
+records [
 	{ id: 'some id', title: 'some title', description: 'some description' ...
 ]
 ```
+
 ignoring any other content. This data will then be indexed in a lucene index with the id as a key along with the domain and object type.
 
 The config value for parameter 'blockstackBase' indicates the blockstack node to ask for user data from. In the hosted version this is a 
@@ -109,7 +112,8 @@ Index blockstack names - comma separated list.
 
 Add the given indexable object to the index. Post data:
 
-```{
+```
+{
 	title: '',
 	description: '',
 	keywords: '',
@@ -156,7 +160,8 @@ under domain 'domain' whose title contains the full text indexed search words.
 
 > http://localhost:8193/index/dapps/localhost/artwork/title?q=batman
 
-```{
+```
+{
 "failed": false,
 "timestamp": 1542726185888,
 "httpStatus": "OK",
