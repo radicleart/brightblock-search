@@ -14,7 +14,9 @@ public class ApiModel implements IApiModel {
 	private String httpStatus;
 	private Object details;
 	private String message;
+	@JsonIgnore
 	private String name;
+	@JsonIgnore
 	private ForwardHeaderModel headersModel;
 	
 	

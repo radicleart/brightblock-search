@@ -147,6 +147,27 @@ Query the dapps index. For example if field='title' and query_string='hallo sail
 under domain 'domain' whose title contains the full text indexed search words.
 
 
+## Examples
 
+> http://localhost:8193/index/dapps/localhost/artwork/title?q=batman
+
+```{
+"failed": false,
+"timestamp": 1542726185888,
+"httpStatus": "OK",
+"details": [
+{
+"id": "1536334374353",
+"title": "Batman",
+"description": "Batman wakes up.",
+"owner": "mike.personal.id",
+"objType": "artwork",
+"domain": "localhost",
+"keywords": "art,digital,blockchain,prototype"
+}
+],
+"message": "Success!"
+}
+```
 
 
