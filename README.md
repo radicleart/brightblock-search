@@ -158,22 +158,22 @@ under domain 'domain' whose title contains the full text indexed search words.
 
 ## Examples
 
-> http://localhost:8193/index/dapps/localhost/artwork/title?q=batman
+> https://search.brightblock.org/index/dapps/staging.transit8.com/artwork/description?q=capitals
 
 ```
 {
 "failed": false,
-"timestamp": 1542726185888,
+"timestamp": 1542727510888,
 "httpStatus": "OK",
 "details": [
 {
-"id": "1536334374353",
-"title": "Batman",
-"description": "Batman wakes up.",
+"id": "1540550024050",
+"title": "Living in the alley",
+"description": "Block capitals on brick",
 "owner": "mike.personal.id",
 "objType": "artwork",
-"domain": "localhost",
-"keywords": "art,digital,blockchain,prototype"
+"domain": "staging.transit8.com",
+"keywords": "Photography,Illustration.3D,2D,Film & Video,Mix-media"
 }
 ],
 "message": "Success!"
