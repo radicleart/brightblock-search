@@ -79,7 +79,7 @@ public class NamesIndexServiceImpl extends BaseIndexingServiceImpl implements Na
     @Async
 	@Override
 	public void indexUsers(List<String> names) {
-    	List<ZonefileModel> zonefiles = indexUsersInternal(names);
+    		List<ZonefileModel> zonefiles = indexUsersInternal(names);
     		indexDappData(zonefiles);
 	}
 
@@ -101,8 +101,11 @@ public class NamesIndexServiceImpl extends BaseIndexingServiceImpl implements Na
 			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(namesAnalyzer);
 			writer = new IndexWriter(namesIndex, indexWriterConfig);
 			for (String name : names) {
-				zonefiles.add(addToIndex(writer, name));
-				indexCount++;
+				ZonefileModel zonefile = addToIndex(writer, name);
+				if (zonefile != null) {
+					zonefiles.add(zonefile);
+					indexCount++;
+				}
 			}
 			return zonefiles; 
 		} catch (Exception e) {

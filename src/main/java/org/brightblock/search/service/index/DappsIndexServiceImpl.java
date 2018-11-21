@@ -121,7 +121,6 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 	@Async
 	@Override
 	public void indexUser(ZonefileModel zonefile) {
-		
 		buildIndex(zonefile);
 	}
 
@@ -174,7 +173,6 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 	private void buildIndex(ZonefileModel zonefile) {
 		List<DomainModel> domains = applicationSettings.getDomains();
 		List<IndexableContainerModel> userRecords = new ArrayList<>();
-		zonefile.getApps();
 		String[] appsVisited = zonefile.getDomainGaiaPairs();
 		for (String appVisited : appsVisited) {
 			String[] appParts = appVisited.split("=");
@@ -197,7 +195,6 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 			} catch (Exception e) {
 				// continue
 			}
-
 		}
 		reindex(userRecords);
 	}

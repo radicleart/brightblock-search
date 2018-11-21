@@ -6,30 +6,25 @@ Search microservice providing a Lucene index of decentralised application and us
 
 - [Purpose](#purpose)
 - [Privacy](#privacy)
-- [Configuration?](#configuration)
-- [Index API?](#index-api)
-- [Search API?](#search-api)
+- [Configuration](#configuration)
+- [Index API](#index-api)
+- [Search API](#search-api)
 
 ## Purpose
 
-Provides customisable search index of user data for decentralised applications.
-Search results are a common gateway to an applciation and this project seeks to provide this doorway to 
-decentralised applications by building on top of Blockstack infrastructure. 
+Provides customisable search index of user data for decentralised applications. Marketplaces and auctions are 
+key examples where specialised search results and filters form the backbone to the rest of the platforms functionality.
+This component provides a way of indexing decentralised user data in an open and transparent way that allows fair
+competition between d-apps and users to evolve. 
 
 The indexer starts from a decentralised blockstack user identity. It pulls the apps the user has visited and 
 indexes data whose app domain matches one of the domains in the yaml configuration of the indexer.
 
-The indexer can be used in either of two ways:
-1. Shared hosting model - add new d-app via update of configuration.
-2. Siloed hosting - pull and run with docker.
-2. Fork the code - [open source repository](https://github.com/mjoecohen/brightblock-search). 
+The indexer can be forked from [open source repository](https://github.com/mjoecohen/brightblock-search). Or can be
+used via;
 
-Option 1. assumes multiple d-app domains added to the yaml configuration of a shared search indexer. For the art auction platform
-this indexer is hosted on linode.com servers and runs inside a docker container at;
-
-> search.brightblock.org
-
-Other options inlcude running the indexer in your own infrastructure via pulling a docker image or forking this project.
+1. shared hosting model - add new d-app domain in configuration,
+2. siloed hosting - pull and run with docker.
 
 ## Privacy
 
@@ -155,6 +150,21 @@ under domain 'domain' whose title contains the full text indexed search words.
 
 
 ## Examples
+
+### Add Blockstack Id(s) to Index
+
+> https://search.brightblock.org/index/users/mike.personal.id,brightblock.id
+
+```
+{
+"failed": false,
+"timestamp": 1542796896542,
+"httpStatus": "OK",
+"details": "Indexing users: [mike.personal.id, brightblock.id] in background.",
+"message": "Success!"
+}
+```
+
 
 > https://search.brightblock.org/index/dapps/staging.transit8.com/artwork/description?q=capitals
 

@@ -3,32 +3,25 @@ package org.brightblock.search.service.blockstack.models;
 
 import org.brightblock.search.rest.models.IndexedModel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ZonefileModel extends IndexedModel {
 
 	private static final long serialVersionUID = -4636203449920344328L;
-//status": "registered", ""
-	// personal.id space? zonefile_txt": "$ORIGIN 0.id\n$TTL 3600\n_http._tcp URI 10 1 \"https://gaia.blockstack.org/hub/126adtBDqoyuPR56dEnJkuK4xntRysyfXs/0/profile.json\"\n", 
-	//zonefile": "$ORIGIN 0.id\n$TTL 3600\n_http._tcp URI 10 1 \"https://gaia.blockstack.org/hub/126adtBDqoyuPR56dEnJkuK4xntRysyfXs/0/profile.json\"\n", 
-//expire_block": 598115, "
-//blockchain": "bitcoin", "
-//last_txid": "6e17d692e6ab0563682b951db0b3377047014a1d00ea770f59500c97f710c674", "
-//address": "126adtBDqoyuPR56dEnJkuK4xntRysyfXs", "
-//zonefile_hash": "fabda66de86f9fe5feada86857bbeb89650fba21"
 	private String name;
 	private String description;
 	private String status;
 	private String zonefile;
-	@JsonProperty("zonefile_txt")
+	@JsonIgnore @JsonProperty("zonefile_txt")
 	private String zonefileText;
-	@JsonProperty("expire_block")
+	@JsonIgnore @JsonProperty("expire_block")
 	private String expireBlock;
 	private String blockchain;
-	@JsonProperty("last_txid")
+	@JsonIgnore @JsonProperty("last_txid")
 	private String lastTxid;
 	private String address;
-	@JsonProperty("zonefile_hash")
+	@JsonIgnore @JsonProperty("zonefile_hash")
 	private String zonefileHash;
 	private String profileUrl;
 	private String apps;
@@ -53,6 +46,7 @@ public class ZonefileModel extends IndexedModel {
 		this.zonefile = zonefile;
 	}
 
+	@JsonIgnore
 	public String getExpireBlock() {
 		return (expireBlock != null) ? expireBlock : "";
 	}
@@ -61,6 +55,7 @@ public class ZonefileModel extends IndexedModel {
 		this.expireBlock = expireBlock;
 	}
 
+	@JsonIgnore 
 	public String getBlockchain() {
 		return blockchain;
 	}
@@ -69,6 +64,7 @@ public class ZonefileModel extends IndexedModel {
 		this.blockchain = blockchain;
 	}
 
+	@JsonIgnore 
 	public String getLastTxid() {
 		return lastTxid;
 	}
@@ -77,6 +73,7 @@ public class ZonefileModel extends IndexedModel {
 		this.lastTxid = lastTxid;
 	}
 
+	@JsonIgnore 
 	public String getAddress() {
 		return address;
 	}
@@ -85,6 +82,7 @@ public class ZonefileModel extends IndexedModel {
 		this.address = address;
 	}
 
+	@JsonIgnore 
 	public String getZonefileHash() {
 		return zonefileHash;
 	}
@@ -101,6 +99,7 @@ public class ZonefileModel extends IndexedModel {
 		this.name = name;
 	}
 
+	@JsonIgnore 
 	public String getProfileUrl() {
 		return profileUrl;
 	}
@@ -141,6 +140,7 @@ public class ZonefileModel extends IndexedModel {
 		this.description = description;
 	}
 
+	@JsonIgnore
 	public String[] getDomainGaiaPairs() {
 		String apps = this.getApps();
 		String[] domainGaiaPairs = apps.split("/\\shttp");
