@@ -1,9 +1,6 @@
 # Brightblock Search
 
-Search microservice for providing a Lucene index for d-apps over blockstack user data.
-This micro-service is part of the open art market - a decentralized auction platform for art. 
-
-For information about the Blockstack project please refer to [Blockstack](https://blockstack.org).
+Search microservice providing a Lucene index of decentralised application and user data via [Blockstack](https://blockstack.org) infrastructure. 
 
 ## Table of Contents
 
@@ -15,16 +12,17 @@ For information about the Blockstack project please refer to [Blockstack](https:
 
 ## Purpose
 
-The purpose of this service is to provide indexing of user data stored via blockstacks gaia storage in order to facilitate
-search and discoverablity of the data in the context of a specific decentralised application.
+Provides customisable search index of user data for decentralised applications.
+Search results are a common gateway to an applciation and this project seeks to provide this doorway to 
+decentralised applications by building on top of Blockstack infrastructure. 
 
-The indexer starts from a decentralised blockstack user identity. It pulls the apps the user has visited and indexes data whose app domain
-matches one of the domains in the yaml configuration of the indexer.
+The indexer starts from a decentralised blockstack user identity. It pulls the apps the user has visited and 
+indexes data whose app domain matches one of the domains in the yaml configuration of the indexer.
 
 The indexer can be used in either of two ways:
-1. Generic indexer for multiple d-app domains using shared hosting.
-2. Pull the docker image with the latest code and deploy on your own infrastructure.
-2. Pull the code this [open source repository](https://github.com/mjoecohen/brightblock-search). 
+1. Shared hosting model - add new d-app via update of configuration.
+2. Siloed hosting - pull and run with docker.
+2. Fork the code - [open source repository](https://github.com/mjoecohen/brightblock-search). 
 
 Option 1. assumes multiple d-app domains added to the yaml configuration of a shared search indexer. For the art auction platform
 this indexer is hosted on linode.com servers and runs inside a docker container at;
