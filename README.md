@@ -7,6 +7,7 @@ Search microservice providing a Lucene index of decentralised application and us
 - [Purpose](#purpose)
 - [Privacy](#privacy)
 - [Configuration](#configuration)
+- [Domains](#domains)
 - [Index API](#index-api)
 - [Search API](#search-api)
 
@@ -148,6 +149,9 @@ your domain.
 Query the dapps index. For example if field='title' and query_string='hallo sailor' this will return all records of type 'objType' 
 under domain 'domain' whose title contains the full text indexed search words.
 
+## Domains
+
+### Add Blockstack Id(s) to Index
 
 ## Examples
 
