@@ -1,6 +1,8 @@
 package org.brightblock.search.api;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -58,9 +60,10 @@ public class IndexController {
 	
 	@RequestMapping(value = "/index/size", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<ApiModel> sizeOfIndex(HttpServletRequest request) {
-		int sizeOfNamesIndex = namesIndexService.getNumbDocs();
-		int sizeOfDappsIndex = dappsIndexService.getNumbDocs();
-		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, new Integer[] {sizeOfNamesIndex, sizeOfDappsIndex});
+		Map<String, Integer> indexSize = new HashMap<String, Integer>();
+		indexSize.put("Name records: ", namesIndexService.getNumbDocs());
+		indexSize.put("Dapp records: ", dappsIndexService.getNumbDocs());
+		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, indexSize);
 		model.setHeaders(request);
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
 	}

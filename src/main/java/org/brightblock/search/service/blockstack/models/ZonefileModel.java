@@ -13,9 +13,9 @@ public class ZonefileModel extends IndexedModel {
 	private String description;
 	private String status;
 	private String zonefile;
-	@JsonIgnore @JsonProperty("zonefile_txt")
+	@JsonProperty("zonefile_txt")
 	private String zonefileText;
-	@JsonIgnore @JsonProperty("expire_block")
+	@JsonProperty("expire_block")
 	private String expireBlock;
 	private String blockchain;
 	@JsonIgnore @JsonProperty("last_txid")
@@ -46,7 +46,6 @@ public class ZonefileModel extends IndexedModel {
 		this.zonefile = zonefile;
 	}
 
-	@JsonIgnore
 	public String getExpireBlock() {
 		return (expireBlock != null) ? expireBlock : "";
 	}
@@ -55,7 +54,6 @@ public class ZonefileModel extends IndexedModel {
 		this.expireBlock = expireBlock;
 	}
 
-	@JsonIgnore 
 	public String getBlockchain() {
 		return blockchain;
 	}
@@ -64,7 +62,6 @@ public class ZonefileModel extends IndexedModel {
 		this.blockchain = blockchain;
 	}
 
-	@JsonIgnore 
 	public String getLastTxid() {
 		return lastTxid;
 	}
@@ -73,7 +70,6 @@ public class ZonefileModel extends IndexedModel {
 		this.lastTxid = lastTxid;
 	}
 
-	@JsonIgnore 
 	public String getAddress() {
 		return address;
 	}
@@ -82,7 +78,6 @@ public class ZonefileModel extends IndexedModel {
 		this.address = address;
 	}
 
-	@JsonIgnore 
 	public String getZonefileHash() {
 		return zonefileHash;
 	}
@@ -99,7 +94,6 @@ public class ZonefileModel extends IndexedModel {
 		this.name = name;
 	}
 
-	@JsonIgnore 
 	public String getProfileUrl() {
 		return profileUrl;
 	}
