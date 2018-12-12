@@ -10,6 +10,7 @@ Search microservice providing a Lucene index of decentralised application and us
 - [Domains](#domains)
 - [Index API](#index-api)
 - [Search API](#search-api)
+- [Roadmap](#roadmap)
 
 ## Purpose
 
@@ -191,5 +192,12 @@ under domain 'domain' whose title contains the full text indexed search words.
 "message": "Success!"
 }
 ```
+
+## Roadmap
+
+Plans for future development include;
+
+1. Build admin portal for configuring and managing the search index.
+2. Hosting the application using infrastructure as a service (e.g. Heroku Searchify).
 
 
