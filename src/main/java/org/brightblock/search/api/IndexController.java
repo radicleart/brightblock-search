@@ -28,18 +28,14 @@ public class IndexController {
 
 	@RequestMapping(value = "/index/dapps/clear", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<ApiModel> clearDapps(HttpServletRequest request) {
-		int size = dappsIndexService.clearAll();
-		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, size);
-		model.setHeaders(request);
-		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
+		dappsIndexService.clearAll();
+		return sizeOfIndex(request);
 	}
 
 	@RequestMapping(value = "/index/names/clear", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<ApiModel> clearNames(HttpServletRequest request) {
-		int size = namesIndexService.clearAll();
-		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, size);
-		model.setHeaders(request);
-		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
+		namesIndexService.clearAll();
+		return sizeOfIndex(request);
 	}
 
 	@RequestMapping(value = "/index/pages/{from}/{to}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
@@ -61,8 +57,8 @@ public class IndexController {
 	@RequestMapping(value = "/index/size", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<ApiModel> sizeOfIndex(HttpServletRequest request) {
 		Map<String, Integer> indexSize = new HashMap<String, Integer>();
-		indexSize.put("Name records: ", namesIndexService.getNumbDocs());
-		indexSize.put("Dapp records: ", dappsIndexService.getNumbDocs());
+		indexSize.put("names", namesIndexService.getNumbDocs());
+		indexSize.put("dapps", dappsIndexService.getNumbDocs());
 		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, indexSize);
 		model.setHeaders(request);
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
