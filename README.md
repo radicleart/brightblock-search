@@ -103,6 +103,8 @@ updates the index for domain matches between user apps and domains in the yaml c
 
 Index blockstack names - comma separated list.
 
+### Add / Remove Search Documents
+
 > value = "/index/addRecord", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE }
 
 Add the given indexable object to the index. Post data:
