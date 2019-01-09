@@ -86,18 +86,18 @@ blockstack node running on the same server as the search micro-service.
 
 ## Index API
 
+### Clear Index
+
 > value = "/index/dapps/clear", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE }
 
 Clears the index out - temporary method for developemnt and test.
+
+### Index Names
 
 > value = "/index/pages/{from}/{to}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE }
 
 Index blockstack names between the pages indicated calls pulls names from [Blockstack API](https://core.blockstack.org/) and then
 updates the index for domain matches between user apps and domains in the yaml config.
-
-> value = "/index/users/{names}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE }
-
-Index blockstack names - comma separated list.
 
 > value = "/index/users/{names}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE }
 
