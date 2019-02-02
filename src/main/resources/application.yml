@@ -71,6 +71,15 @@ application:
          fields:
             - title
             - description
+      -  domain: /transit8.com
+         indexFiles: 
+            - indexFileName: records_v01.json
+              indexObjType: artwork
+            - indexFileName: auctions_v01.json
+              indexObjType: auction
+         fields:
+            - title
+            - description
 
 ---
 
