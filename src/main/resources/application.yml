@@ -62,16 +62,12 @@ spring:
 application:
    blockstackBase: https://core-staging.brightblock.org
    domains:
-      -  domain: www.transit8.com
+      -  domain: staging.transit8.com
          indexFiles: 
             - indexFileName: records_v01.json
               indexObjType: artwork
             - indexFileName: auctions_v01.json
               indexObjType: auction
-         fields:
-            - title
-            - description
-      -  domain: app.graphitedocs.com
          fields:
             - title
             - description
@@ -84,10 +80,20 @@ application:
    blockstackBase: https://core.brightblock.org
    domains:
       -  domain: www.transit8.com
+         indexFiles: 
+            - indexFileName: records_v01.json
+              indexObjType: artwork
+            - indexFileName: auctions_v01.json
+              indexObjType: auction
          fields:
             - title
             - description
-      -  domain: app.graphitedocs.com
+      -  domain: /transit8.com
+         indexFiles: 
+            - indexFileName: records_v01.json
+              indexObjType: artwork
+            - indexFileName: auctions_v01.json
+              indexObjType: auction
          fields:
             - title
             - description
