@@ -41,16 +41,12 @@ application:
          fields:
             - title
             - description
-      -  domain: www.brightblock.org
+      -  domain: /transit8.com
          indexFiles: 
             - indexFileName: records_v01.json
               indexObjType: artwork
             - indexFileName: auctions_v01.json
               indexObjType: auction
-         fields:
-            - title
-            - description
-      -  domain: app.graphitedocs.com
          fields:
             - title
             - description
