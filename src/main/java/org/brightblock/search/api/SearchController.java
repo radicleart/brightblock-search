@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-@CrossOrigin(origins = { "http://localhost:8080", "https://transit8.com" }, maxAge = 6000)
+@CrossOrigin(origins = { "http://localhost:8080", "https://radicle.art", "https://brightblock.org", "https://transit8.com" }, maxAge = 6000)
 public class SearchController {
 
 	@Autowired private NamesSearchService namesSearchService;
