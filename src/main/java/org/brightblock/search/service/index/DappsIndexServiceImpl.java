@@ -270,6 +270,9 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 			if (record.getOwner() != null) {
 				document.add(new TextField("owner", record.getOwner(), Field.Store.YES));
 			}
+			if (record.getArtist() != null) {
+				document.add(new TextField("artist", record.getArtist(), Field.Store.YES));
+			}
 			if (record.getDescription() != null) {
 				document.add(new TextField("description", record.getDescription(), Field.Store.YES));
 			}

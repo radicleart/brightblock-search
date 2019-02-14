@@ -17,6 +17,7 @@ public class IndexableModel implements Serializable, Comparable<IndexableModel> 
 	private String title;
 	private String description;
 	private String owner;
+	private String artist;
 	private String objType;
 	private String domain;
 	private String keywords;
@@ -71,6 +72,9 @@ public class IndexableModel implements Serializable, Comparable<IndexableModel> 
 				im.setOwner(node.get("administrator").asText());
 			} else {
 				throw new RuntimeException("unable to parse");
+			}
+			if (node.has("artist")) {
+				im.setArtist(node.get("artist").asText());
 			}
 			if (node.has("keywords")) {
 				im.setKeywords(node.get("keywords").asText());
@@ -150,6 +154,14 @@ public class IndexableModel implements Serializable, Comparable<IndexableModel> 
 
 	public void setDomain(String domain) {
 		this.domain = domain;
+	}
+
+	public String getArtist() {
+		return artist;
+	}
+
+	public void setArtist(String artist) {
+		this.artist = artist;
 	}
 
 }
