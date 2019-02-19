@@ -174,6 +174,7 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 		List<DomainModel> domains = applicationSettings.getDomains();
 		List<IndexableContainerModel> userRecords = new ArrayList<>();
 		String[] appsVisited = zonefile.getDomainGaiaPairs();
+		logger.info("Zonefile info: " + zonefile.getZonefile());
 		for (String appVisited : appsVisited) {
 			String[] appParts = appVisited.split("=");
 			try {
@@ -208,9 +209,9 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 			HttpEntity<Object> requestEntity = new HttpEntity<Object>(httpHeaders);
 			jsonFile = restTemplate1.exchange(gaiaIndexFileUrl + "/" + fileName, HttpMethod.GET, requestEntity, String.class).getBody();
 			logger.info("Index fetching from: " + gaiaIndexFileUrl + "/" + fileName);
-			if (fileName.equals("auctions_v01.json")) {
-				logger.info(jsonFile);
-			}
+//			if (fileName.equals("auctions_v01.json")) {
+//				logger.info(jsonFile);
+//			}
 			model = mapper.readValue(jsonFile, IndexableContainerModel.class);
 			for (IndexableModel indexable : model.getRecords()) {
 				indexable.setDomain(domain);
