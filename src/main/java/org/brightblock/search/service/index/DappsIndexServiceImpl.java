@@ -277,6 +277,15 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 			if (record.getDescription() != null) {
 				document.add(new TextField("description", record.getDescription(), Field.Store.YES));
 			}
+			if (record.getBuyer() != null) {
+				document.add(new TextField("buyer", record.getBuyer(), Field.Store.YES));
+			}
+			if (record.getStatus() != null) {
+				document.add(new TextField("status", record.getStatus(), Field.Store.YES));
+			}
+			if (record.getTxid() != null) {
+				document.add(new TextField("txid", record.getTxid(), Field.Store.YES));
+			}
 			if (record.getKeywords() != null) {
 				document.add(new TextField("keywords", record.getKeywords(), Field.Store.YES));
 			} else {

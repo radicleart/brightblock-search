@@ -19,6 +19,9 @@ public class OwnershipRecordModel implements Serializable, Comparable<OwnershipR
 	private String keywords;
 	private String appUrl;
 	private String gaiaUrl;
+	private String status;
+	private String buyer;
+	private String txid;
 	private SaleDataModel saleData;
 
 	public OwnershipRecordModel() {
@@ -35,6 +38,9 @@ public class OwnershipRecordModel implements Serializable, Comparable<OwnershipR
 			@JsonProperty("artist") String artist, 
 			@JsonProperty("keywords") String keywords, 
 			@JsonProperty("editions") Long editions, 
+			@JsonProperty("status") String status, 
+			@JsonProperty("buyer") String buyer, 
+			@JsonProperty("txid") String txid, 
 			@JsonProperty("sold") Boolean sold) {
 		super();
 		this.id = Long.valueOf(id);
@@ -46,6 +52,9 @@ public class OwnershipRecordModel implements Serializable, Comparable<OwnershipR
 		this.itemType = itemType;
 		this.editions = editions;
 		this.keywords = keywords;
+		this.status = status;
+		this.buyer = buyer;
+		this.txid = txid;
 	}
 
 	public String getTitle() {
@@ -153,5 +162,29 @@ public class OwnershipRecordModel implements Serializable, Comparable<OwnershipR
 
 	public void setArtist(String artist) {
 		this.artist = artist;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getBuyer() {
+		return buyer;
+	}
+
+	public void setBuyer(String buyer) {
+		this.buyer = buyer;
+	}
+
+	public String getTxid() {
+		return txid;
+	}
+
+	public void setTxid(String txid) {
+		this.txid = txid;
 	}
 }

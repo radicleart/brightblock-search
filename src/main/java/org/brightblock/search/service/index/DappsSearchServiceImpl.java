@@ -77,6 +77,9 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 		model.setOwner(document.get("owner"));
 		model.setArtist(document.get("artist"));
 		model.setKeywords(document.get("keywords"));
+		model.setBuyer(document.get("buyer"));
+		model.setStatus(document.get("status"));
+		model.setTxid(document.get("txid"));
 		model.setTitle(document.get("title"));
 		model.setDomain(document.get("domain"));
 		return model;

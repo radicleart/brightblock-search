@@ -21,6 +21,9 @@ public class IndexableModel implements Serializable, Comparable<IndexableModel> 
 	private String objType;
 	private String domain;
 	private String keywords;
+	private String status;
+	private String buyer;
+	private String txid;
 
 	public IndexableModel() {
 		super();
@@ -84,6 +87,15 @@ public class IndexableModel implements Serializable, Comparable<IndexableModel> 
 			}
 			if (node.has("domain")) {
 				im.setDomain(node.get("domain").asText());
+			}
+			if (node.has("buyer")) {
+				im.setBuyer(node.get("buyer").asText());
+			}
+			if (node.has("status")) {
+				im.setStatus(node.get("status").asText());
+			}
+			if (node.has("txid")) {
+				im.setTxid(node.get("txid").asText());
 			}
 			return im;
 		}
@@ -162,6 +174,30 @@ public class IndexableModel implements Serializable, Comparable<IndexableModel> 
 
 	public void setArtist(String artist) {
 		this.artist = artist;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getBuyer() {
+		return buyer;
+	}
+
+	public void setBuyer(String buyer) {
+		this.buyer = buyer;
+	}
+
+	public String getTxid() {
+		return txid;
+	}
+
+	public void setTxid(String txid) {
+		this.txid = txid;
 	}
 
 }
