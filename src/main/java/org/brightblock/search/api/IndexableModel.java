@@ -62,8 +62,12 @@ public class IndexableModel implements Serializable, Comparable<IndexableModel> 
 			IndexableModel im = new IndexableModel();
 			if (node.has("id")) {
 				im.setId(node.get("id").asText());
+			} else if (node.has("artworkId")) {
+				im.setId(node.get("artworkId").asText());
 			} else if (node.has("auctionId")) {
 				im.setId(node.get("auctionId").asText());
+			} else if (node.has("galleryId")) {
+				im.setId(node.get("galleryId").asText());
 			} else {
 				throw new RuntimeException("unable to parse");
 			}
@@ -71,6 +75,8 @@ public class IndexableModel implements Serializable, Comparable<IndexableModel> 
 			im.setDescription(node.get("description").asText());
 			if (node.has("owner")) {
 				im.setOwner(node.get("owner").asText());
+			} else if (node.has("auctioneer")) {
+				im.setOwner(node.get("auctioneer").asText());
 			} else if (node.has("administrator")) {
 				im.setOwner(node.get("administrator").asText());
 			} else {
