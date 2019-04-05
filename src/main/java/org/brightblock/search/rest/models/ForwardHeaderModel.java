@@ -4,11 +4,11 @@ package org.brightblock.search.rest.models;
 public class ForwardHeaderModel implements IApiModel {
 
 	private static final long serialVersionUID = 8500069866847641096L;
-	protected static final String X_REAL_IP = "X-Real-IP";
-	protected static final String X_FORWARDED_HOST = "X-Forwarded-Host";
-	protected static final String X_FORWARDED_PROTO = "X-Forwarded-Proto";
-	protected static final String X_FORWARDED_FOR = "X-Forwarded-For";
-	protected static final String X_FORWARDED_SERVER = "X-Forwarded-Server";
+	public static final String X_REAL_IP = "X-Real-IP";
+	public static final String X_FORWARDED_HOST = "X-Forwarded-Host";
+	public static final String X_FORWARDED_PROTO = "X-Forwarded-Proto";
+	public static final String X_FORWARDED_FOR = "X-Forwarded-For";
+	public static final String X_FORWARDED_SERVER = "X-Forwarded-Server";
 	private String headerForwardedHost;
 	private String headerForwardedServer;
 	private String headerForwardedFor;

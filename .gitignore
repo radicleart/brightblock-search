@@ -1,4 +1,6 @@
 target
+tomcat
+*.log
 *.gz
 .settings
 .project
