@@ -173,7 +173,7 @@ under domain 'domain' whose title contains the full text indexed search words.
 ```
 
 
-> https://search.brightblock.org/index/dapps/staging.transit8.com/artwork/description?q=capitals
+> https://search.brightblock.org/index/dapps/radicle.art/artwork/description?q=capitals
 
 ```
 {
@@ -187,7 +187,7 @@ under domain 'domain' whose title contains the full text indexed search words.
 "description": "Block capitals on brick",
 "owner": "mike.personal.id",
 "objType": "artwork",
-"domain": "staging.transit8.com",
+"domain": "radicle.art",
 "keywords": "Photography,Illustration.3D,2D,Film & Video,Mix-media"
 }
 ],
