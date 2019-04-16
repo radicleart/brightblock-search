@@ -41,7 +41,7 @@ application:
          fields:
             - title
             - description
-      -  domain: /transit8.com
+      -  domain: /radicle.art
          indexFiles: 
             - indexFileName: records_v01.json
               indexObjType: artwork
@@ -58,7 +58,7 @@ spring:
 application:
    blockstackBase: https://core-staging.brightblock.org
    domains:
-      -  domain: staging.transit8.com
+      -  domain: staging.radicle.art
          indexFiles: 
             - indexFileName: records_v01.json
               indexObjType: artwork
@@ -67,7 +67,7 @@ application:
          fields:
             - title
             - description
-      -  domain: /transit8.com
+      -  domain: /radicle.art
          indexFiles: 
             - indexFileName: records_v01.json
               indexObjType: artwork
@@ -84,16 +84,7 @@ spring:
 application:
    blockstackBase: https://core.brightblock.org
    domains:
-      -  domain: www.transit8.com
-         indexFiles: 
-            - indexFileName: records_v01.json
-              indexObjType: artwork
-            - indexFileName: auctions_v01.json
-              indexObjType: auction
-         fields:
-            - title
-            - description
-      -  domain: /transit8.com
+      -  domain: radicle.art
          indexFiles: 
             - indexFileName: records_v01.json
               indexObjType: artwork
