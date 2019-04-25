@@ -2,10 +2,12 @@ package org.brightblock.search.api;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
@@ -24,6 +26,7 @@ public class IndexableModel implements Serializable, Comparable<IndexableModel> 
 	private String status;
 	private String buyer;
 	private String txid;
+	private Map<String, String> metaData;
 
 	public IndexableModel() {
 		super();
@@ -102,6 +105,11 @@ public class IndexableModel implements Serializable, Comparable<IndexableModel> 
 			}
 			if (node.has("txid")) {
 				im.setTxid(node.get("txid").asText());
+			}
+			if (node.has("metaData")) {
+				ObjectMapper mapper = new ObjectMapper();
+				@SuppressWarnings("unchecked") Map<String, String> result = mapper.convertValue(node.get("metaData"), Map.class);
+				im.setMetaData(result);
 			}
 			return im;
 		}
@@ -204,6 +212,14 @@ public class IndexableModel implements Serializable, Comparable<IndexableModel> 
 
 	public void setTxid(String txid) {
 		this.txid = txid;
+	}
+
+	public Map<String, String> getMetaData() {
+		return metaData;
+	}
+
+	public void setMetaData(Map<String, String> metaData) {
+		this.metaData = metaData;
 	}
 
 }

@@ -291,11 +291,15 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 			} else {
 				document.add(new TextField("keywords", "no keywords", Field.Store.YES));
 			}
+			for (String key : record.getMetaData().keySet()) {
+				String value = record.getMetaData().get(key);
+				document.add(new TextField(key, value, Field.Store.YES));
+			}
 			Term term = new Term("id", String.valueOf(record.getId()));
 			writer.updateDocument(term, document);
 			logger.info("Indexed dapp search record: Owner: " + record.getOwner() + " object: " + record.getObjType() + " record title: " + record.getTitle() + " from domain: " + record.getDomain());
 		} catch (Exception e) {
-			logger.error("Error message: " + e.getMessage());
+			logger.error("Error idexing document from record: " + e.getMessage());
 		}
 		return;
 	}

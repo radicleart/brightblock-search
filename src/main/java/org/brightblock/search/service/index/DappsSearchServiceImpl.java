@@ -2,11 +2,14 @@ package org.brightblock.search.service.index;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
@@ -44,10 +47,20 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 	public List<IndexableModel> searchIndex(int limit, String objType, String domain, String inField, String searchTerm) {
 		try {
 			initArtMarket();
-			if (searchTerm == null || searchTerm.length() == 0) {
-				searchTerm = "*";
+//			if (searchTerm == null || searchTerm.length() == 0) {
+//				searchTerm = "*";
+//			}
+			// title:"foo bar" AND body:"quick fox"
+			String query = "domain:" + domain + " AND objType:" + objType;			
+			if (inField.equals("title")) {
+				query += " AND (title:" + searchTerm + " OR description:" + searchTerm + " OR keywords:" + searchTerm + ")";
+			} else if (inField.equals("facet")) {
+				if (searchTerm != null && searchTerm.length() > 0) {
+					query += " AND " + searchTerm;
+				}
+			} else {
+				query += " AND (" + inField + ":" + searchTerm + ")";
 			}
-			String query = "domain:" + domain + " AND objType:" + objType + " AND " + inField + ":" + searchTerm;			
 			QueryParser qp = new QueryParser(inField, artAnalyzer);
 			if (inField.equals("description") || inField.equals("title") || inField.equals("keywords")) {
 				qp.setAllowLeadingWildcard(true);
@@ -82,6 +95,13 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 		model.setTxid(document.get("txid"));
 		model.setTitle(document.get("title"));
 		model.setDomain(document.get("domain"));
+		List<IndexableField> fields = document.getFields();
+		Map<String, String> metaData = new HashMap<String, String>();
+		for (IndexableField field : fields) {
+			String fieldname = field.stringValue();
+			String value = document.get(fieldname);
+			metaData.put(fieldname, value);
+		}
 		return model;
 	}
 }
