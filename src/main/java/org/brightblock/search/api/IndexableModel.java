@@ -20,6 +20,8 @@ public class IndexableModel implements Serializable, Comparable<IndexableModel> 
 	private String description;
 	private String owner;
 	private String artist;
+	private String gallerist;
+	private String galleryId;
 	private String objType;
 	private String domain;
 	private String keywords;
@@ -71,6 +73,8 @@ public class IndexableModel implements Serializable, Comparable<IndexableModel> 
 				im.setId(node.get("auctionId").asText());
 			} else if (node.has("galleryId")) {
 				im.setId(node.get("galleryId").asText());
+			} else if (node.has("gallerist")) {
+				im.setId(node.get("gallerist").asText());
 			} else {
 				throw new RuntimeException("unable to parse");
 			}
@@ -220,6 +224,22 @@ public class IndexableModel implements Serializable, Comparable<IndexableModel> 
 
 	public void setMetaData(Map<String, String> metaData) {
 		this.metaData = metaData;
+	}
+
+	public String getGallerist() {
+		return gallerist;
+	}
+
+	public void setGallerist(String gallerist) {
+		this.gallerist = gallerist;
+	}
+
+	public String getGalleryId() {
+		return galleryId;
+	}
+
+	public void setGalleryId(String galleryId) {
+		this.galleryId = galleryId;
 	}
 
 }

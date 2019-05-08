@@ -9,7 +9,10 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.document.DoublePoint;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.FloatPoint;
+import org.apache.lucene.document.IntPoint;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
@@ -286,14 +289,32 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 			if (record.getTxid() != null) {
 				document.add(new TextField("txid", record.getTxid(), Field.Store.YES));
 			}
+			if (record.getGallerist() != null) {
+				document.add(new TextField("gallerist", record.getGallerist(), Field.Store.YES));
+			}
+			if (record.getGalleryId() != null) {
+				document.add(new TextField("galleryId", record.getGalleryId(), Field.Store.YES));
+			}
 			if (record.getKeywords() != null) {
 				document.add(new TextField("keywords", record.getKeywords(), Field.Store.YES));
 			} else {
 				document.add(new TextField("keywords", "no keywords", Field.Store.YES));
 			}
 			for (String key : record.getMetaData().keySet()) {
-				String value = record.getMetaData().get(key);
-				document.add(new TextField(key, value, Field.Store.YES));
+				try {
+					Object value = record.getMetaData().get(key);
+					if (value instanceof Integer) {
+						document.add(new IntPoint(key, (Integer)value));
+					} else if (value instanceof Float) {
+						document.add(new FloatPoint(key, (Integer)value));
+					} else if (value instanceof Double) {
+						document.add(new DoublePoint(key, (Integer)value));
+					} else {
+						document.add(new TextField(key, (String)value, Field.Store.YES));
+					}
+				} catch (Exception e) {
+					logger.error("Field error - only coping with strings just now: " + e.getMessage());
+				}
 			}
 			Term term = new Term("id", String.valueOf(record.getId()));
 			writer.updateDocument(term, document);

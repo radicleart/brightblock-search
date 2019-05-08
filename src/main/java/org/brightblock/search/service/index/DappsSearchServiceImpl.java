@@ -47,12 +47,12 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 	public List<IndexableModel> searchIndex(int limit, String objType, String domain, String inField, String searchTerm) {
 		try {
 			initArtMarket();
-//			if (searchTerm == null || searchTerm.length() == 0) {
-//				searchTerm = "*";
-//			}
 			// title:"foo bar" AND body:"quick fox"
 			String query = "domain:" + domain + " AND objType:" + objType;			
 			if (inField.equals("title")) {
+				if (searchTerm == null || searchTerm.length() == 0) {
+					searchTerm = "*";					
+				}
 				query += " AND (title:" + searchTerm + " OR description:" + searchTerm + " OR keywords:" + searchTerm + ")";
 			} else if (inField.equals("facet")) {
 				if (searchTerm != null && searchTerm.length() > 0) {
@@ -88,6 +88,8 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 		model.setId(document.get("id"));
 		model.setObjType(document.get("objType"));
 		model.setOwner(document.get("owner"));
+		model.setGallerist(document.get("gallerist"));
+		model.setGalleryId(document.get("galleryId"));
 		model.setArtist(document.get("artist"));
 		model.setKeywords(document.get("keywords"));
 		model.setBuyer(document.get("buyer"));

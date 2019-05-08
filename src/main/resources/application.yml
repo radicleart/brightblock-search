@@ -1,6 +1,6 @@
 application:
    blockstackNamesIndex: /var/index/dapps
-   blockstackOrgBase: https://core-staging.brightblock.org
+   blockstackOrgBase: https://core.blockstack.org
    artMarketIndex: /var/index/artmarket
    auctionIndex: /var/index/auction
 
@@ -30,7 +30,7 @@ application:
 spring:
     profiles: docker-dev
 application:
-   blockstackBase: https://core-staging.brightblock.org
+   blockstackBase: https://staging.brightblock.org
    domains:
       -  domain: localhost
          indexFiles: 
@@ -56,7 +56,7 @@ application:
 spring:
     profiles: staging
 application:
-   blockstackBase: https://core-staging.brightblock.org
+   blockstackBase: https://staging.brightblock.org
    domains:
       -  domain: staging.radicle.art
          indexFiles: 
