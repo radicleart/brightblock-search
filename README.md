@@ -197,10 +197,6 @@ under domain 'domain' whose title contains the full text indexed search words.
 
 ## Roadmap
 
-Plans for future development include;
-
-0. Add API keys for securing access to the search service.
-1. Build admin portal for configuring and managing the search index.
-2. Hosting the application using infrastructure as a service (e.g. Heroku Searchify).
+This is an early stage prototype and is waiting on funding for further development.
 
 
