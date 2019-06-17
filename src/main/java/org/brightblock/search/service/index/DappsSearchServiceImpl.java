@@ -48,7 +48,7 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 		try {
 			initArtMarket();
 			// title:"foo bar" AND body:"quick fox"
-			String query = "domain:" + domain + " AND objType:" + objType;			
+			String query = "domain:" + domain + " AND objType:" + objType;	
 			if (inField.equals("title")) {
 				if (searchTerm == null || searchTerm.length() == 0) {
 					searchTerm = "*";					

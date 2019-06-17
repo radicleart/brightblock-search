@@ -34,6 +34,8 @@ application:
    domains:
       -  domain: localhost
          indexFiles: 
+            - indexFileName: items_v01.json
+              indexObjType: item
             - indexFileName: records_v01.json
               indexObjType: artwork
             - indexFileName: auctions_v01.json
@@ -41,7 +43,7 @@ application:
          fields:
             - title
             - description
-      -  domain: dbid.io
+      -  domain: /dbid.io
          indexFiles: 
             - indexFileName: items_v01.json
               indexObjType: item
@@ -50,7 +52,7 @@ application:
          fields:
             - title
             - description
-      -  domain: radicle.art
+      -  domain: /radicle.art
          indexFiles: 
             - indexFileName: records_v01.json
               indexObjType: artwork
@@ -67,8 +69,8 @@ spring:
 application:
    blockstackBase: https://staging.brightblock.org
    domains:
-      -  domain: dbid.io
-         indexFiles: 
+      -  domain: /dbid.io
+         indexFiles:
             - indexFileName: items_v01.json
               indexObjType: item
             - indexFileName: auctions_v01.json
@@ -76,17 +78,8 @@ application:
          fields:
             - title
             - description
-      -  domain: staging.radicle.art
-         indexFiles: 
-            - indexFileName: records_v01.json
-              indexObjType: artwork
-            - indexFileName: auctions_v01.json
-              indexObjType: auction
-         fields:
-            - title
-            - description
-      -  domain: radicle.art
-         indexFiles: 
+      -  domain: /radicle.art
+         indexFiles:
             - indexFileName: records_v01.json
               indexObjType: artwork
             - indexFileName: auctions_v01.json

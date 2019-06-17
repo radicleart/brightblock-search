@@ -183,6 +183,8 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 			try {
 				String appUrl = appParts[0];
 				for (DomainModel domain : domains) {
+					logger.info("---------------------------------");
+					logger.info("domain info: " + domain.getDomain());
 					if (appUrl.indexOf(domain.getDomain()) > -1 || domain.getDomain().indexOf(appUrl) > -1) {
 						for (IndexFileModel indexFileModel : domain.getIndexFiles()) {
 							IndexableContainerModel indexableContainerModel = fetchUserFile(
@@ -190,11 +192,15 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 									indexFileModel.getIndexFileName(),
 									indexFileModel.getIndexObjType(), 
 									domain.getDomain());
+							logger.info("domain getIndexFileName: " + indexFileModel.getIndexFileName());
+							logger.info("domain getIndexObjType: " + indexFileModel.getIndexObjType());
 							if (indexableContainerModel != null && indexableContainerModel.getRecords() != null && indexableContainerModel.getRecords().size() > 0) {
 								userRecords.add(indexableContainerModel);
+								logger.info("domain indexing: " + indexableContainerModel.getRecords().size());
 							}
 						}
 					}
+					logger.info("---------------------------------");
 				}
 			} catch (Exception e) {
 				// continue
