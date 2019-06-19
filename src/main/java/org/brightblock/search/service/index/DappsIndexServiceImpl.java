@@ -306,20 +306,22 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 			} else {
 				document.add(new TextField("keywords", "no keywords", Field.Store.YES));
 			}
-			for (String key : record.getMetaData().keySet()) {
-				try {
-					Object value = record.getMetaData().get(key);
-					if (value instanceof Integer) {
-						document.add(new IntPoint(key, (Integer)value));
-					} else if (value instanceof Float) {
-						document.add(new FloatPoint(key, (Integer)value));
-					} else if (value instanceof Double) {
-						document.add(new DoublePoint(key, (Integer)value));
-					} else {
-						document.add(new TextField(key, (String)value, Field.Store.YES));
+			if (record.getMetaData() != null) {
+				for (String key : record.getMetaData().keySet()) {
+					try {
+						Object value = record.getMetaData().get(key);
+						if (value instanceof Integer) {
+							document.add(new IntPoint(key, (Integer)value));
+						} else if (value instanceof Float) {
+							document.add(new FloatPoint(key, (Integer)value));
+						} else if (value instanceof Double) {
+							document.add(new DoublePoint(key, (Integer)value));
+						} else {
+							document.add(new TextField(key, (String)value, Field.Store.YES));
+						}
+					} catch (Exception e) {
+						logger.error("Field error - only coping with strings just now: " + e.getMessage());
 					}
-				} catch (Exception e) {
-					logger.error("Field error - only coping with strings just now: " + e.getMessage());
 				}
 			}
 			Term term = new Term("id", String.valueOf(record.getId()));

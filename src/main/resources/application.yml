@@ -13,8 +13,8 @@ application:
    domains:
       -  domain: www.brightblock.org
          indexFiles: 
-            - indexFileName: records_v01.json
-              indexObjType: artwork
+            - indexFileName: items_v01.json
+              indexObjType: item
             - indexFileName: auctions_v01.json
               indexObjType: auction
          fields:
@@ -43,7 +43,7 @@ application:
          fields:
             - title
             - description
-      -  domain: /dbid.io
+      -  domain: dbid.io
          indexFiles: 
             - indexFileName: items_v01.json
               indexObjType: item
@@ -69,7 +69,7 @@ spring:
 application:
    blockstackBase: https://staging.brightblock.org
    domains:
-      -  domain: /dbid.io
+      -  domain: dbid.io
          indexFiles:
             - indexFileName: items_v01.json
               indexObjType: item
