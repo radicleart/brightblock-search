@@ -1,6 +1,7 @@
 package org.brightblock.search.api;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -61,6 +62,18 @@ public class SearchController {
 			query = request.getParameter("q");
 		}
 		List<IndexableModel> response = dappsSearchService.searchIndex(200, objType, domain, field, query);
+		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, response);
+		model.setHeaders(request);
+		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/index/categories/{domain}/{objType}/{field}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<ApiModel> categories(HttpServletRequest request, @PathVariable String objType, @PathVariable String domain, @PathVariable String field) {
+		String query = request.getParameter("query");
+		if (query == null) {
+			query = request.getParameter("q");
+		}
+		List<Map<String, Object>> response = dappsSearchService.searchCategories(objType, domain, field, query);
 		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, response);
 		model.setHeaders(request);
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);

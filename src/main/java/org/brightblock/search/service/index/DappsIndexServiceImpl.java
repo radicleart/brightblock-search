@@ -13,6 +13,7 @@ import org.apache.lucene.document.DoublePoint;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.FloatPoint;
 import org.apache.lucene.document.IntPoint;
+import org.apache.lucene.document.NumericDocValuesField;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
@@ -24,6 +25,7 @@ import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.Query;
 import org.brightblock.search.api.IndexableContainerModel;
 import org.brightblock.search.api.IndexableModel;
+import org.brightblock.search.api.KeywordModel;
 import org.brightblock.search.conf.settings.DomainModel;
 import org.brightblock.search.conf.settings.IndexFileModel;
 import org.brightblock.search.service.blockstack.models.ZonefileModel;
@@ -274,6 +276,12 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 			} else {
 				document.add(new TextField("objType", "artwork", Field.Store.YES));
 			}
+			if (record.getUpdated() != null) {
+				document.add(new NumericDocValuesField("updated", record.getUpdated()));
+			}
+			if (record.getCreated() != null) {
+				document.add(new NumericDocValuesField("created", record.getCreated()));
+			}
 			if (record.getDomain() != null) {
 				document.add(new TextField("domain", record.getDomain(), Field.Store.YES));
 			}
@@ -302,7 +310,12 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 				document.add(new TextField("galleryId", record.getGalleryId(), Field.Store.YES));
 			}
 			if (record.getKeywords() != null) {
-				document.add(new TextField("keywords", record.getKeywords(), Field.Store.YES));
+				String csKeywords = "1 ";
+				for (KeywordModel km : record.getKeywords()) {
+					csKeywords += km.getId() + " ";
+				}
+				csKeywords.substring(0, csKeywords.length() -2);
+				document.add(new TextField("keywords", csKeywords, Field.Store.YES));
 			} else {
 				document.add(new TextField("keywords", "no keywords", Field.Store.YES));
 			}

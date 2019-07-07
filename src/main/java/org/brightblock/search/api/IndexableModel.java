@@ -2,6 +2,10 @@ package org.brightblock.search.api;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonParser;
@@ -18,13 +22,15 @@ public class IndexableModel implements Serializable, Comparable<IndexableModel> 
 	private String id;
 	private String title;
 	private String description;
+	private Long created;
+	private Long updated;
 	private String owner;
 	private String artist;
 	private String gallerist;
 	private String galleryId;
 	private String objType;
 	private String domain;
-	private String keywords;
+	private List<KeywordModel> keywords;
 	private String status;
 	private String buyer;
 	private String txid;
@@ -32,6 +38,8 @@ public class IndexableModel implements Serializable, Comparable<IndexableModel> 
 
 	public IndexableModel() {
 		super();
+		created = new Date().getTime();
+		updated = new Date().getTime();
 	}
 
 	// @JsonCreator
@@ -65,6 +73,7 @@ public class IndexableModel implements Serializable, Comparable<IndexableModel> 
 		public IndexableModel deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
 			JsonNode node = jp.getCodec().readTree(jp);
 			IndexableModel im = new IndexableModel();
+			ObjectMapper mapper = new ObjectMapper();
 			if (node.has("id")) {
 				im.setId(node.get("id").asText());
 			} else if (node.has("artworkId")) {
@@ -92,9 +101,6 @@ public class IndexableModel implements Serializable, Comparable<IndexableModel> 
 			if (node.has("artist")) {
 				im.setArtist(node.get("artist").asText());
 			}
-			if (node.has("keywords")) {
-				im.setKeywords(node.get("keywords").asText());
-			}
 			if (node.has("objType")) {
 				im.setObjType(node.get("objType").asText());
 			}
@@ -110,8 +116,21 @@ public class IndexableModel implements Serializable, Comparable<IndexableModel> 
 			if (node.has("txid")) {
 				im.setTxid(node.get("txid").asText());
 			}
+			if (node.has("keywords")) {
+				mapper = new ObjectMapper();
+				@SuppressWarnings("unchecked") List<LinkedHashMap<String, Object>> keywords = mapper.convertValue(node.get("keywords"), List.class);
+				List<KeywordModel> kms = new ArrayList<>();
+				KeywordModel km = null;
+				for (LinkedHashMap<String, Object> keyword : keywords) {
+					Object lev = keyword.get("level");
+					Integer level = (Integer)lev;
+					km = new KeywordModel((String)keyword.get("id"), (String)keyword.get("name"), level, (String)keyword.get("parent"));
+					kms.add(km);
+				}
+				im.setKeywords(kms);
+			}
 			if (node.has("metaData")) {
-				ObjectMapper mapper = new ObjectMapper();
+				mapper = new ObjectMapper();
 				@SuppressWarnings("unchecked") Map<String, String> result = mapper.convertValue(node.get("metaData"), Map.class);
 				im.setMetaData(result);
 			}
@@ -159,11 +178,11 @@ public class IndexableModel implements Serializable, Comparable<IndexableModel> 
 		this.objType = objType;
 	}
 
-	public String getKeywords() {
+	public List<KeywordModel> getKeywords() {
 		return keywords;
 	}
 
-	public void setKeywords(String keywords) {
+	public void setKeywords(List<KeywordModel> keywords) {
 		this.keywords = keywords;
 	}
 
@@ -240,6 +259,22 @@ public class IndexableModel implements Serializable, Comparable<IndexableModel> 
 
 	public void setGalleryId(String galleryId) {
 		this.galleryId = galleryId;
+	}
+
+	public Long getCreated() {
+		return created;
+	}
+
+	public void setCreated(Long created) {
+		this.created = created;
+	}
+
+	public Long getUpdated() {
+		return updated;
+	}
+
+	public void setUpdated(Long updated) {
+		this.updated = updated;
 	}
 
 }
