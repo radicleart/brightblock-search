@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-@CrossOrigin(origins = { "http://localhost:8080", "https://radicle.art", "https://dbid.io", "https://brightblock.org" }, maxAge = 6000)
+@CrossOrigin(origins = { "http://localhost:8080", "http://localhost:8081", "https://radicle.art", "https://tart.radiclesociety.org", "https://tdbid.radiclesociety.org",  "https://dbid.io", "https://brightblock.org" }, maxAge = 6000)
 public class IndexController {
 
 	@Autowired private NamesIndexService namesIndexService;
