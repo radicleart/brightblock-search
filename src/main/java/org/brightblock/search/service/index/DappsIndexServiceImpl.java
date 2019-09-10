@@ -279,6 +279,9 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 			if (record.getUpdated() != null) {
 				document.add(new NumericDocValuesField("updated", record.getUpdated()));
 			}
+			if (record.getPrivacy() != null) {
+				document.add(new TextField("privacy", record.getPrivacy(), Field.Store.YES));
+			}
 			if (record.getCreated() != null) {
 				document.add(new NumericDocValuesField("created", record.getCreated()));
 			}
@@ -303,11 +306,17 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 			if (record.getTxid() != null) {
 				document.add(new TextField("txid", record.getTxid(), Field.Store.YES));
 			}
+			if (record.getPrivacy() != null) {
+				document.add(new TextField("privacy", record.getPrivacy(), Field.Store.YES));
+			}
 			if (record.getGallerist() != null) {
 				document.add(new TextField("gallerist", record.getGallerist(), Field.Store.YES));
 			}
 			if (record.getGalleryId() != null) {
 				document.add(new TextField("galleryId", record.getGalleryId(), Field.Store.YES));
+			}
+			if (record.getCategory() != null) {
+				document.add(new TextField("category", record.getCategory().getId(), Field.Store.YES));
 			}
 			if (record.getKeywords() != null) {
 				String csKeywords = "1 ";

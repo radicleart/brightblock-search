@@ -25,11 +25,13 @@ public class IndexableModel implements Serializable, Comparable<IndexableModel> 
 	private Long created;
 	private Long updated;
 	private String owner;
+	private String privacy;
 	private String artist;
 	private String gallerist;
 	private String galleryId;
 	private String objType;
 	private String domain;
+	private KeywordModel category;
 	private List<KeywordModel> keywords;
 	private String status;
 	private String buyer;
@@ -82,6 +84,8 @@ public class IndexableModel implements Serializable, Comparable<IndexableModel> 
 				im.setId(node.get("auctionId").asText());
 			} else if (node.has("galleryId")) {
 				im.setId(node.get("galleryId").asText());
+			} else if (node.has("privacy")) {
+				im.setId(node.get("privacy").asText());
 			} else if (node.has("gallerist")) {
 				im.setId(node.get("gallerist").asText());
 			} else {
@@ -115,6 +119,13 @@ public class IndexableModel implements Serializable, Comparable<IndexableModel> 
 			}
 			if (node.has("txid")) {
 				im.setTxid(node.get("txid").asText());
+			}
+			if (node.has("category")) {
+				LinkedHashMap<String, Object> keyword = new LinkedHashMap<>();
+				Object lev = keyword.get("level");
+				Integer level = (Integer)lev;
+				KeywordModel km = new KeywordModel((String)keyword.get("id"), (String)keyword.get("name"), level, (String)keyword.get("parent"));
+				im.setCategory(km);
 			}
 			if (node.has("keywords")) {
 				mapper = new ObjectMapper();
@@ -275,6 +286,22 @@ public class IndexableModel implements Serializable, Comparable<IndexableModel> 
 
 	public void setUpdated(Long updated) {
 		this.updated = updated;
+	}
+
+	public KeywordModel getCategory() {
+		return category;
+	}
+
+	public void setCategory(KeywordModel category) {
+		this.category = category;
+	}
+
+	public String getPrivacy() {
+		return privacy;
+	}
+
+	public void setPrivacy(String privacy) {
+		this.privacy = privacy;
 	}
 
 }

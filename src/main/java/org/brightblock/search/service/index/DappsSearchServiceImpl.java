@@ -57,7 +57,7 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 				if (searchTerm == null || searchTerm.length() == 0) {
 					searchTerm = "*";
 				}
-				query += " AND (title:" + searchTerm + " OR description:" + searchTerm + " OR keywords:" + searchTerm + ")";
+				query += " AND (title:" + searchTerm + " OR category:" + searchTerm + " OR description:" + searchTerm + " OR keywords:" + searchTerm + ")";
 			} else if (inField.equals("facet")) {
 				if (searchTerm != null && searchTerm.length() > 0) {
 					query += " AND " + searchTerm;
@@ -66,7 +66,7 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 				query += " AND (" + inField + ":" + searchTerm + ")";
 			}
 			QueryParser qp = new QueryParser(inField, artAnalyzer);
-			if (inField.equals("description") || inField.equals("title") || inField.equals("keywords")) {
+			if (inField.equals("description") || inField.equals("title") || inField.equals("category") || inField.equals("keywords")) {
 				qp.setAllowLeadingWildcard(true);
 			}
 			Query q = qp.parse(query);
@@ -94,7 +94,7 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 			List<Map<String, Object>> results = new ArrayList<>();
 			Map<String, Object> result = null;
 			for (String catId : catIds) {
-				String query = "domain:" + domain + " AND objType:" + objType + " AND keywords:" + catId;
+				String query = "domain:" + domain + " AND objType:" + objType + " AND (keywords:" + catId + " OR category:" + catId;
 				QueryParser qp = new QueryParser(inField, artAnalyzer);
 				qp.setAllowLeadingWildcard(true);
 				Query q = qp.parse(query);
@@ -141,6 +141,11 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 				kms.add(km);
 			}
 			model.setKeywords(kms);
+		}
+		String csCategory = document.get("category");
+		if (csCategory != null) {
+			KeywordModel km = new KeywordModel(csCategory);
+			model.setCategory(km);
 		}
 		model.setBuyer(document.get("buyer"));
 		model.setStatus(document.get("status"));
