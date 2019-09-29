@@ -94,7 +94,7 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 			List<Map<String, Object>> results = new ArrayList<>();
 			Map<String, Object> result = null;
 			for (String catId : catIds) {
-				String query = "domain:" + domain + " AND objType:" + objType + " AND (keywords:" + catId + " OR category:" + catId;
+				String query = "domain:" + domain + " AND objType:" + objType + " AND (keywords:" + catId + " OR category:" + catId + ")";
 				QueryParser qp = new QueryParser(inField, artAnalyzer);
 				qp.setAllowLeadingWildcard(true);
 				Query q = qp.parse(query);

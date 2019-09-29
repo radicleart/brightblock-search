@@ -121,10 +121,11 @@ public class IndexableModel implements Serializable, Comparable<IndexableModel> 
 				im.setTxid(node.get("txid").asText());
 			}
 			if (node.has("category")) {
-				LinkedHashMap<String, Object> keyword = new LinkedHashMap<>();
-				Object lev = keyword.get("level");
+				mapper = new ObjectMapper();
+				@SuppressWarnings("unchecked") LinkedHashMap<String, Object> cat = mapper.convertValue(node.get("category"), LinkedHashMap.class);
+				Object lev = cat.get("level");
 				Integer level = (Integer)lev;
-				KeywordModel km = new KeywordModel((String)keyword.get("id"), (String)keyword.get("name"), level, (String)keyword.get("parent"));
+				KeywordModel km = new KeywordModel((String)cat.get("id"), (String)cat.get("name"), level, (String)cat.get("parent"));
 				im.setCategory(km);
 			}
 			if (node.has("keywords")) {
