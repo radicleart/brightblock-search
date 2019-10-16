@@ -92,7 +92,6 @@ public class IndexableModel implements Serializable, Comparable<IndexableModel> 
 				throw new RuntimeException("unable to parse");
 			}
 			im.setTitle(node.get("title").asText());
-			im.setDescription(node.get("description").asText());
 			if (node.has("owner")) {
 				im.setOwner(node.get("owner").asText());
 			} else if (node.has("auctioneer")) {
@@ -101,6 +100,11 @@ public class IndexableModel implements Serializable, Comparable<IndexableModel> 
 				im.setOwner(node.get("administrator").asText());
 			} else {
 				throw new RuntimeException("unable to parse");
+			}
+			if (node.has("description")) {
+				im.setDescription(node.get("description").asText());
+			} else {
+				im.setDescription(node.get("title").asText());
 			}
 			if (node.has("artist")) {
 				im.setArtist(node.get("artist").asText());
