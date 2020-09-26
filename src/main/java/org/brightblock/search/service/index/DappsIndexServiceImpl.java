@@ -179,6 +179,7 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 		List<DomainModel> domains = applicationSettings.getDomains();
 		List<IndexableContainerModel> userRecords = new ArrayList<>();
 		String[] appsVisited = zonefile.getDomainGaiaPairs();
+		if (appsVisited == null) return;
 		logger.info("Zonefile info: " + zonefile.getZonefile());
 		for (String appVisited : appsVisited) {
 			String[] appParts = appVisited.split("=");

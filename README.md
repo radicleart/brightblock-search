@@ -4,8 +4,14 @@ Search microservice providing a Lucene index of decentralised application and us
 
 ## Build
 
-```javascript
-mvn -f ../ms-search/pom.xml -Dmaven.test.skip=true clean install
+Build and skip/not skip tests
+
+```bash
+mvn -Dmaven.test.skip=true clean install
+```
+
+```bash
+mvn -Dmaven.test.skip=true clean install
 ```
 
 ## Table of Contents
@@ -13,7 +19,6 @@ mvn -f ../ms-search/pom.xml -Dmaven.test.skip=true clean install
 - [Purpose](#purpose)
 - [Privacy](#privacy)
 - [Configuration](#configuration)
-- [Domains](#domains)
 - [Index API](#index-api)
 - [Search API](#search-api)
 - [Roadmap](#roadmap)
@@ -164,7 +169,7 @@ under domain 'domain' whose title contains the full text indexed search words.
 
 ### Add Blockstack Id(s) to Index
 
-> [search.index](https://search.brightblock.org/index/users/mike.personal.id,brightblock.id)
+> [search.index](http://localhost:8002/index/users/mike.personal.id,brightblock.id)
 
 ```javascript
 {
@@ -176,7 +181,7 @@ under domain 'domain' whose title contains the full text indexed search words.
 }
 ```
 
-> [radicle.art](https://search.brightblock.org/index/dapps/radicle.art/artwork/description?q=capitals)
+> [radicle.art](http://localhost:8002/index/dapps/radicle.art/artwork/description?q=capitals)
 
 ```javascript
 {

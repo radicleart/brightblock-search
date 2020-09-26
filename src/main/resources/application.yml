@@ -11,7 +11,7 @@ spring:
 application:
    blockstackBase: http://localhost:6270
    domains:
-      -  domain: www.brightblock.org
+      -  domain: localhost
          indexFiles: 
             - indexFileName: items_v01.json
               indexObjType: item
@@ -30,7 +30,7 @@ application:
 spring:
     profiles: docker-dev
 application:
-   blockstackBase: https://staging.brightblock.org
+   blockstackBase: https://tapi.risidio.com
    domains:
       -  domain: localhost
          indexFiles: 
@@ -67,7 +67,7 @@ application:
 spring:
     profiles: staging
 application:
-   blockstackBase: https://staging.brightblock.org
+   blockstackBase: https://tapi.risidio.com
    domains:
       -  domain: dbid.io
          indexFiles:
@@ -93,8 +93,26 @@ application:
 spring:
     profiles: production
 application:
-   blockstackBase: https://core.brightblock.org
+   blockstackBase: https://api.risidio.com
    domains:
+      -  domain: risidio.loopbomb.com
+         indexFiles: 
+            - indexFileName: loopbomb_v03.json
+              indexObjType: item
+            - indexFileName: auctions_v01.json
+              indexObjType: auction
+         fields:
+            - title
+            - description
+      -  domain: loopbomb.com
+         indexFiles: 
+            - indexFileName: items_v01.json
+              indexObjType: item
+            - indexFileName: auctions_v01.json
+              indexObjType: auction
+         fields:
+            - title
+            - description
       -  domain: dbid.io
          indexFiles: 
             - indexFileName: items_v01.json

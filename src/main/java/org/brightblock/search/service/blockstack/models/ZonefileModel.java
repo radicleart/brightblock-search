@@ -137,6 +137,7 @@ public class ZonefileModel extends IndexedModel {
 	@JsonIgnore
 	public String[] getDomainGaiaPairs() {
 		String apps = this.getApps();
+		if (apps == null) return null;
 		String[] domainGaiaPairs = apps.split("/\\shttp");
 		return domainGaiaPairs;
 	}
