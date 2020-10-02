@@ -20,11 +20,15 @@ public class IndexableModel implements Serializable, Comparable<IndexableModel> 
 
 	private static final long serialVersionUID = 7471051478505916999L;
 	private String id;
+	private String projectId;
 	private String title;
 	private String description;
 	private Long created;
 	private Long updated;
 	private String owner;
+	private String assetHash;
+	private String assetUrl;
+	private String assetProjectUrl;
 	private String privacy;
 	private String artist;
 	private String gallerist;
@@ -76,10 +80,8 @@ public class IndexableModel implements Serializable, Comparable<IndexableModel> 
 			JsonNode node = jp.getCodec().readTree(jp);
 			IndexableModel im = new IndexableModel();
 			ObjectMapper mapper = new ObjectMapper();
-			if (node.has("id")) {
-				im.setId(node.get("id").asText());
-			} else if (node.has("artworkId")) {
-				im.setId(node.get("artworkId").asText());
+			if (node.has("assetHash")) {
+				im.setId(node.get("assetHash").asText());
 			} else if (node.has("auctionId")) {
 				im.setId(node.get("auctionId").asText());
 			} else if (node.has("galleryId")) {
@@ -88,10 +90,37 @@ public class IndexableModel implements Serializable, Comparable<IndexableModel> 
 				im.setId(node.get("privacy").asText());
 			} else if (node.has("gallerist")) {
 				im.setId(node.get("gallerist").asText());
+			} else if (node.has("id")) {
+				im.setId(node.get("id").asText());
 			} else {
 				throw new RuntimeException("unable to parse");
 			}
-			im.setTitle(node.get("title").asText());
+			
+			if (node.has("assetHash")) {
+				im.setAssetHash(node.get("assetHash").asText());
+			}
+			
+			if (node.has("projectId")) {
+				im.setProjectId(node.get("projectId").asText());
+			}
+			
+			if (node.has("imageUrl")) {
+				im.setAssetUrl(node.get("imageUrl").asText());
+			} else if (node.has("assetUrl")) {
+				im.setAssetUrl(node.get("assetUrl").asText());
+			}
+			
+			if (node.has("assetProjectUrl")) {
+				im.setAssetProjectUrl(node.get("assetProjectUrl").asText());
+			} else if (node.has("externalUrl")) {
+				im.setAssetProjectUrl(node.get("externalUrl").asText());
+			}
+			
+			if (node.has("title")) {
+				im.setTitle(node.get("title").asText());
+			} else {
+				im.setTitle(node.get("name").asText());
+			}
 			if (node.has("owner")) {
 				im.setOwner(node.get("owner").asText());
 			} else if (node.has("auctioneer")) {
@@ -134,16 +163,27 @@ public class IndexableModel implements Serializable, Comparable<IndexableModel> 
 			}
 			if (node.has("keywords")) {
 				mapper = new ObjectMapper();
-				@SuppressWarnings("unchecked") List<LinkedHashMap<String, Object>> keywords = mapper.convertValue(node.get("keywords"), List.class);
-				List<KeywordModel> kms = new ArrayList<>();
-				KeywordModel km = null;
-				for (LinkedHashMap<String, Object> keyword : keywords) {
-					Object lev = keyword.get("level");
-					Integer level = (Integer)lev;
-					km = new KeywordModel((String)keyword.get("id"), (String)keyword.get("name"), level, (String)keyword.get("parent"));
-					kms.add(km);
+				try {
+					@SuppressWarnings("unchecked") List<LinkedHashMap<String, Object>> keywords = mapper.convertValue(node.get("keywords"), List.class);
+					List<KeywordModel> kms = new ArrayList<>();
+					KeywordModel km = null;
+					for (LinkedHashMap<String, Object> keyword : keywords) {
+						Object lev = keyword.get("level");
+						Integer level = (Integer)lev;
+						km = new KeywordModel((String)keyword.get("id"), (String)keyword.get("name"), level, (String)keyword.get("parent"));
+						kms.add(km);
+					}
+					im.setKeywords(kms);
+				} catch (Exception e) {
+					@SuppressWarnings("unchecked") List<String> keywords = mapper.convertValue(node.get("keywords"), List.class);
+					List<KeywordModel> kms = new ArrayList<>();
+					KeywordModel km = null;
+					for (String keyword : keywords) {
+						km = new KeywordModel("1", keyword, 1, null);
+						kms.add(km);
+					}
+					im.setKeywords(kms);
 				}
-				im.setKeywords(kms);
 			}
 			if (node.has("metaData")) {
 				mapper = new ObjectMapper();
@@ -152,6 +192,38 @@ public class IndexableModel implements Serializable, Comparable<IndexableModel> 
 			}
 			return im;
 		}
+	}
+
+	public String getProjectId() {
+		return projectId;
+	}
+
+	public void setProjectId(String projectId) {
+		this.projectId = projectId;
+	}
+
+	public String getAssetProjectUrl() {
+		return assetProjectUrl;
+	}
+
+	public void setAssetProjectUrl(String assetProjectUrl) {
+		this.assetProjectUrl = assetProjectUrl;
+	}
+
+	public String getAssetUrl() {
+		return assetUrl;
+	}
+
+	public void setAssetUrl(String assetUrl) {
+		this.assetUrl = assetUrl;
+	}
+
+	public String getAssetHash() {
+		return assetHash;
+	}
+
+	public void setAssetHash(String assetHash) {
+		this.assetHash = assetHash;
 	}
 
 	public String getTitle() {

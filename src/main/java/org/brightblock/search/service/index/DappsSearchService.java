@@ -10,6 +10,10 @@ public interface DappsSearchService
 {
 	public List<Map<String, Object>> searchCategories(String objType, String domain, String inField, String query);
 	public List<IndexableModel> searchIndex(int limit, String objType, String domain, String inField, String query);
+	public List<IndexableModel> searchIndex(int limit, String objType, String inField, String query);
+	public List<IndexableModel> searchIndex(int limit, String inField, String query);
+	public List<IndexableModel> searchProject(int limit, String query);
 	public List<IndexableModel> fetchAll();
+	public List<IndexableModel> fetchAll(String fieldName);
 
 }

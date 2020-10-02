@@ -48,27 +48,75 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 	}
 
 	@Override
+	public List<IndexableModel> fetchAll(String fieldName) {
+		String query = "_exists_:" + fieldName;
+		return doSearch(200, query, fieldName);
+	}
+
+	@Override
 	public List<IndexableModel> searchIndex(int limit, String objType, String domain, String inField, String searchTerm) {
+		String query = "domain:" + domain + " AND objType:" + objType;
+		if (inField.equals("title")) {
+			if (searchTerm == null || searchTerm.length() == 0) {
+				searchTerm = "*";
+			}
+			query += " AND (title:" + searchTerm + " OR category:" + searchTerm + " OR description:" + searchTerm + " OR keywords:" + searchTerm + ")";
+		} else if (inField.equals("facet")) {
+			if (searchTerm != null && searchTerm.length() > 0) {
+				query += " AND " + searchTerm;
+			}
+		} else {
+			query += " AND (" + inField + ":" + searchTerm + ")";
+		}
+		return doSearch(limit, query, inField);
+	}
+
+	@Override
+	public List<IndexableModel> searchIndex(int limit, String objType, String inField, String searchTerm) {
+		String query = "objType:" + objType;
+		if (inField.equals("title")) {
+			if (searchTerm == null || searchTerm.length() == 0) {
+				searchTerm = "*";
+			}
+			query += " AND (title:" + searchTerm + " OR category:" + searchTerm + " OR description:" + searchTerm + " OR keywords:" + searchTerm + ")";
+		} else if (inField.equals("facet")) {
+			if (searchTerm != null && searchTerm.length() > 0) {
+				query += " AND " + searchTerm;
+			}
+		} else {
+			query += " AND (" + inField + ":" + searchTerm + ")";
+		}
+		return doSearch(limit, query, inField);
+	}
+
+	@Override
+	public List<IndexableModel> searchIndex(int limit, String inField, String searchTerm) {
+		String query = "objType:artwork";
+		if (inField.equals("title")) {
+			if (searchTerm == null || searchTerm.length() == 0) {
+				searchTerm = "*";
+			}
+			query += " AND (title:" + searchTerm + " OR category:" + searchTerm + " OR description:" + searchTerm + " OR keywords:" + searchTerm + ")";
+		} else if (inField.equals("facet")) {
+			if (searchTerm != null && searchTerm.length() > 0) {
+				query += " AND " + searchTerm;
+			}
+		} else {
+			query += " AND (" + inField + ":" + searchTerm + ")";
+		}
+		return doSearch(limit, query, inField);
+	}
+
+	@Override
+	public List<IndexableModel> searchProject(int limit, String searchTerm) {
+		String query = "projectId:" + searchTerm;
+		return doSearch(limit, query, "projectId");
+	}
+
+	private List<IndexableModel> doSearch(int limit, String query, String inField) {
 		try {
 			initArtMarket();
-			// title:"foo bar" AND body:"quick fox"
-			String query = "domain:" + domain + " AND objType:" + objType;
-			if (inField.equals("title")) {
-				if (searchTerm == null || searchTerm.length() == 0) {
-					searchTerm = "*";
-				}
-				query += " AND (title:" + searchTerm + " OR category:" + searchTerm + " OR description:" + searchTerm + " OR keywords:" + searchTerm + ")";
-			} else if (inField.equals("facet")) {
-				if (searchTerm != null && searchTerm.length() > 0) {
-					query += " AND " + searchTerm;
-				}
-			} else {
-				query += " AND (" + inField + ":" + searchTerm + ")";
-			}
 			QueryParser qp = new QueryParser(inField, artAnalyzer);
-			if (inField.equals("description") || inField.equals("title") || inField.equals("category") || inField.equals("keywords")) {
-				qp.setAllowLeadingWildcard(true);
-			}
 			Query q = qp.parse(query);
 			IndexReader indexReader = DirectoryReader.open(artIndex);
 			IndexSearcher searcher = new IndexSearcher(indexReader);
@@ -128,6 +176,10 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 			model.setUpdated(Long.parseLong(document.get("created")));
 		}
 		model.setOwner(document.get("owner"));
+		model.setProjectId(document.get("projectId"));
+		model.setAssetHash(document.get("assetHash"));
+		model.setAssetProjectUrl(document.get("assetProjectUrl"));
+		model.setAssetUrl(document.get("assetUrl"));
 		model.setGallerist(document.get("gallerist"));
 		model.setGalleryId(document.get("galleryId"));
 		model.setArtist(document.get("artist"));

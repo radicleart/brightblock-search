@@ -272,6 +272,10 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 			document = new Document();
 			document.add(new TextField("title", record.getTitle(), Field.Store.YES));
 			document.add(new StringField("id", record.getId(), Field.Store.YES));
+			document.add(new TextField("assetHash", record.getAssetHash(), Field.Store.YES));
+			if (record.getProjectId()!= null) {
+				document.add(new TextField("projectId", record.getProjectId(), Field.Store.YES));
+			}
 			if (record.getObjType() != null) {
 				document.add(new TextField("objType", record.getObjType(), Field.Store.YES));
 			} else {
@@ -310,6 +314,12 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 			if (record.getPrivacy() != null) {
 				document.add(new TextField("privacy", record.getPrivacy(), Field.Store.YES));
 			}
+			if (record.getAssetProjectUrl() != null) {
+				document.add(new TextField("assetProjectUrl", record.getAssetProjectUrl(), Field.Store.YES));
+			}
+			if (record.getAssetUrl() != null) {
+				document.add(new TextField("assetUrl", record.getAssetUrl(), Field.Store.YES));
+			}
 			if (record.getGallerist() != null) {
 				document.add(new TextField("gallerist", record.getGallerist(), Field.Store.YES));
 			}
@@ -347,7 +357,7 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 					}
 				}
 			}
-			Term term = new Term("id", String.valueOf(record.getId()));
+			Term term = new Term("assetHash", String.valueOf(record.getAssetHash()));
 			writer.updateDocument(term, document);
 			logger.info("Indexed dapp search record: Owner: " + record.getOwner() + " object: " + record.getObjType() + " record title: " + record.getTitle() + " from domain: " + record.getDomain());
 		} catch (Exception e) {
