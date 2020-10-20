@@ -15,34 +15,26 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
-@JsonDeserialize(using = IndexableModel.Deserializer.class)
-public class IndexableModel implements SearchResultModel, Serializable, Comparable<IndexableModel> {
+@JsonDeserialize(using = ProjectModel.Deserializer.class)
+public class ProjectModel implements SearchResultModel, Serializable, Comparable<ProjectModel> {
 
-	private static final long serialVersionUID = 7471051478505916999L;
+	private static final long serialVersionUID = -1711100172168977732L;
 	private String id;
 	private String projectId;
 	private String title;
 	private String description;
 	private Long created;
+	private String assetUrl;
 	private Long updated;
 	private String owner;
-	private String assetHash;
-	private String assetUrl;
-	private String assetProjectUrl;
 	private String privacy;
-	private String artist;
-	private String gallerist;
-	private String galleryId;
 	private String objType;
 	private String domain;
 	private KeywordModel category;
 	private List<KeywordModel> keywords;
-	private String status;
-	private String buyer;
-	private String txid;
 	private Map<String, String> metaData;
 
-	public IndexableModel() {
+	public ProjectModel() {
 		super();
 		created = new Date().getTime();
 		updated = new Date().getTime();
@@ -66,7 +58,7 @@ public class IndexableModel implements SearchResultModel, Serializable, Comparab
 	// this.domain = domain;
 	// }
 
-	public static class Deserializer extends StdDeserializer<IndexableModel> {
+	public static class Deserializer extends StdDeserializer<ProjectModel> {
 		public Deserializer() {
 			this(null);
 		}
@@ -76,9 +68,9 @@ public class IndexableModel implements SearchResultModel, Serializable, Comparab
 		}
 
 		@Override
-		public IndexableModel deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
+		public ProjectModel deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
 			JsonNode node = jp.getCodec().readTree(jp);
-			IndexableModel im = new IndexableModel();
+			ProjectModel im = new ProjectModel();
 			ObjectMapper mapper = new ObjectMapper();
 			if (node.has("assetHash")) {
 				im.setId(node.get("assetHash").asText());
@@ -96,24 +88,8 @@ public class IndexableModel implements SearchResultModel, Serializable, Comparab
 				throw new RuntimeException("unable to parse");
 			}
 			
-			if (node.has("assetHash")) {
-				im.setAssetHash(node.get("assetHash").asText());
-			}
-			
 			if (node.has("projectId")) {
 				im.setProjectId(node.get("projectId").asText());
-			}
-			
-			if (node.has("imageUrl")) {
-				im.setAssetUrl(node.get("imageUrl").asText());
-			} else if (node.has("assetUrl")) {
-				im.setAssetUrl(node.get("assetUrl").asText());
-			}
-			
-			if (node.has("assetProjectUrl")) {
-				im.setAssetProjectUrl(node.get("assetProjectUrl").asText());
-			} else if (node.has("externalUrl")) {
-				im.setAssetProjectUrl(node.get("externalUrl").asText());
 			}
 			
 			if (node.has("title")) {
@@ -135,24 +111,18 @@ public class IndexableModel implements SearchResultModel, Serializable, Comparab
 			} else {
 				im.setDescription(node.get("title").asText());
 			}
-			if (node.has("artist")) {
-				im.setArtist(node.get("artist").asText());
-			}
 			if (node.has("objType")) {
 				im.setObjType(node.get("objType").asText());
 			}
 			if (node.has("domain")) {
 				im.setDomain(node.get("domain").asText());
 			}
-			if (node.has("buyer")) {
-				im.setBuyer(node.get("buyer").asText());
+			if (node.has("imageUrl")) {
+				im.setAssetUrl(node.get("imageUrl").asText());
+			} else if (node.has("assetUrl")) {
+				im.setAssetUrl(node.get("assetUrl").asText());
 			}
-			if (node.has("status")) {
-				im.setStatus(node.get("status").asText());
-			}
-			if (node.has("txid")) {
-				im.setTxid(node.get("txid").asText());
-			}
+			
 			if (node.has("category")) {
 				mapper = new ObjectMapper();
 				@SuppressWarnings("unchecked") LinkedHashMap<String, Object> cat = mapper.convertValue(node.get("category"), LinkedHashMap.class);
@@ -200,30 +170,6 @@ public class IndexableModel implements SearchResultModel, Serializable, Comparab
 
 	public void setProjectId(String projectId) {
 		this.projectId = projectId;
-	}
-
-	public String getAssetProjectUrl() {
-		return assetProjectUrl;
-	}
-
-	public void setAssetProjectUrl(String assetProjectUrl) {
-		this.assetProjectUrl = assetProjectUrl;
-	}
-
-	public String getAssetUrl() {
-		return assetUrl;
-	}
-
-	public void setAssetUrl(String assetUrl) {
-		this.assetUrl = assetUrl;
-	}
-
-	public String getAssetHash() {
-		return assetHash;
-	}
-
-	public void setAssetHash(String assetHash) {
-		this.assetHash = assetHash;
 	}
 
 	public String getTitle() {
@@ -275,13 +221,13 @@ public class IndexableModel implements SearchResultModel, Serializable, Comparab
 	}
 
 	@Override
-	public int compareTo(IndexableModel model) {
+	public int compareTo(ProjectModel model) {
 		return this.id.compareTo(model.getId());
 	}
 
 	@Override
 	public boolean equals(Object model) {
-		IndexableModel record = (IndexableModel) model;
+		ProjectModel record = (ProjectModel) model;
 		return this.id.equals(record.getId());
 	}
 
@@ -293,60 +239,12 @@ public class IndexableModel implements SearchResultModel, Serializable, Comparab
 		this.domain = domain;
 	}
 
-	public String getArtist() {
-		return artist;
-	}
-
-	public void setArtist(String artist) {
-		this.artist = artist;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	public String getBuyer() {
-		return buyer;
-	}
-
-	public void setBuyer(String buyer) {
-		this.buyer = buyer;
-	}
-
-	public String getTxid() {
-		return txid;
-	}
-
-	public void setTxid(String txid) {
-		this.txid = txid;
-	}
-
 	public Map<String, String> getMetaData() {
 		return metaData;
 	}
 
 	public void setMetaData(Map<String, String> metaData) {
 		this.metaData = metaData;
-	}
-
-	public String getGallerist() {
-		return gallerist;
-	}
-
-	public void setGallerist(String gallerist) {
-		this.gallerist = gallerist;
-	}
-
-	public String getGalleryId() {
-		return galleryId;
-	}
-
-	public void setGalleryId(String galleryId) {
-		this.galleryId = galleryId;
 	}
 
 	public Long getCreated() {
@@ -379,6 +277,14 @@ public class IndexableModel implements SearchResultModel, Serializable, Comparab
 
 	public void setPrivacy(String privacy) {
 		this.privacy = privacy;
+	}
+
+	public String getAssetUrl() {
+		return assetUrl;
+	}
+
+	public void setAssetUrl(String assetUrl) {
+		this.assetUrl = assetUrl;
 	}
 
 }

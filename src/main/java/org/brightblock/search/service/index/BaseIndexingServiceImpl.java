@@ -3,6 +3,7 @@ package org.brightblock.search.service.index;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,6 +11,7 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.brightblock.search.api.IndexableModel;
 import org.brightblock.search.conf.ApplicationSettings;
 import org.brightblock.search.service.blockstack.BlockstackApiService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,4 +76,5 @@ public class BaseIndexingServiceImpl {
 			auctionAnalyzer = new StandardAnalyzer();
 		}
 	}
+
 }
