@@ -25,6 +25,7 @@ public class IndexableModel implements SearchResultModel, Serializable, Comparab
 	private String description;
 	private Long created;
 	private Long updated;
+	private Long mintedOn;
 	private String owner;
 	private String assetHash;
 	private String assetUrl;
@@ -134,6 +135,9 @@ public class IndexableModel implements SearchResultModel, Serializable, Comparab
 				im.setDescription(node.get("description").asText());
 			} else {
 				im.setDescription(node.get("title").asText());
+			}
+			if (node.has("mintedOn")) {
+				im.setArtist(node.get("mintedOn").asText());
 			}
 			if (node.has("artist")) {
 				im.setArtist(node.get("artist").asText());
@@ -379,6 +383,14 @@ public class IndexableModel implements SearchResultModel, Serializable, Comparab
 
 	public void setPrivacy(String privacy) {
 		this.privacy = privacy;
+	}
+
+	public Long getMintedOn() {
+		return mintedOn;
+	}
+
+	public void setMintedOn(Long mintedOn) {
+		this.mintedOn = mintedOn;
 	}
 
 }

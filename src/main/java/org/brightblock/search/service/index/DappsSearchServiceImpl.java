@@ -238,6 +238,9 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 		} else {
 			model.setUpdated(Long.parseLong(document.get("updated")));
 		}
+		if (document.get("mintedOn") != null) {
+			model.setMintedOn(Long.parseLong(document.get("mintedOn")));
+		}
 		if (document.get("created") == null) {
 			model.setUpdated(new Date().getTime() - HUNDRED_DAYS); 
 		} else {

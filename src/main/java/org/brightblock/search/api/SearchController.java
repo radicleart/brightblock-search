@@ -2,6 +2,7 @@ package org.brightblock.search.api;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -10,6 +11,8 @@ import org.brightblock.search.rest.models.ResponseCodes;
 import org.brightblock.search.service.blockstack.models.ZonefileModel;
 import org.brightblock.search.service.index.DappsSearchService;
 import org.brightblock.search.service.index.NamesSearchService;
+import org.brightblock.search.service.project.ProjectService;
+import org.brightblock.search.service.project.domain.Project;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,6 +29,8 @@ public class SearchController {
 
 	@Autowired private NamesSearchService namesSearchService;
 	@Autowired private DappsSearchService dappsSearchService;
+	@Autowired
+	private ProjectService projectService;
 
 	@RequestMapping(value = "/names/fetch", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<ApiModel> fetchAllNames(HttpServletRequest request) {
@@ -41,6 +46,30 @@ public class SearchController {
 		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, response);
 		model.setHeaders(request);
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/projectsByProjectId/{projectId}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	public Optional<Project> findByProjectId(HttpServletRequest request, @PathVariable String projectId) {
+		Optional<Project> project = projectService.findByProjectId(projectId);
+		return project;
+	}
+	
+	@RequestMapping(value = "/projectsByDomain/{domain}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	public List<Project> findByDomain(HttpServletRequest request, @PathVariable String domain) {
+		List<Project> projects = projectService.findByDomain(domain);
+		return projects;
+	}
+	
+	@RequestMapping(value = "/projectsByOwner/{owner}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	public List<Project> findByOwner(HttpServletRequest request, @PathVariable String owner) {
+		List<Project> projects = projectService.findByOwner(owner);
+		return projects;
+	}
+	
+	@RequestMapping(value = "/projectsAll", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	public List<Project> findAllProjects(HttpServletRequest request) {
+		List<Project> projects = projectService.findAll();
+		return projects;
 	}
 
 	@RequestMapping(value = "/findAll", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
@@ -94,14 +123,6 @@ public class SearchController {
 	@RequestMapping(value = "/findArtworkByTitleOrDescriptionOrCategoryOrKeyword", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<ApiModel> searchDapps(HttpServletRequest request) {
 		List<SearchResultModel> response = dappsSearchService.searchIndex(200, "title", getQuery(request));
-		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, response);
-		model.setHeaders(request);
-		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
-	}
-	
-	@RequestMapping(value = "/findByProject/{projectId}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<ApiModel> searchProjects(HttpServletRequest request, @PathVariable String projectId) {
-		List<SearchResultModel> response = dappsSearchService.searchProject(200, projectId);
 		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, response);
 		model.setHeaders(request);
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);

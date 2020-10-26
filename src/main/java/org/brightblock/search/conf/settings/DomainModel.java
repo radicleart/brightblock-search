@@ -3,6 +3,8 @@ package org.brightblock.search.conf.settings;
 import java.io.Serializable;
 import java.util.List;
 
+import org.brightblock.search.service.project.domain.IndexFileModel;
+
 public class DomainModel implements Serializable {
 
 	private static final long serialVersionUID = 3112854578667781497L;

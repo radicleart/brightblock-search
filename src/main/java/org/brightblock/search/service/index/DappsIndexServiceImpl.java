@@ -26,9 +26,10 @@ import org.apache.lucene.search.Query;
 import org.brightblock.search.api.IndexableContainerModel;
 import org.brightblock.search.api.IndexableModel;
 import org.brightblock.search.api.KeywordModel;
-import org.brightblock.search.conf.settings.DomainModel;
-import org.brightblock.search.conf.settings.IndexFileModel;
 import org.brightblock.search.service.blockstack.models.ZonefileModel;
+import org.brightblock.search.service.project.ProjectService;
+import org.brightblock.search.service.project.domain.IndexFileModel;
+import org.brightblock.search.service.project.domain.Project;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -47,7 +48,10 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 	@Autowired
 	private RestOperations restTemplate1;
 	@Autowired
+	private ProjectService projectService;
+	@Autowired
 	private ObjectMapper mapper;
+
 
 	@Override
 	public int clearAll() {
@@ -176,7 +180,8 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 	}
 
 	private void buildIndex(ZonefileModel zonefile) {
-		List<DomainModel> domains = applicationSettings.getDomains();
+		// List<DomainModel> domains = applicationSettings.getDomains();
+		List<Project> projects = projectService.findAll();
 		List<IndexableContainerModel> userRecords = new ArrayList<>();
 		String[] appsVisited = zonefile.getDomainGaiaPairs();
 		if (appsVisited == null) return;
@@ -185,16 +190,16 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 			String[] appParts = appVisited.split("=");
 			try {
 				String appUrl = appParts[0];
-				for (DomainModel domain : domains) {
+				for (Project project : projects) {
 					logger.info("---------------------------------");
-					logger.info("domain info: " + domain.getDomain());
-					if (appUrl.indexOf(domain.getDomain()) > -1 || domain.getDomain().indexOf(appUrl) > -1) {
-						for (IndexFileModel indexFileModel : domain.getIndexFiles()) {
+					logger.info("matching: " + project.getDomain() + " against " + appUrl);
+					if (appUrl.indexOf(project.getDomain()) > -1 || project.getDomain().indexOf(appUrl) > -1) {
+						for (IndexFileModel indexFileModel : project.getIndexFiles()) {
 							IndexableContainerModel indexableContainerModel = fetchUserFile(
 									appParts[1], 
 									indexFileModel.getIndexFileName(),
-									indexFileModel.getIndexObjType(), 
-									domain.getDomain());
+									indexFileModel.getIndexObjType(),
+									project.getDomain());
 							logger.info("domain getIndexFileName: " + indexFileModel.getIndexFileName());
 							logger.info("domain getIndexObjType: " + indexFileModel.getIndexObjType());
 							if (indexableContainerModel != null && indexableContainerModel.getRecords() != null && indexableContainerModel.getRecords().size() > 0) {
@@ -283,6 +288,9 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 			}
 			if (record.getUpdated() != null) {
 				document.add(new NumericDocValuesField("updated", record.getUpdated()));
+			}
+			if (record.getMintedOn() != null) {
+				document.add(new NumericDocValuesField("mintedOn", record.getMintedOn()));
 			}
 			if (record.getPrivacy() != null) {
 				document.add(new TextField("privacy", record.getPrivacy(), Field.Store.YES));

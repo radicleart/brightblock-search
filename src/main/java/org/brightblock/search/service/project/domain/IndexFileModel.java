@@ -1,4 +1,4 @@
-package org.brightblock.search.conf.settings;
+package org.brightblock.search.service.project.domain;
 
 import java.io.Serializable;
 
