@@ -1,27 +1,22 @@
 package org.brightblock.search.service.project.domain;
 
-import java.io.Serializable;
+import org.springframework.data.annotation.TypeAlias;
 
-public class IndexFileModel implements Serializable {
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-	private static final long serialVersionUID = 7644522607123444433L;
+@Getter
+@Setter
+@Builder
+@ToString
+@AllArgsConstructor
+@TypeAlias(value = "IndexFileModel")
+public class IndexFileModel {
+
 	private String indexFileName;
 	private String indexObjType;
-
-	public String getIndexFileName() {
-		return indexFileName;
-	}
-
-	public void setIndexFileName(String indexFileName) {
-		this.indexFileName = indexFileName;
-	}
-
-	public String getIndexObjType() {
-		return indexObjType;
-	}
-
-	public void setIndexObjType(String indexObjType) {
-		this.indexObjType = indexObjType;
-	}
 
 }
