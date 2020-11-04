@@ -35,6 +35,7 @@ public class IndexController {
 	@Autowired
 	private ProjectService projectService;
 
+	@Deprecated
 	@RequestMapping(value = "/register", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public Project register(HttpServletRequest request, @RequestBody Project project) {
 		project = projectService.save(project);
@@ -42,6 +43,21 @@ public class IndexController {
 		names.add(project.getOwner());
 		namesIndexService.indexUsers(names);
 		return project;
+	}
+
+	@Deprecated
+	@RequestMapping(value = "/project", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<ApiModel> indexProjects(HttpServletRequest request) {
+		List<Project> projects = projectService.findAll();
+		List<String> names = new ArrayList<String>();
+		for (Project project : projects) {
+			names.add(project.getOwner());
+		}
+		namesIndexService.indexUsers(names);
+		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK,
+				"Indexing users: " + names.toString() + " in background.");
+		model.setHeaders(request);
+		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/dapps/clear", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
@@ -77,26 +93,20 @@ public class IndexController {
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/project", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<ApiModel> indexProjects(HttpServletRequest request) {
-		List<Project> projects = projectService.findAll();
-		List<String> names = new ArrayList<String>();
-		for (Project project : projects) {
-			names.add(project.getOwner());
-		}
-		namesIndexService.indexUsers(names);
-		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK,
-				"Indexing users: " + names.toString() + " in background.");
-		model.setHeaders(request);
-		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
-	}
-
 	@RequestMapping(value = "/size", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<ApiModel> sizeOfIndex(HttpServletRequest request) {
 		Map<String, Integer> indexSize = new HashMap<String, Integer>();
 		indexSize.put("names", namesIndexService.getNumbDocs());
 		indexSize.put("dapps", dappsIndexService.getNumbDocs());
 		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, indexSize);
+		model.setHeaders(request);
+		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/addProject", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<ApiModel> addRecord(HttpServletRequest request, @RequestBody ProjectModel indexData) {
+		dappsIndexService.indexSingleRecord(indexData);
+		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, "Building in background.");
 		model.setHeaders(request);
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
 	}
