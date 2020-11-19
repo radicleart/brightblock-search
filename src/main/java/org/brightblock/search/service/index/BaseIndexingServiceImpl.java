@@ -11,7 +11,7 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import org.brightblock.search.api.IndexableModel;
+import org.brightblock.search.api.model.IndexableModel;
 import org.brightblock.search.conf.ApplicationSettings;
 import org.brightblock.search.service.blockstack.BlockstackApiService;
 import org.springframework.beans.factory.annotation.Autowired;

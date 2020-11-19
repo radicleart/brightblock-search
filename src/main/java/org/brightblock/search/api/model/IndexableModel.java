@@ -1,4 +1,4 @@
-package org.brightblock.search.api;
+package org.brightblock.search.api.model;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -19,7 +19,6 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 public class IndexableModel implements SearchResultModel, Serializable, Comparable<IndexableModel> {
 
 	private static final long serialVersionUID = 7471051478505916999L;
-	private String id;
 	private String projectId;
 	private String title;
 	private String description;
@@ -32,16 +31,16 @@ public class IndexableModel implements SearchResultModel, Serializable, Comparab
 	private String assetProjectUrl;
 	private String privacy;
 	private String artist;
-	private String gallerist;
-	private String galleryId;
 	private String objType;
 	private String domain;
 	private KeywordModel category;
 	private List<KeywordModel> keywords;
 	private String status;
 	private String buyer;
-	private String txid;
+	private Long tokenId;
+	private Long nftIndex;
 	private Map<String, String> metaData;
+	private TradeInfoModel tradeInfo;
 
 	public IndexableModel() {
 		super();
@@ -81,30 +80,22 @@ public class IndexableModel implements SearchResultModel, Serializable, Comparab
 			JsonNode node = jp.getCodec().readTree(jp);
 			IndexableModel im = new IndexableModel();
 			ObjectMapper mapper = new ObjectMapper();
-			if (node.has("assetHash")) {
-				im.setId(node.get("assetHash").asText());
-			} else if (node.has("auctionId")) {
-				im.setId(node.get("auctionId").asText());
-			} else if (node.has("galleryId")) {
-				im.setId(node.get("galleryId").asText());
-			} else if (node.has("privacy")) {
-				im.setId(node.get("privacy").asText());
-			} else if (node.has("gallerist")) {
-				im.setId(node.get("gallerist").asText());
-			} else if (node.has("id")) {
-				im.setId(node.get("id").asText());
-			} else {
-				throw new RuntimeException("unable to parse");
-			}
 			
-			if (node.has("assetHash")) {
-				im.setAssetHash(node.get("assetHash").asText());
-			}
+			// don't allow things without an asset hash - primary id of items.
+			im.setAssetHash(node.get("assetHash").asText());
 			
+			if (node.has("tokenId")) {
+				im.setTokenId(node.get("tokenId").asLong());
+			}
+			if (node.has("nftIndex")) {
+				im.setNftIndex(node.get("nftIndex").asLong());
+			}
+			if (node.has("privacy")) {
+				im.setPrivacy(node.get("privacy").asText());
+			}
 			if (node.has("projectId")) {
 				im.setProjectId(node.get("projectId").asText());
 			}
-			
 			if (node.has("imageUrl")) {
 				im.setAssetUrl(node.get("imageUrl").asText());
 			} else if (node.has("assetUrl")) {
@@ -154,9 +145,6 @@ public class IndexableModel implements SearchResultModel, Serializable, Comparab
 			if (node.has("status")) {
 				im.setStatus(node.get("status").asText());
 			}
-			if (node.has("txid")) {
-				im.setTxid(node.get("txid").asText());
-			}
 			if (node.has("category")) {
 				mapper = new ObjectMapper();
 				@SuppressWarnings("unchecked") LinkedHashMap<String, Object> cat = mapper.convertValue(node.get("category"), LinkedHashMap.class);
@@ -196,6 +184,14 @@ public class IndexableModel implements SearchResultModel, Serializable, Comparab
 			}
 			return im;
 		}
+	}
+
+	public TradeInfoModel getTradeInfo() {
+		return tradeInfo;
+	}
+
+	public void setTradeInfo(TradeInfoModel saleData) {
+		this.tradeInfo = saleData;
 	}
 
 	public String getProjectId() {
@@ -246,14 +242,6 @@ public class IndexableModel implements SearchResultModel, Serializable, Comparab
 		this.description = description;
 	}
 
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
 	public String getOwner() {
 		return owner;
 	}
@@ -280,13 +268,13 @@ public class IndexableModel implements SearchResultModel, Serializable, Comparab
 
 	@Override
 	public int compareTo(IndexableModel model) {
-		return this.id.compareTo(model.getId());
+		return this.assetHash.compareTo(model.getAssetHash());
 	}
 
 	@Override
 	public boolean equals(Object model) {
 		IndexableModel record = (IndexableModel) model;
-		return this.id.equals(record.getId());
+		return this.assetHash.equals(record.getAssetHash());
 	}
 
 	public String getDomain() {
@@ -321,12 +309,12 @@ public class IndexableModel implements SearchResultModel, Serializable, Comparab
 		this.buyer = buyer;
 	}
 
-	public String getTxid() {
-		return txid;
+	public Long getTokenId() {
+		return tokenId;
 	}
 
-	public void setTxid(String txid) {
-		this.txid = txid;
+	public void setTokenId(Long tokenId) {
+		this.tokenId = tokenId;
 	}
 
 	public Map<String, String> getMetaData() {
@@ -335,22 +323,6 @@ public class IndexableModel implements SearchResultModel, Serializable, Comparab
 
 	public void setMetaData(Map<String, String> metaData) {
 		this.metaData = metaData;
-	}
-
-	public String getGallerist() {
-		return gallerist;
-	}
-
-	public void setGallerist(String gallerist) {
-		this.gallerist = gallerist;
-	}
-
-	public String getGalleryId() {
-		return galleryId;
-	}
-
-	public void setGalleryId(String galleryId) {
-		this.galleryId = galleryId;
 	}
 
 	public Long getCreated() {
@@ -391,6 +363,14 @@ public class IndexableModel implements SearchResultModel, Serializable, Comparab
 
 	public void setMintedOn(Long mintedOn) {
 		this.mintedOn = mintedOn;
+	}
+
+	public Long getNftIndex() {
+		return nftIndex;
+	}
+
+	public void setNftIndex(Long nftIndex) {
+		this.nftIndex = nftIndex;
 	}
 
 }

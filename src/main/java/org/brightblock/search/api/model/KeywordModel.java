@@ -1,4 +1,4 @@
-package org.brightblock.search.api;
+package org.brightblock.search.api.model;
 
 import java.io.IOException;
 import java.io.Serializable;

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.lucene.document.Document;
+import org.apache.lucene.document.LongPoint;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexableField;
@@ -16,10 +17,10 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
-import org.brightblock.search.api.IndexableModel;
-import org.brightblock.search.api.KeywordModel;
-import org.brightblock.search.api.ProjectModel;
-import org.brightblock.search.api.SearchResultModel;
+import org.brightblock.search.api.model.IndexableModel;
+import org.brightblock.search.api.model.KeywordModel;
+import org.brightblock.search.api.model.SearchResultModel;
+import org.brightblock.search.api.model.TradeInfoModel;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -93,7 +94,7 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 
 	@Override
 	public List<SearchResultModel> searchIndex(int limit, String inField, String searchTerm) {
-		String query = "objType:artwork";
+		String query = "objType:artwork OR objType:trading_cards OR objType:certificates OR objType:digital_property OR objType:written_word OR objType:news_media";
 		if (inField.equals("title")) {
 			if (searchTerm == null || searchTerm.length() == 0) {
 				searchTerm = "*";
@@ -110,27 +111,66 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 	}
 
 	@Override
-	public List<SearchResultModel> searchProject(int limit, String searchTerm) {
-		String query = "objType:artwork AND projectId:" + searchTerm;
+	public List<SearchResultModel> findByProjectId(int limit, String searchTerm) {
+		String query = "projectId:" + searchTerm;
 		return doSearch(limit, query, "projectId");
+	}
+
+	@Override
+	public SearchResultModel findByAssetHash(String assetHash) {
+		String query = "assetHash:" + assetHash;
+		List<SearchResultModel> results = doSearch(1, query, "assetHash");
+		return results.get(0);
+	}
+
+	@Override
+	public List<SearchResultModel> findByOwner(int limit, String searchTerm) {
+		String query = "owner:" + searchTerm;
+		return doSearch(limit, query, "owner");
+	}
+
+	@Override
+	public List<SearchResultModel> findBySaleType(int limit, Long searchTerm) {
+		List<Long> points = new ArrayList<Long>();
+		points.add(searchTerm);
+		Query query = LongPoint.newSetQuery("saleType", points);
+		return doGeneralisedSearch(limit, query, "saleType");
 	}
 
 	@Override
 	public List<SearchResultModel> searchObjectType(int limit, String searchTerm) {
 		String query = "objType:" + searchTerm;
 		List<SearchResultModel> models = doSearch(limit, query, "objType");
-		
 		return models;
 	}
 
 	private List<SearchResultModel> doSearch(int limit, String query, String inField) {
 		try {
 			initArtMarket();
+			IndexReader indexReader = DirectoryReader.open(artIndex);
 			QueryParser qp = new QueryParser(inField, artAnalyzer);
 			Query q = qp.parse(query);
-			IndexReader indexReader = DirectoryReader.open(artIndex);
 			IndexSearcher searcher = new IndexSearcher(indexReader);
 			TopDocs topDocs = searcher.search(q, limit);
+			List<SearchResultModel> models = new ArrayList<SearchResultModel>();
+			Document document = null;
+			for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
+				document = searcher.doc(scoreDoc.doc);
+				SearchResultModel model = convertToRecord(document);
+				models.add(model);
+			}
+			return models;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	private List<SearchResultModel> doGeneralisedSearch(int limit, Query query, String inField) {
+		try {
+			initArtMarket();
+			IndexReader indexReader = DirectoryReader.open(artIndex);
+			IndexSearcher searcher = new IndexSearcher(indexReader);
+			TopDocs topDocs = searcher.search(query, limit);
 			List<SearchResultModel> models = new ArrayList<SearchResultModel>();
 			Document document = null;
 			for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
@@ -174,64 +214,15 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 		String objectType = document.get("objType");
 		if (objectType.equals("artwork")) {
 			return convertToArtwork(document);
-		} else if (objectType.equals("project")) {
-			return convertToProject(document);
 		} else {
 			return null;
 		}
 	}
 	
-	private SearchResultModel convertToProject(Document document) {
-		ProjectModel model = new ProjectModel();
-		model.setDescription(document.get("description"));
-		model.setId(document.get("id"));
-		model.setObjType(document.get("objType"));
-		if (document.get("updated") == null) {
-			model.setUpdated(new Date().getTime() - HUNDRED_DAYS); 
-		} else {
-			model.setUpdated(Long.parseLong(document.get("updated")));
-		}
-		if (document.get("created") == null) {
-			model.setUpdated(new Date().getTime() - HUNDRED_DAYS); 
-		} else {
-			model.setUpdated(Long.parseLong(document.get("created")));
-		}
-		model.setOwner(document.get("owner"));
-		model.setProjectId(document.get("projectId"));
-		
-		model.setAssetUrl(document.get("assetUrl"));
-		String csKeywords = document.get("keywords");
-		if (csKeywords != null) {
-			List<KeywordModel> kms = new ArrayList<>();
-			String[] csList = csKeywords.split(",");
-			KeywordModel km = null;
-			for (String keywordId : csList) {
-				km = new KeywordModel(keywordId);
-				kms.add(km);
-			}
-			model.setKeywords(kms);
-		}
-		String csCategory = document.get("category");
-		if (csCategory != null) {
-			KeywordModel km = new KeywordModel(csCategory);
-			model.setCategory(km);
-		}
-		model.setTitle(document.get("title"));
-		model.setDomain(document.get("domain"));
-		List<IndexableField> fields = document.getFields();
-		Map<String, String> metaData = new HashMap<String, String>();
-		for (IndexableField field : fields) {
-			String fieldname = field.stringValue();
-			String value = document.get(fieldname);
-			metaData.put(fieldname, value);
-		}
-		return model;
-	}
-	
 	private SearchResultModel convertToArtwork(Document document) {
 		IndexableModel model = new IndexableModel();
 		model.setDescription(document.get("description"));
-		model.setId(document.get("id"));
+		model.setAssetHash(document.get("assetHash"));
 		model.setObjType("artwork");
 		if (document.get("updated") == null) {
 			model.setUpdated(new Date().getTime() - HUNDRED_DAYS); 
@@ -246,13 +237,44 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 		} else {
 			model.setUpdated(Long.parseLong(document.get("created")));
 		}
+		if (document.get("nftIndex") != null) {
+			model.setNftIndex(Long.parseLong(document.get("nftIndex")));
+		}
+		logger.info("Getting from nftIndex: " + model.getNftIndex() + " : " + document.get("nftIndex"));
+		if (document.get("tokenId") != null) {
+			model.setTokenId(Long.parseLong(document.get("tokenId")));
+		}
+		if (model.getTradeInfo() == null) {
+			model.setTradeInfo(new TradeInfoModel());
+		}
+		if (document.get("saleType") != null) {
+			try {
+				model.getTradeInfo().setSaleType(Integer.parseInt(document.get("saleType")));
+			} catch (NumberFormatException e) {
+				model.getTradeInfo().setSaleType(0);
+			}
+		}
+		logger.info("Getting from saleType: " + model.getTradeInfo().getSaleType() + " : " + document.get("saleType"));
+		if (document.get("buyNowOrStartingPrice") != null) {
+			model.getTradeInfo().setBuyNowOrStartingPrice(Long.parseLong(document.get("buyNowOrStartingPrice")));
+		}
+		logger.info("Getting from saleType: " + model.getTradeInfo().getBuyNowOrStartingPrice() + " : " + document.get("buyNowOrStartingPrice"));
+		if (document.get("incrementPrice") != null) {
+			model.getTradeInfo().setIncrementPrice(Long.parseLong(document.get("incrementPrice")));
+		}
+		if (document.get("reservePrice") != null) {
+			model.getTradeInfo().setReservePrice(Long.parseLong(document.get("reservePrice")));
+		}
+		logger.info("Getting from reservePrice: " + model.getTradeInfo().getReservePrice() + " : " + document.get("reservePrice"));
+		if (document.get("biddingEndTime") != null) {
+			model.getTradeInfo().setBiddingEndTime(Long.parseLong(document.get("biddingEndTime")));
+		}
+		logger.info("Getting from biddingEndTime: " + model.getTradeInfo().getBiddingEndTime() + " : " + document.get("biddingEndTime"));
+
 		model.setOwner(document.get("owner"));
 		model.setProjectId(document.get("projectId"));
-		model.setAssetHash(document.get("assetHash"));
 		model.setAssetProjectUrl(document.get("assetProjectUrl"));
 		model.setAssetUrl(document.get("assetUrl"));
-		model.setGallerist(document.get("gallerist"));
-		model.setGalleryId(document.get("galleryId"));
 		model.setArtist(document.get("artist"));
 		String csKeywords = document.get("keywords");
 		if (csKeywords != null) {
@@ -272,7 +294,6 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 		}
 		model.setBuyer(document.get("buyer"));
 		model.setStatus(document.get("status"));
-		model.setTxid(document.get("txid"));
 		model.setTitle(document.get("title"));
 		model.setDomain(document.get("domain"));
 		List<IndexableField> fields = document.getFields();

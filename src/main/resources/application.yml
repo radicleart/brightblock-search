@@ -88,25 +88,6 @@ radicle:
       mongoDbName: search
 application:
    blockstackBase: https://tapi.risidio.com
-   domains:
-      -  domain: dbid.io
-         indexFiles:
-            - indexFileName: items_v01.json
-              indexObjType: item
-            - indexFileName: auctions_v01.json
-              indexObjType: auction
-         fields:
-            - title
-            - description
-      -  domain: /radicle.art
-         indexFiles:
-            - indexFileName: records_v01.json
-              indexObjType: artwork
-            - indexFileName: auctions_v01.json
-              indexObjType: auction
-         fields:
-            - title
-            - description
 
 ---
 
@@ -119,40 +100,3 @@ radicle:
       mongoDbName: search
 application:
    blockstackBase: https://api.risidio.com
-   domains:
-      -  domain: risidio.loopbomb.com
-         indexFiles: 
-            - indexFileName: loopbomb_v03.json
-              indexObjType: item
-            - indexFileName: auctions_v01.json
-              indexObjType: auction
-         fields:
-            - title
-            - description
-      -  domain: loopbomb.com
-         indexFiles: 
-            - indexFileName: items_v01.json
-              indexObjType: item
-            - indexFileName: auctions_v01.json
-              indexObjType: auction
-         fields:
-            - title
-            - description
-      -  domain: dbid.io
-         indexFiles: 
-            - indexFileName: items_v01.json
-              indexObjType: item
-            - indexFileName: auctions_v01.json
-              indexObjType: auction
-         fields:
-            - title
-            - description
-      -  domain: radicle.art
-         indexFiles: 
-            - indexFileName: records_v01.json
-              indexObjType: artwork
-            - indexFileName: auctions_v01.json
-              indexObjType: auction
-         fields:
-            - title
-            - description

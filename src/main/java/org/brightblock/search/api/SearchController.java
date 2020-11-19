@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.brightblock.search.api.model.SearchResultModel;
 import org.brightblock.search.rest.models.ApiModel;
 import org.brightblock.search.rest.models.ResponseCodes;
 import org.brightblock.search.service.blockstack.models.ZonefileModel;
@@ -81,9 +82,25 @@ public class SearchController {
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/findBy/{fieldName}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<ApiModel> fetchAllDapps(HttpServletRequest request, @PathVariable String fieldName) {
-		List<SearchResultModel> records = dappsSearchService.fetchAll(fieldName);
+	@RequestMapping(value = "/findByProjectId", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<ApiModel> findByProjectId(HttpServletRequest request) {
+		List<SearchResultModel> records = dappsSearchService.findByProjectId(200, getQuery(request));
+		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, records);
+		model.setHeaders(request);
+		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/findByOwner", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<ApiModel> findByOwner(HttpServletRequest request) {
+		List<SearchResultModel> records = dappsSearchService.findByOwner(200, getQuery(request));
+		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, records);
+		model.setHeaders(request);
+		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/findBySaleType/{saleType}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<ApiModel> findBySaleType(HttpServletRequest request, @PathVariable Long saleType) {
+		List<SearchResultModel> records = dappsSearchService.findBySaleType(200, saleType);
 		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, records);
 		model.setHeaders(request);
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
@@ -105,7 +122,7 @@ public class SearchController {
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/findArtworkByTitleOrDescriptionOrCategoryOrKeyword/{field}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@RequestMapping(value = "/findByTitleOrDescriptionOrCategoryOrKeyword/{field}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<ApiModel> searchDapps(HttpServletRequest request, @PathVariable String field) {
 		List<SearchResultModel> response = dappsSearchService.searchIndex(200, field, getQuery(request));
 		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, response);
@@ -114,14 +131,12 @@ public class SearchController {
 	}
 	
 	@RequestMapping(value = "/v1/asset/{assetHash}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<ApiModel> getAsset(HttpServletRequest request, @PathVariable String assetHash) {
-		List<SearchResultModel> response = dappsSearchService.searchIndex(200, "id", assetHash);
-		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, response);
-		model.setHeaders(request);
-		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
+	public SearchResultModel getAsset(HttpServletRequest request, @PathVariable String assetHash) {
+		SearchResultModel asset = dappsSearchService.findByAssetHash(assetHash);
+		return asset;
 	}
 	
-	@RequestMapping(value = "/findArtworkByTitleOrDescriptionOrCategoryOrKeyword", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@RequestMapping(value = "/findByTitleOrDescriptionOrCategoryOrKeyword", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<ApiModel> searchDapps(HttpServletRequest request) {
 		List<SearchResultModel> response = dappsSearchService.searchIndex(200, "title", getQuery(request));
 		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, response);

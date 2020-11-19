@@ -1,7 +1,7 @@
 package org.brightblock.search.service.index;
 
-import org.brightblock.search.api.IndexableContainerModel;
-import org.brightblock.search.api.IndexableModel;
+import org.brightblock.search.api.model.IndexableContainerModel;
+import org.brightblock.search.api.model.IndexableModel;
 import org.brightblock.search.service.blockstack.models.ZonefileModel;
 
 public interface DappsIndexService

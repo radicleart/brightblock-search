@@ -13,7 +13,9 @@ import org.apache.lucene.document.DoublePoint;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.FloatPoint;
 import org.apache.lucene.document.IntPoint;
+import org.apache.lucene.document.LongPoint;
 import org.apache.lucene.document.NumericDocValuesField;
+import org.apache.lucene.document.StoredField;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
@@ -23,9 +25,9 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.Query;
-import org.brightblock.search.api.IndexableContainerModel;
-import org.brightblock.search.api.IndexableModel;
-import org.brightblock.search.api.KeywordModel;
+import org.brightblock.search.api.model.IndexableContainerModel;
+import org.brightblock.search.api.model.IndexableModel;
+import org.brightblock.search.api.model.KeywordModel;
 import org.brightblock.search.service.blockstack.models.ZonefileModel;
 import org.brightblock.search.service.project.ProjectService;
 import org.brightblock.search.service.project.domain.IndexFileModel;
@@ -276,8 +278,7 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 		try {
 			document = new Document();
 			document.add(new TextField("title", record.getTitle(), Field.Store.YES));
-			document.add(new StringField("id", record.getId(), Field.Store.YES));
-			document.add(new TextField("assetHash", record.getAssetHash(), Field.Store.YES));
+			document.add(new StringField("assetHash", record.getAssetHash(), Field.Store.YES));
 			if (record.getProjectId()!= null) {
 				document.add(new TextField("projectId", record.getProjectId(), Field.Store.YES));
 			}
@@ -285,6 +286,13 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 				document.add(new TextField("objType", record.getObjType(), Field.Store.YES));
 			} else {
 				document.add(new TextField("objType", "artwork", Field.Store.YES));
+			}
+			if (record.getNftIndex() != null) {
+				document.add(new StoredField("nftIndex", record.getNftIndex()));
+			}
+			logger.info("Adding to index: " + record.getNftIndex() + " : " + document.get("nftIndex"));
+			if (record.getTokenId() != null) {
+				document.add(new StoredField("tokenId", record.getTokenId()));
 			}
 			if (record.getUpdated() != null) {
 				document.add(new NumericDocValuesField("updated", record.getUpdated()));
@@ -316,9 +324,6 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 			if (record.getStatus() != null) {
 				document.add(new TextField("status", record.getStatus(), Field.Store.YES));
 			}
-			if (record.getTxid() != null) {
-				document.add(new TextField("txid", record.getTxid(), Field.Store.YES));
-			}
 			if (record.getPrivacy() != null) {
 				document.add(new TextField("privacy", record.getPrivacy(), Field.Store.YES));
 			}
@@ -328,14 +333,25 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 			if (record.getAssetUrl() != null) {
 				document.add(new TextField("assetUrl", record.getAssetUrl(), Field.Store.YES));
 			}
-			if (record.getGallerist() != null) {
-				document.add(new TextField("gallerist", record.getGallerist(), Field.Store.YES));
-			}
-			if (record.getGalleryId() != null) {
-				document.add(new TextField("galleryId", record.getGalleryId(), Field.Store.YES));
-			}
 			if (record.getCategory() != null) {
 				document.add(new TextField("category", record.getCategory().getId(), Field.Store.YES));
+			}
+			if (record.getTradeInfo() != null && record.getTradeInfo().getSaleType() != null) {
+				document.add(new LongPoint("saleType", record.getTradeInfo().getSaleType()));
+				document.add(new StoredField("saleType", record.getTradeInfo().getSaleType()));
+			}
+			if (record.getTradeInfo() != null && record.getTradeInfo().getBiddingEndTime() != null) {
+				document.add(new StoredField("biddingEndTime", record.getTradeInfo().getBiddingEndTime()));
+			}
+			if (record.getTradeInfo() != null && record.getTradeInfo().getBuyNowOrStartingPrice() != null) {
+				document.add(new LongPoint("buyNowOrStartingPrice", record.getTradeInfo().getSaleType()));
+				document.add(new StoredField("buyNowOrStartingPrice", record.getTradeInfo().getBuyNowOrStartingPrice()));
+			}
+			if (record.getTradeInfo() != null && record.getTradeInfo().getIncrementPrice() != null) {
+				document.add(new StoredField("incrementPrice", record.getTradeInfo().getIncrementPrice()));
+			}
+			if (record.getTradeInfo() != null && record.getTradeInfo().getReservePrice() != null) {
+				document.add(new StoredField("reservePrice", record.getTradeInfo().getReservePrice()));
 			}
 			if (record.getKeywords() != null) {
 				String csKeywords = "1 ";
@@ -367,7 +383,7 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 			}
 			Term term = new Term("assetHash", String.valueOf(record.getAssetHash()));
 			writer.updateDocument(term, document);
-			logger.info("Indexed dapp search record: Owner: " + record.getOwner() + " object: " + record.getObjType() + " record title: " + record.getTitle() + " from domain: " + record.getDomain());
+			logger.info("Indexed dapp search record: nftIndex: " + document.get("nftIndex") + " object: " +record.getOwner() + " object: " + record.getObjType() + " record title: " + record.getTitle() + " from domain: " + record.getDomain());
 		} catch (Exception e) {
 			logger.error("Error idexing document from record: " + e.getMessage());
 		}
