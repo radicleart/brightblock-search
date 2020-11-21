@@ -137,6 +137,9 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 
 	@Override
 	public void indexSingleRecord(IndexableModel indexData) {
+		if (indexData.getNftIndex() == null) {
+			return;
+		}
 		IndexWriter writer = null;
 		long freeMemBefore = Runtime.getRuntime().freeMemory();
 		long timeStart = new Date().getTime();
