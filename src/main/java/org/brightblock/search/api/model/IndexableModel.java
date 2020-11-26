@@ -84,68 +84,68 @@ public class IndexableModel implements SearchResultModel, Serializable, Comparab
 			// don't allow things without an asset hash - primary id of items.
 			im.setAssetHash(node.get("assetHash").asText());
 			
-			if (node.has("tokenId")) {
+			if (node.hasNonNull("tokenId")) {
 				im.setTokenId(node.get("tokenId").asLong());
 			}
-			if (node.has("nftIndex")) {
+			if (node.hasNonNull("nftIndex")) {
 				im.setNftIndex(node.get("nftIndex").asLong());
 			}
-			if (node.has("privacy")) {
+			if (node.hasNonNull("privacy")) {
 				im.setPrivacy(node.get("privacy").asText());
 			}
-			if (node.has("projectId")) {
+			if (node.hasNonNull("projectId")) {
 				im.setProjectId(node.get("projectId").asText());
 			}
-			if (node.has("imageUrl")) {
+			if (node.hasNonNull("imageUrl")) {
 				im.setAssetUrl(node.get("imageUrl").asText());
-			} else if (node.has("assetUrl")) {
+			} else if (node.hasNonNull("assetUrl")) {
 				im.setAssetUrl(node.get("assetUrl").asText());
 			}
 			
-			if (node.has("assetProjectUrl")) {
+			if (node.hasNonNull("assetProjectUrl")) {
 				im.setAssetProjectUrl(node.get("assetProjectUrl").asText());
-			} else if (node.has("externalUrl")) {
+			} else if (node.hasNonNull("externalUrl")) {
 				im.setAssetProjectUrl(node.get("externalUrl").asText());
 			}
 			
-			if (node.has("title")) {
+			if (node.hasNonNull("title")) {
 				im.setTitle(node.get("title").asText());
 			} else {
 				im.setTitle(node.get("name").asText());
 			}
-			if (node.has("owner")) {
+			if (node.hasNonNull("owner")) {
 				im.setOwner(node.get("owner").asText());
-			} else if (node.has("auctioneer")) {
+			} else if (node.hasNonNull("auctioneer")) {
 				im.setOwner(node.get("auctioneer").asText());
 			} else if (node.has("administrator")) {
 				im.setOwner(node.get("administrator").asText());
 			} else {
 				throw new RuntimeException("unable to parse");
 			}
-			if (node.has("description")) {
+			if (node.hasNonNull("description")) {
 				im.setDescription(node.get("description").asText());
 			} else {
 				im.setDescription(node.get("title").asText());
 			}
-			if (node.has("mintedOn")) {
+			if (node.hasNonNull("mintedOn")) {
 				im.setArtist(node.get("mintedOn").asText());
 			}
-			if (node.has("artist")) {
+			if (node.hasNonNull("artist")) {
 				im.setArtist(node.get("artist").asText());
 			}
-			if (node.has("objType")) {
+			if (node.hasNonNull("objType")) {
 				im.setObjType(node.get("objType").asText());
 			}
-			if (node.has("domain")) {
+			if (node.hasNonNull("domain")) {
 				im.setDomain(node.get("domain").asText());
 			}
-			if (node.has("buyer")) {
+			if (node.hasNonNull("buyer")) {
 				im.setBuyer(node.get("buyer").asText());
 			}
-			if (node.has("status")) {
+			if (node.hasNonNull("status")) {
 				im.setStatus(node.get("status").asText());
 			}
-			if (node.has("category")) {
+			if (node.hasNonNull("category")) {
 				mapper = new ObjectMapper();
 				@SuppressWarnings("unchecked") LinkedHashMap<String, Object> cat = mapper.convertValue(node.get("category"), LinkedHashMap.class);
 				Object lev = cat.get("level");
@@ -153,7 +153,7 @@ public class IndexableModel implements SearchResultModel, Serializable, Comparab
 				KeywordModel km = new KeywordModel((String)cat.get("id"), (String)cat.get("name"), level, (String)cat.get("parent"));
 				im.setCategory(km);
 			}
-			if (node.has("keywords")) {
+			if (node.hasNonNull("keywords")) {
 				mapper = new ObjectMapper();
 				try {
 					@SuppressWarnings("unchecked") List<LinkedHashMap<String, Object>> keywords = mapper.convertValue(node.get("keywords"), List.class);
@@ -177,7 +177,7 @@ public class IndexableModel implements SearchResultModel, Serializable, Comparab
 					im.setKeywords(kms);
 				}
 			}
-			if (node.has("metaData")) {
+			if (node.hasNonNull("metaData")) {
 				mapper = new ObjectMapper();
 				@SuppressWarnings("unchecked") Map<String, String> result = mapper.convertValue(node.get("metaData"), Map.class);
 				im.setMetaData(result);
@@ -190,8 +190,8 @@ public class IndexableModel implements SearchResultModel, Serializable, Comparab
 		return tradeInfo;
 	}
 
-	public void setTradeInfo(TradeInfoModel saleData) {
-		this.tradeInfo = saleData;
+	public void setTradeInfo(TradeInfoModel tradeInfo) {
+		this.tradeInfo = tradeInfo;
 	}
 
 	public String getProjectId() {

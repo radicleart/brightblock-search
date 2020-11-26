@@ -6,14 +6,16 @@ import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.brightblock.search.api.model.DomainIndexModel;
 import org.brightblock.search.api.model.SearchResultModel;
 import org.brightblock.search.rest.models.ApiModel;
 import org.brightblock.search.rest.models.ResponseCodes;
 import org.brightblock.search.service.blockstack.models.ZonefileModel;
 import org.brightblock.search.service.index.DappsSearchService;
 import org.brightblock.search.service.index.NamesSearchService;
-import org.brightblock.search.service.project.ProjectService;
-import org.brightblock.search.service.project.domain.Project;
+import org.brightblock.search.service.project.DomainIndexService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -32,7 +34,8 @@ public class SearchController {
 	@Autowired private NamesSearchService namesSearchService;
 	@Autowired private DappsSearchService dappsSearchService;
 	@Autowired
-	private ProjectService projectService;
+	private DomainIndexService projectService;
+    protected static final Logger logger = LogManager.getLogger(SearchController.class);
 
 	@RequestMapping(value = "/names/fetch", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<ApiModel> fetchAllNames(HttpServletRequest request) {
@@ -51,26 +54,26 @@ public class SearchController {
 	}
 
 	@RequestMapping(value = "/projectsByProjectId/{projectId}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
-	public Optional<Project> findByProjectId(HttpServletRequest request, @PathVariable String projectId) {
-		Optional<Project> project = projectService.findByProjectId(projectId);
+	public Optional<DomainIndexModel> findByProjectId(HttpServletRequest request, @PathVariable String projectId) {
+		Optional<DomainIndexModel> project = projectService.findByProjectId(projectId);
 		return project;
 	}
 	
 	@RequestMapping(value = "/projectsByDomain/{domain}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
-	public List<Project> findByDomain(HttpServletRequest request, @PathVariable String domain) {
-		List<Project> projects = projectService.findByDomain(domain);
+	public List<DomainIndexModel> findByDomain(HttpServletRequest request, @PathVariable String domain) {
+		List<DomainIndexModel> projects = projectService.findByDomain(domain);
 		return projects;
 	}
 	
 	@RequestMapping(value = "/projectsByOwner/{owner}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
-	public List<Project> findByOwner(HttpServletRequest request, @PathVariable String owner) {
-		List<Project> projects = projectService.findByOwner(owner);
+	public List<DomainIndexModel> findByOwner(HttpServletRequest request, @PathVariable String owner) {
+		List<DomainIndexModel> projects = projectService.findByOwner(owner);
 		return projects;
 	}
 	
 	@GetMapping(value = "/projectsAll")
-	public List<Project> findAllProjects(HttpServletRequest request) {
-		List<Project> projects = projectService.findAll();
+	public List<DomainIndexModel> findAllProjects(HttpServletRequest request) {
+		List<DomainIndexModel> projects = projectService.findAll();
 		return projects;
 	}
 
@@ -132,8 +135,13 @@ public class SearchController {
 	
 	@RequestMapping(value = "/v1/asset/{assetHash}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public SearchResultModel getAsset(HttpServletRequest request, @PathVariable String assetHash) {
-		SearchResultModel asset = dappsSearchService.findByAssetHash(assetHash);
-		return asset;
+		try {
+			SearchResultModel asset = dappsSearchService.findByAssetHash(assetHash);
+			return asset;
+		} catch (Exception e) {
+			logger.info("No asset found for hash: " + assetHash);
+			return null;
+		}
 	}
 	
 	@RequestMapping(value = "/findByTitleOrDescriptionOrCategoryOrKeyword", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })

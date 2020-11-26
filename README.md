@@ -59,9 +59,9 @@ application:
       -  domain: localhost
          indexFiles:
             - indexFileName: records_v01.json
-              indexObjType: artwork
+              category: artwork
             - indexFileName: auctions_v01.json
-              indexObjType: auction
+              category: auction
          fields:
             - id
             - title
@@ -70,9 +70,9 @@ application:
       -  domain: www.brightblock.org
          indexFiles:
             - indexFileName: records_v01.json
-              indexObjType: artwork
+              category: artwork
             - indexFileName: auctions_v01.json
-              indexObjType: auction
+              category: auction
          fields:
             - id
             - title

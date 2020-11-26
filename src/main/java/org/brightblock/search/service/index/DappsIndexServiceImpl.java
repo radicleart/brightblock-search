@@ -25,13 +25,13 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.Query;
+import org.brightblock.search.api.model.DomainIndexFileModel;
+import org.brightblock.search.api.model.DomainIndexModel;
 import org.brightblock.search.api.model.IndexableContainerModel;
 import org.brightblock.search.api.model.IndexableModel;
 import org.brightblock.search.api.model.KeywordModel;
 import org.brightblock.search.service.blockstack.models.ZonefileModel;
-import org.brightblock.search.service.project.ProjectService;
-import org.brightblock.search.service.project.domain.IndexFileModel;
-import org.brightblock.search.service.project.domain.Project;
+import org.brightblock.search.service.project.DomainIndexService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -50,7 +50,7 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 	@Autowired
 	private RestOperations restTemplate1;
 	@Autowired
-	private ProjectService projectService;
+	private DomainIndexService projectService;
 	@Autowired
 	private ObjectMapper mapper;
 
@@ -186,7 +186,7 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 
 	private void buildIndex(ZonefileModel zonefile) {
 		// List<DomainModel> domains = applicationSettings.getDomains();
-		List<Project> projects = projectService.findAll();
+		List<DomainIndexModel> projects = projectService.findAll();
 		List<IndexableContainerModel> userRecords = new ArrayList<>();
 		String[] appsVisited = zonefile.getDomainGaiaPairs();
 		if (appsVisited == null) return;
@@ -195,18 +195,18 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 			String[] appParts = appVisited.split("=");
 			try {
 				String appUrl = appParts[0];
-				for (Project project : projects) {
+				for (DomainIndexModel project : projects) {
 					logger.info("---------------------------------");
 					logger.info("matching: " + project.getDomain() + " against " + appUrl);
 					if (appUrl.indexOf(project.getDomain()) > -1 || project.getDomain().indexOf(appUrl) > -1) {
-						for (IndexFileModel indexFileModel : project.getIndexFiles()) {
+						for (DomainIndexFileModel indexFileModel : project.getIndexFiles()) {
 							IndexableContainerModel indexableContainerModel = fetchUserFile(
 									appParts[1], 
 									indexFileModel.getIndexFileName(),
-									indexFileModel.getIndexObjType(),
+									indexFileModel.getCategory(),
 									project.getDomain());
 							logger.info("domain getIndexFileName: " + indexFileModel.getIndexFileName());
-							logger.info("domain getIndexObjType: " + indexFileModel.getIndexObjType());
+							logger.info("domain category: " + indexFileModel.getCategory());
 							if (indexableContainerModel != null && indexableContainerModel.getRecords() != null && indexableContainerModel.getRecords().size() > 0) {
 								userRecords.add(indexableContainerModel);
 								logger.info("domain indexing: " + indexableContainerModel.getRecords().size());
@@ -263,6 +263,10 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 			for (IndexableContainerModel userControlRecord : userRecords) { // index a portion of the namespace for test  purposes..
 				indexCount = 0;
 				for (IndexableModel record : userControlRecord.getRecords()) {
+					if (record.getNftIndex() == null) {
+						logger.info("Skipping unminted record: " + record.getTitle());
+						continue;
+					}
 					addToIndex(writer, record);
 					indexCount++;
 				}
@@ -347,7 +351,7 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 				document.add(new StoredField("biddingEndTime", record.getTradeInfo().getBiddingEndTime()));
 			}
 			if (record.getTradeInfo() != null && record.getTradeInfo().getBuyNowOrStartingPrice() != null) {
-				document.add(new LongPoint("buyNowOrStartingPrice", record.getTradeInfo().getSaleType()));
+				document.add(new DoublePoint("buyNowOrStartingPrice", record.getTradeInfo().getSaleType()));
 				document.add(new StoredField("buyNowOrStartingPrice", record.getTradeInfo().getBuyNowOrStartingPrice()));
 			}
 			if (record.getTradeInfo() != null && record.getTradeInfo().getIncrementPrice() != null) {

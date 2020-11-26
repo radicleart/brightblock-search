@@ -3,13 +3,13 @@ package org.brightblock.search.conf.settings;
 import java.io.Serializable;
 import java.util.List;
 
-import org.brightblock.search.service.project.domain.IndexFileModel;
+import org.brightblock.search.api.model.DomainIndexFileModel;
 
 public class DomainModel implements Serializable {
 
 	private static final long serialVersionUID = 3112854578667781497L;
 	private String domain;
-	private List<IndexFileModel> indexFiles;
+	private List<DomainIndexFileModel> indexFiles;
 	private String[] fields;
 
 	public String[] getFields() {
@@ -28,11 +28,11 @@ public class DomainModel implements Serializable {
 		this.domain = domain;
 	}
 
-	public List<IndexFileModel> getIndexFiles() {
+	public List<DomainIndexFileModel> getIndexFiles() {
 		return indexFiles;
 	}
 
-	public void setIndexFiles(List<IndexFileModel> indexFiles) {
+	public void setIndexFiles(List<DomainIndexFileModel> indexFiles) {
 		this.indexFiles = indexFiles;
 	}
 

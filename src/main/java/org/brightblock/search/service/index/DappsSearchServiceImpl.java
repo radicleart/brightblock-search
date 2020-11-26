@@ -94,20 +94,24 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 
 	@Override
 	public List<SearchResultModel> searchIndex(int limit, String inField, String searchTerm) {
-		String query = "objType:artwork OR objType:trading_cards OR objType:certificates OR objType:digital_property OR objType:written_word OR objType:news_media";
 		if (inField.equals("title")) {
-			if (searchTerm == null || searchTerm.length() == 0) {
-				searchTerm = "*";
-			}
-			query += " AND (title:" + searchTerm + " OR category:" + searchTerm + " OR description:" + searchTerm + " OR keywords:" + searchTerm + ")";
-		} else if (inField.equals("facet")) {
-			if (searchTerm != null && searchTerm.length() > 0) {
-				query += " AND " + searchTerm;
-			}
+			return doSearch(limit, "title:" + searchTerm, inField);
 		} else {
-			query += " AND (" + inField + ":" + searchTerm + ")";
+			String query = "objType:artwork OR objType:trading_cards OR objType:certificates OR objType:digital_property OR objType:written_word OR objType:news_media";
+			if (inField.equals("title")) {
+				if (searchTerm == null || searchTerm.length() == 0) {
+					searchTerm = "*";
+				}
+				query += " AND (title:" + searchTerm + " OR category:" + searchTerm + " OR description:" + searchTerm + " OR keywords:" + searchTerm + ")";
+			} else if (inField.equals("facet")) {
+				if (searchTerm != null && searchTerm.length() > 0) {
+					query += " AND " + searchTerm;
+				}
+			} else {
+				query += " AND (" + inField + ":" + searchTerm + ")";
+			}
+			return doSearch(limit, query, inField);
 		}
-		return doSearch(limit, query, inField);
 	}
 
 	@Override
@@ -120,6 +124,7 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 	public SearchResultModel findByAssetHash(String assetHash) {
 		String query = "assetHash:" + assetHash;
 		List<SearchResultModel> results = doSearch(1, query, "assetHash");
+		if (results == null || results.isEmpty()) return null;
 		return results.get(0);
 	}
 
@@ -249,21 +254,21 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 		}
 		if (document.get("saleType") != null) {
 			try {
-				model.getTradeInfo().setSaleType(Integer.parseInt(document.get("saleType")));
+				model.getTradeInfo().setSaleType(Long.parseLong(document.get("saleType")));
 			} catch (NumberFormatException e) {
-				model.getTradeInfo().setSaleType(0);
+				model.getTradeInfo().setSaleType(0L);
 			}
 		}
 		logger.info("Getting from saleType: " + model.getTradeInfo().getSaleType() + " : " + document.get("saleType"));
 		if (document.get("buyNowOrStartingPrice") != null) {
-			model.getTradeInfo().setBuyNowOrStartingPrice(Long.parseLong(document.get("buyNowOrStartingPrice")));
+			model.getTradeInfo().setBuyNowOrStartingPrice(Double.parseDouble(document.get("buyNowOrStartingPrice")));
 		}
 		logger.info("Getting from saleType: " + model.getTradeInfo().getBuyNowOrStartingPrice() + " : " + document.get("buyNowOrStartingPrice"));
 		if (document.get("incrementPrice") != null) {
-			model.getTradeInfo().setIncrementPrice(Long.parseLong(document.get("incrementPrice")));
+			model.getTradeInfo().setIncrementPrice(Double.parseDouble(document.get("incrementPrice")));
 		}
 		if (document.get("reservePrice") != null) {
-			model.getTradeInfo().setReservePrice(Long.parseLong(document.get("reservePrice")));
+			model.getTradeInfo().setReservePrice(Double.parseDouble(document.get("reservePrice")));
 		}
 		logger.info("Getting from reservePrice: " + model.getTradeInfo().getReservePrice() + " : " + document.get("reservePrice"));
 		if (document.get("biddingEndTime") != null) {

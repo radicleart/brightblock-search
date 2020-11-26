@@ -24,9 +24,9 @@ application:
       -  domain: localhost
          indexFiles: 
             - indexFileName: items_v01.json
-              indexObjType: item
+              category: item
             - indexFileName: auctions_v01.json
-              indexObjType: auction
+              category: auction
          fields:
             - title
             - description
@@ -50,29 +50,29 @@ application:
       -  domain: localhost
          indexFiles: 
             - indexFileName: items_v01.json
-              indexObjType: item
+              category: item
             - indexFileName: records_v01.json
-              indexObjType: artwork
+              category: artwork
             - indexFileName: auctions_v01.json
-              indexObjType: auction
+              category: auction
          fields:
             - title
             - description
       -  domain: dbid.io
          indexFiles: 
             - indexFileName: items_v01.json
-              indexObjType: item
+              category: item
             - indexFileName: auctions_v01.json
-              indexObjType: auction
+              category: auction
          fields:
             - title
             - description
       -  domain: /radicle.art
          indexFiles: 
             - indexFileName: records_v01.json
-              indexObjType: artwork
+              category: artwork
             - indexFileName: auctions_v01.json
-              indexObjType: auction
+              category: auction
          fields:
             - title
             - description

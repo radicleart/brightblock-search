@@ -11,7 +11,7 @@ import org.brightblock.search.rest.models.ApiModel;
 import org.brightblock.search.rest.models.ResponseCodes;
 import org.brightblock.search.service.index.DappsIndexService;
 import org.brightblock.search.service.index.NamesIndexService;
-import org.brightblock.search.service.project.ProjectService;
+import org.brightblock.search.service.project.DomainIndexService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -32,7 +32,7 @@ public class IndexController {
 	@Autowired
 	private DappsIndexService dappsIndexService;
 	@Autowired
-	private ProjectService projectService;
+	private DomainIndexService projectService;
 
 	@RequestMapping(value = "/dapps/clear", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<ApiModel> clearDapps(HttpServletRequest request) {
