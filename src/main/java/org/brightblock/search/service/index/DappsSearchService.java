@@ -2,7 +2,10 @@ package org.brightblock.search.service.index;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.brightblock.search.api.model.CreatorsModel;
+import org.brightblock.search.api.model.OwnersModel;
 import org.brightblock.search.api.model.SearchResultModel;
 
 
@@ -19,5 +22,8 @@ public interface DappsSearchService
 	public List<SearchResultModel> searchObjectType(int limit, String searchTerm);
 	public List<SearchResultModel> findByOwner(int limit, String query);
 	public List<SearchResultModel> findBySaleType(int limit, Long query);
+	public Set<String> distinctOwners();
+	public OwnersModel fetchDistinctOwners();
+	public CreatorsModel fetchDistinctCreators();
 
 }

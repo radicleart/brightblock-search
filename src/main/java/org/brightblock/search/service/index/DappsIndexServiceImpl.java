@@ -54,7 +54,6 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 	@Autowired
 	private ObjectMapper mapper;
 
-
 	@Override
 	public int clearAll() {
 		IndexWriter writer = null;

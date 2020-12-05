@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.LongPoint;
@@ -17,16 +19,23 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
+import org.brightblock.search.api.model.CreatorsModel;
 import org.brightblock.search.api.model.IndexableModel;
 import org.brightblock.search.api.model.KeywordModel;
+import org.brightblock.search.api.model.OwnersModel;
 import org.brightblock.search.api.model.SearchResultModel;
 import org.brightblock.search.api.model.TradeInfoModel;
+import org.brightblock.search.service.project.CreatorsRepository;
+import org.brightblock.search.service.project.OwnersRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements DappsSearchService {
 
 	private static final long HUNDRED_DAYS = 8640000000L;
+	@Autowired private OwnersRepository ownersRepository;
+	@Autowired private CreatorsRepository creatorsRepository;
 
 	@Override
 	public List<SearchResultModel> fetchAll() {
@@ -47,6 +56,71 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 			return models;
 		} catch (IOException e) {
 			throw new RuntimeException(e);
+		}
+	}
+
+	@Override
+	public Set<String> distinctOwners() {
+		try {
+			initArtMarket();
+			Set<String> owners = new TreeSet<String>();
+			Set<String> creators = new TreeSet<String>();
+			IndexReader reader = DirectoryReader.open(artIndex);
+			Document document = null;
+			for (int i = 0; i < reader.maxDoc(); i++) {
+				try {
+					document = reader.document(i);
+					String owner = document.get("owner");
+					String creator = document.get("artist");
+					if (!owners.contains(owner)) owners.add(owner);
+					if (!creators.contains(creator)) creators.add(creator);
+				} catch (IOException e) {
+					logger.error("Error reading document at: " + i + " Error thrown: " + e.getMessage());
+				}
+			}
+			List<OwnersModel> allOwners = ownersRepository.findAll();
+			if (allOwners == null || allOwners.isEmpty()) {
+				OwnersModel om = new OwnersModel();
+				om.setOwners(owners);
+				ownersRepository.save(om);
+			} else {
+				OwnersModel om = allOwners.get(0);
+				om.setOwners(owners);
+				ownersRepository.save(om);
+			}
+			
+			List<CreatorsModel> allCreators = creatorsRepository.findAll();
+			if (allCreators == null || allCreators.isEmpty()) {
+				CreatorsModel om = new CreatorsModel();
+				om.setCreators(owners);
+				creatorsRepository.save(om);
+			} else {
+				CreatorsModel om = allCreators.get(0);
+				om.setCreators(creators);
+				creatorsRepository.save(om);
+			}
+			
+			return owners;
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@Override
+	public OwnersModel fetchDistinctOwners() {
+		try {
+			return ownersRepository.findAll().get(0);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	@Override
+	public CreatorsModel fetchDistinctCreators() {
+		try {
+			return creatorsRepository.findAll().get(0);
+		} catch (Exception e) {
+			return null;
 		}
 	}
 

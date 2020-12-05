@@ -146,12 +146,19 @@ public class IndexableModel implements SearchResultModel, Serializable, Comparab
 				im.setStatus(node.get("status").asText());
 			}
 			if (node.hasNonNull("category")) {
-				mapper = new ObjectMapper();
-				@SuppressWarnings("unchecked") LinkedHashMap<String, Object> cat = mapper.convertValue(node.get("category"), LinkedHashMap.class);
-				Object lev = cat.get("level");
-				Integer level = (Integer)lev;
-				KeywordModel km = new KeywordModel((String)cat.get("id"), (String)cat.get("name"), level, (String)cat.get("parent"));
-				im.setCategory(km);
+				try {
+					mapper = new ObjectMapper();
+					@SuppressWarnings("unchecked") LinkedHashMap<String, Object> cat = mapper.convertValue(node.get("category"), LinkedHashMap.class);
+					Object lev = cat.get("level");
+					Integer level = 0;
+					if (lev != null) level = (Integer)lev;
+					KeywordModel km = new KeywordModel((String)cat.get("id"), (String)cat.get("name"), level, (String)cat.get("parent"));
+					im.setCategory(km);
+				} catch (Exception e) {
+					im.setCategory(KeywordModel.defKeywordModel());
+				}
+			} else {
+				im.setCategory(KeywordModel.defKeywordModel());
 			}
 			if (node.hasNonNull("keywords")) {
 				mapper = new ObjectMapper();

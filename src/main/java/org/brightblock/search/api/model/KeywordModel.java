@@ -30,6 +30,10 @@ public class KeywordModel implements Serializable, Comparable<KeywordModel> {
 		this.parent = parent;
 	}
 
+	public static KeywordModel defKeywordModel() {
+		return new KeywordModel("1", "artwork", 0, null);
+	}
+
 	public KeywordModel(String id) {
 		super();
 		this.id = id;
