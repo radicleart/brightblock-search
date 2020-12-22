@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.brightblock.search.api.model.DomainIndexModel;
-import org.brightblock.search.api.model.RatesModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Service;
 public class DomainIndexServiceImpl implements DomainIndexService {
 
 	@Autowired private DomainIndexRepository projectRepository;
-	@Autowired private RatesRepository ratesRepository;
 
 	@Override
 	public DomainIndexModel save(DomainIndexModel fromJson) {
@@ -52,11 +50,5 @@ public class DomainIndexServiceImpl implements DomainIndexService {
 	@Override
 	public List<DomainIndexModel> findAll() {
 		return projectRepository.findAll();
-	}
-
-	@Override
-	public RatesModel save(RatesModel ratesModel) {
-		ratesRepository.save(ratesModel);
-		return ratesModel;
 	}
 }
