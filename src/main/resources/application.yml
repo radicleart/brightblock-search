@@ -1,6 +1,7 @@
 application:
    blockstackNamesIndex: /var/index/dapps
    blockstackOrgBase: https://core.blockstack.org
+   blockstackNamesV2: https://stacks-node-api.testnet.stacks.co/
    artMarketIndex: /var/index/artmarket
    auctionIndex: /var/index/auction
 radicle:

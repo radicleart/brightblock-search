@@ -294,7 +294,7 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 		if (objectType.equals("artwork")) {
 			return convertToArtwork(document);
 		} else {
-			return null;
+			return convertToArtwork(document);
 		}
 	}
 	
