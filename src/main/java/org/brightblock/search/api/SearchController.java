@@ -18,13 +18,10 @@ import org.brightblock.search.service.index.NamesSearchService;
 import org.brightblock.search.service.project.DomainIndexService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -37,7 +34,7 @@ public class SearchController {
 	private DomainIndexService projectService;
     protected static final Logger logger = LogManager.getLogger(SearchController.class);
 
-	@RequestMapping(value = "/names/fetch", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+    @GetMapping(value = "/names/fetch")
 	public ResponseEntity<ApiModel> fetchAllNames(HttpServletRequest request) {
 		List<ZonefileModel> records = namesSearchService.fetchAll();
 		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, records);
@@ -45,7 +42,7 @@ public class SearchController {
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/names/query/{field}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/names/query/{field}")
 	public ResponseEntity<ApiModel> searchNames(HttpServletRequest request, @PathVariable String field) {
 		List<ZonefileModel> response = namesSearchService.searchIndex(field, getQuery(request));
 		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, response);
@@ -53,19 +50,19 @@ public class SearchController {
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/projectsByProjectId/{projectId}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/projectsByProjectId/{projectId}")
 	public Optional<DomainIndexModel> findByProjectId(HttpServletRequest request, @PathVariable String projectId) {
 		Optional<DomainIndexModel> project = projectService.findByProjectId(projectId);
 		return project;
 	}
 	
-	@RequestMapping(value = "/projectsByDomain/{domain}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/projectsByDomain/{domain}")
 	public List<DomainIndexModel> findByDomain(HttpServletRequest request, @PathVariable String domain) {
 		List<DomainIndexModel> projects = projectService.findByDomain(domain);
 		return projects;
 	}
 	
-	@RequestMapping(value = "/projectsByOwner/{owner}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/projectsByOwner/{owner}")
 	public List<DomainIndexModel> findByOwner(HttpServletRequest request, @PathVariable String owner) {
 		List<DomainIndexModel> projects = projectService.findByOwner(owner);
 		return projects;
@@ -77,7 +74,7 @@ public class SearchController {
 		return projects;
 	}
 
-	@RequestMapping(value = "/findAll", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/findAll")
 	public ResponseEntity<ApiModel> fetchAllDapps(HttpServletRequest request) {
 		List<SearchResultModel> records = dappsSearchService.fetchAll();
 		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, records);
@@ -85,7 +82,7 @@ public class SearchController {
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/findByProjectId", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/findByProjectId")
 	public ResponseEntity<ApiModel> findByProjectId(HttpServletRequest request) {
 		List<SearchResultModel> records = dappsSearchService.findByProjectId(200, getQuery(request));
 		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, records);
@@ -93,7 +90,7 @@ public class SearchController {
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/findByOwner", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/findByOwner")
 	public ResponseEntity<ApiModel> findByOwner(HttpServletRequest request) {
 		List<SearchResultModel> records = dappsSearchService.findByOwner(200, getQuery(request));
 		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, records);
@@ -101,7 +98,7 @@ public class SearchController {
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/findBySaleType/{saleType}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/findBySaleType/{saleType}")
 	public ResponseEntity<ApiModel> findBySaleType(HttpServletRequest request, @PathVariable Long saleType) {
 		List<SearchResultModel> records = dappsSearchService.findBySaleType(200, saleType);
 		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, records);
@@ -109,7 +106,7 @@ public class SearchController {
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/findByDomainAndObjectTypeAndTitleOrDescriptionOrCategoryOrKeyword/{domain}/{objType}/{field}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/findByDomainAndObjectTypeAndTitleOrDescriptionOrCategoryOrKeyword/{domain}/{objType}/{field}")
 	public ResponseEntity<ApiModel> searchDapps(HttpServletRequest request, @PathVariable String objType, @PathVariable String domain, @PathVariable String field) {
 		List<SearchResultModel> response = dappsSearchService.searchIndex(200, objType, domain, field, getQuery(request));
 		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, response);
@@ -117,7 +114,7 @@ public class SearchController {
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/findByObjectTypeAndTitleOrDescriptionOrCategoryOrKeyword/{objType}/{field}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/findByObjectTypeAndTitleOrDescriptionOrCategoryOrKeyword/{objType}/{field}")
 	public ResponseEntity<ApiModel> searchDapps(HttpServletRequest request, @PathVariable String objType, @PathVariable String field) {
 		List<SearchResultModel> response = dappsSearchService.searchIndex(200, objType, field, getQuery(request));
 		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, response);
@@ -125,7 +122,7 @@ public class SearchController {
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/findByTitleOrDescriptionOrCategoryOrKeyword/{field}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/findByTitleOrDescriptionOrCategoryOrKeyword/{field}")
 	public ResponseEntity<ApiModel> searchDapps(HttpServletRequest request, @PathVariable String field) {
 		List<SearchResultModel> response = dappsSearchService.searchIndex(200, field, getQuery(request));
 		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, response);
@@ -133,7 +130,7 @@ public class SearchController {
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/v1/asset/{assetHash}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/v1/asset/{assetHash}")
 	public SearchResultModel getAsset(HttpServletRequest request, @PathVariable String assetHash) {
 		try {
 			SearchResultModel asset = dappsSearchService.findByAssetHash(assetHash);
@@ -144,7 +141,7 @@ public class SearchController {
 		}
 	}
 	
-	@RequestMapping(value = "/findByTitleOrDescriptionOrCategoryOrKeyword", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/findByTitleOrDescriptionOrCategoryOrKeyword")
 	public ResponseEntity<ApiModel> searchDapps(HttpServletRequest request) {
 		List<SearchResultModel> response = dappsSearchService.searchIndex(200, "title", getQuery(request));
 		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, response);
@@ -152,7 +149,7 @@ public class SearchController {
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/findByObject/{objectType}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/findByObject/{objectType}")
 	public ResponseEntity<ApiModel> searchByObjectType(HttpServletRequest request, @PathVariable String objectType) {
 		List<SearchResultModel> response = dappsSearchService.searchObjectType(200, objectType);
 		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, response);
@@ -160,7 +157,7 @@ public class SearchController {
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/countByDomainAndObjectTypeAndCategories/{domain}/{objType}/{field}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/countByDomainAndObjectTypeAndCategories/{domain}/{objType}/{field}")
 	public ResponseEntity<ApiModel> categories(HttpServletRequest request, @PathVariable String objType, @PathVariable String domain, @PathVariable String field) {
 		List<Map<String, Object>> response = dappsSearchService.searchCategories(objType, domain, field, getQuery(request));
 		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, response);

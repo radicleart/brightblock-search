@@ -1,5 +1,7 @@
 package org.brightblock.search.service.index;
 
+import java.util.List;
+
 import org.brightblock.search.api.model.IndexableContainerModel;
 import org.brightblock.search.api.model.IndexableModel;
 import org.brightblock.search.service.blockstack.models.ZonefileModel;
@@ -12,4 +14,5 @@ public interface DappsIndexService
 	public int clearAll();
 	public void addToIndex(IndexableContainerModel records);
 	public void indexUser(ZonefileModel zonefile);
+	void indexRecords(List<IndexableModel> indexData);
 }

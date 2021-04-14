@@ -25,6 +25,8 @@ import org.brightblock.search.api.model.KeywordModel;
 import org.brightblock.search.api.model.OwnersModel;
 import org.brightblock.search.api.model.SearchResultModel;
 import org.brightblock.search.api.model.TradeInfoModel;
+import org.brightblock.search.api.v2.MediaObject;
+import org.brightblock.search.api.v2.NftMedia;
 import org.brightblock.search.service.project.CreatorsRepository;
 import org.brightblock.search.service.project.OwnersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -355,20 +357,47 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 		model.setAssetProjectUrl(document.get("assetProjectUrl"));
 		model.setAssetUrl(document.get("assetUrl"));
 		model.setArtist(document.get("artist"));
+		
+		NftMedia nfm = new NftMedia();
+		nfm.setCoverArtist(document.get("coverArtist"));
+		
+		MediaObject awf = new MediaObject();
+		awf.setSize(document.get("awfSize"));
+		awf.setFileUrl(document.get("awfFileUrl"));
+		awf.setStorage(document.get("awfStorage"));
+		awf.setType(document.get("awfType"));
+		nfm.setArtworkFile(awf);
+		
+		awf = new MediaObject();
+		awf.setSize(document.get("awcSize"));
+		awf.setFileUrl(document.get("awcFileUrl"));
+		awf.setStorage(document.get("awcStorage"));
+		awf.setType(document.get("awcType"));
+		nfm.setArtworkClip(awf);
+		
+		awf = new MediaObject();
+		awf.setSize(document.get("aciSize"));
+		awf.setFileUrl(document.get("aciFileUrl"));
+		awf.setStorage(document.get("aciStorage"));
+		awf.setType(document.get("aciType"));
+		nfm.setCoverImage(awf);
+		
+		model.setNftMedia(nfm);
+		
 		String csKeywords = document.get("keywords");
 		if (csKeywords != null) {
 			List<KeywordModel> kms = new ArrayList<>();
 			String[] csList = csKeywords.split(",");
 			KeywordModel km = null;
 			for (String keywordId : csList) {
-				km = new KeywordModel(keywordId);
+				km = new KeywordModel(null, keywordId, 0, null);
 				kms.add(km);
 			}
 			model.setKeywords(kms);
 		}
 		String csCategory = document.get("category");
 		if (csCategory != null) {
-			KeywordModel km = new KeywordModel(csCategory);
+			KeywordModel km = new KeywordModel(null, csCategory, 0, null);
 			model.setCategory(km);
 		}
 		model.setBuyer(document.get("buyer"));

@@ -7,6 +7,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.brightblock.search.api.model.IndexableModel;
+import org.brightblock.search.api.v2.JsonRootFile;
+import org.brightblock.search.api.v2.RootFile;
 import org.brightblock.search.rest.models.ApiModel;
 import org.brightblock.search.rest.models.ResponseCodes;
 import org.brightblock.search.service.index.DappsIndexService;
@@ -14,16 +16,20 @@ import org.brightblock.search.service.index.NamesIndexService;
 import org.brightblock.search.service.project.DomainIndexService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+@RestController
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
 public class IndexController {
 
@@ -33,21 +39,21 @@ public class IndexController {
 	private DappsIndexService dappsIndexService;
 	@Autowired
 	private DomainIndexService projectService;
+	@Autowired private ObjectMapper mapper;
 
-	@RequestMapping(value = "/dapps/clear", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/dapps/clear")
 	public ResponseEntity<ApiModel> clearDapps(HttpServletRequest request) {
 		dappsIndexService.clearAll();
 		return sizeOfIndex(request);
 	}
 
-	@RequestMapping(value = "/names/clear", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/names/clear")
 	public ResponseEntity<ApiModel> clearNames(HttpServletRequest request) {
 		namesIndexService.clearAll();
 		return sizeOfIndex(request);
 	}
 
-	@RequestMapping(value = "/pages/{from}/{to}", method = RequestMethod.GET, produces = {
-			MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/pages/{from}/{to}")
 	public ResponseEntity<ApiModel> indexPages(HttpServletRequest request, @PathVariable int from,
 			@PathVariable int to) {
 		namesIndexService.indexPages(from, to);
@@ -57,8 +63,7 @@ public class IndexController {
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/users/{names}", method = RequestMethod.GET, produces = {
-			MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/users/{names}")
 	public ResponseEntity<ApiModel> indexUsers(HttpServletRequest request, @PathVariable List<String> names) {
 		namesIndexService.indexUsers(names);
 		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK,
@@ -67,7 +72,7 @@ public class IndexController {
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/size", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/size")
 	public ResponseEntity<ApiModel> sizeOfIndex(HttpServletRequest request) {
 		Map<String, Integer> indexSize = new HashMap<String, Integer>();
 		indexSize.put("names", namesIndexService.getNumbDocs());
@@ -77,7 +82,30 @@ public class IndexController {
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/addRecord", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@PostMapping(value = "/indexJsonRootFile")
+	public ResponseEntity<ApiModel> indexJsonRootFile(HttpServletRequest request, @RequestBody JsonRootFile jsonRootFile) throws JsonMappingException, JsonProcessingException {
+		
+		RootFile rootFile = convert(jsonRootFile.getJsonRootFile());
+		dappsIndexService.indexRecords(rootFile.getRecords());
+		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, "Building in background.");
+		model.setHeaders(request);
+		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
+	}
+
+	private RootFile convert(String jsonResp) throws JsonMappingException, JsonProcessingException {
+		RootFile rates = mapper.readValue(jsonResp, new TypeReference<RootFile>() {});
+		return rates;
+	}
+
+	@PostMapping(value = "/indexRootFile")
+	public ResponseEntity<ApiModel> indexRootFile(HttpServletRequest request, @RequestBody RootFile rootFile) {
+		dappsIndexService.indexRecords(rootFile.getRecords());
+		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, "Building in background.");
+		model.setHeaders(request);
+		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
+	}
+
+	@PostMapping(value = "/addRecord")
 	public ResponseEntity<ApiModel> addRecord(HttpServletRequest request, @RequestBody IndexableModel indexData) {
 		dappsIndexService.indexSingleRecord(indexData);
 		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, "Building in background.");
@@ -85,8 +113,7 @@ public class IndexController {
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/removeRecord/{field}/{value}", method = RequestMethod.GET, produces = {
-			MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/removeRecord/{field}/{value}")
 	public ResponseEntity<ApiModel> removeRecord(HttpServletRequest request, @PathVariable String field,
 			@PathVariable String value) {
 		dappsIndexService.remove(field, value);

@@ -13,7 +13,6 @@ import org.apache.lucene.document.DoublePoint;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.FloatPoint;
 import org.apache.lucene.document.IntPoint;
-import org.apache.lucene.document.LongPoint;
 import org.apache.lucene.document.NumericDocValuesField;
 import org.apache.lucene.document.StoredField;
 import org.apache.lucene.document.StringField;
@@ -30,6 +29,7 @@ import org.brightblock.search.api.model.DomainIndexModel;
 import org.brightblock.search.api.model.IndexableContainerModel;
 import org.brightblock.search.api.model.IndexableModel;
 import org.brightblock.search.api.model.KeywordModel;
+import org.brightblock.search.api.v2.NftMedia;
 import org.brightblock.search.service.blockstack.models.ZonefileModel;
 import org.brightblock.search.service.project.DomainIndexService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -132,6 +132,30 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 	@Override
 	public void indexUser(ZonefileModel zonefile) {
 		buildIndex(zonefile);
+	}
+
+	@Override
+	public void indexRecords(List<IndexableModel> indexData) {
+		if (indexData == null || indexData.size() == 0) {
+			return;
+		}
+		IndexWriter writer = null;
+		long freeMemBefore = Runtime.getRuntime().freeMemory();
+		long timeStart = new Date().getTime();
+		int indexCount = 0;
+		try {
+			initArtMarket();
+			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(artAnalyzer);
+			writer = new IndexWriter(artIndex, indexWriterConfig);
+			for (IndexableModel model : indexData) {
+				addToIndex(writer, model);
+				indexCount++;
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		} finally {
+			wrapUp(writer, indexCount, freeMemBefore, timeStart);
+		}
 	}
 
 	@Override
@@ -342,23 +366,30 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 			if (record.getCategory() != null) {
 				document.add(new TextField("category", record.getCategory().getId(), Field.Store.YES));
 			}
-			if (record.getTradeInfo() != null && record.getTradeInfo().getSaleType() != null) {
-				document.add(new LongPoint("saleType", record.getTradeInfo().getSaleType()));
-				document.add(new StoredField("saleType", record.getTradeInfo().getSaleType()));
+			
+			if (record.getNftMedia() != null) {
+				NftMedia nfm = record.getNftMedia();
+				document.add(new StoredField("coverArtist", nfm.getCoverArtist()));
+				if (nfm.getArtworkClip() != null) {
+					document.add(new StoredField("awcSize", nfm.getArtworkClip().getSize()));
+					document.add(new StoredField("awcFileUrl", nfm.getArtworkClip().getFileUrl()));
+					document.add(new StoredField("awcStorage", nfm.getArtworkClip().getStorage()));
+					document.add(new StoredField("awcType", nfm.getArtworkClip().getType()));
+				}
+				if (nfm.getArtworkFile() != null) {
+					document.add(new StoredField("awfSize", nfm.getArtworkFile().getSize()));
+					document.add(new StoredField("awfFileUrl", nfm.getArtworkFile().getFileUrl()));
+					document.add(new StoredField("awfStorage", nfm.getArtworkFile().getStorage()));
+					document.add(new StoredField("awfType", nfm.getArtworkFile().getType()));
+				}
+				if (nfm.getCoverImage() != null) {
+					document.add(new StoredField("aciSize", nfm.getCoverImage().getSize()));
+					document.add(new StoredField("aciFileUrl", nfm.getCoverImage().getFileUrl()));
+					document.add(new StoredField("aciStorage", nfm.getCoverImage().getStorage()));
+					document.add(new StoredField("aciType", nfm.getCoverImage().getType()));
+				}
 			}
-			if (record.getTradeInfo() != null && record.getTradeInfo().getBiddingEndTime() != null) {
-				document.add(new StoredField("biddingEndTime", record.getTradeInfo().getBiddingEndTime()));
-			}
-			if (record.getTradeInfo() != null && record.getTradeInfo().getBuyNowOrStartingPrice() != null) {
-				document.add(new DoublePoint("buyNowOrStartingPrice", record.getTradeInfo().getSaleType()));
-				document.add(new StoredField("buyNowOrStartingPrice", record.getTradeInfo().getBuyNowOrStartingPrice()));
-			}
-			if (record.getTradeInfo() != null && record.getTradeInfo().getIncrementPrice() != null) {
-				document.add(new StoredField("incrementPrice", record.getTradeInfo().getIncrementPrice()));
-			}
-			if (record.getTradeInfo() != null && record.getTradeInfo().getReservePrice() != null) {
-				document.add(new StoredField("reservePrice", record.getTradeInfo().getReservePrice()));
-			}
+			
 			if (record.getKeywords() != null) {
 				String csKeywords = "1 ";
 				for (KeywordModel km : record.getKeywords()) {
