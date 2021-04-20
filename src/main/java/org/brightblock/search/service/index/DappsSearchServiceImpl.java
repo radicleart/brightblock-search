@@ -24,7 +24,6 @@ import org.brightblock.search.api.model.IndexableModel;
 import org.brightblock.search.api.model.KeywordModel;
 import org.brightblock.search.api.model.OwnersModel;
 import org.brightblock.search.api.model.SearchResultModel;
-import org.brightblock.search.api.model.TradeInfoModel;
 import org.brightblock.search.api.v2.MediaObject;
 import org.brightblock.search.api.v2.NftMedia;
 import org.brightblock.search.service.project.CreatorsRepository;
@@ -310,48 +309,13 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 		} else {
 			model.setUpdated(Long.parseLong(document.get("updated")));
 		}
-		if (document.get("mintedOn") != null) {
-			model.setMintedOn(Long.parseLong(document.get("mintedOn")));
-		}
 		if (document.get("created") == null) {
 			model.setUpdated(new Date().getTime() - HUNDRED_DAYS); 
 		} else {
 			model.setUpdated(Long.parseLong(document.get("created")));
 		}
-		if (document.get("nftIndex") != null) {
-			model.setNftIndex(Long.parseLong(document.get("nftIndex")));
-		}
-		logger.info("Getting from nftIndex: " + model.getNftIndex() + " : " + document.get("nftIndex"));
-		if (document.get("tokenId") != null) {
-			model.setTokenId(Long.parseLong(document.get("tokenId")));
-		}
-		if (model.getTradeInfo() == null) {
-			model.setTradeInfo(new TradeInfoModel());
-		}
-		if (document.get("saleType") != null) {
-			try {
-				model.getTradeInfo().setSaleType(Long.parseLong(document.get("saleType")));
-			} catch (NumberFormatException e) {
-				model.getTradeInfo().setSaleType(0L);
-			}
-		}
-		logger.info("Getting from saleType: " + model.getTradeInfo().getSaleType() + " : " + document.get("saleType"));
-		if (document.get("buyNowOrStartingPrice") != null) {
-			model.getTradeInfo().setBuyNowOrStartingPrice(Double.parseDouble(document.get("buyNowOrStartingPrice")));
-		}
-		logger.info("Getting from saleType: " + model.getTradeInfo().getBuyNowOrStartingPrice() + " : " + document.get("buyNowOrStartingPrice"));
-		if (document.get("incrementPrice") != null) {
-			model.getTradeInfo().setIncrementPrice(Double.parseDouble(document.get("incrementPrice")));
-		}
-		if (document.get("reservePrice") != null) {
-			model.getTradeInfo().setReservePrice(Double.parseDouble(document.get("reservePrice")));
-		}
-		logger.info("Getting from reservePrice: " + model.getTradeInfo().getReservePrice() + " : " + document.get("reservePrice"));
-		if (document.get("biddingEndTime") != null) {
-			model.getTradeInfo().setBiddingEndTime(Long.parseLong(document.get("biddingEndTime")));
-		}
-		logger.info("Getting from biddingEndTime: " + model.getTradeInfo().getBiddingEndTime() + " : " + document.get("biddingEndTime"));
 
+		model.setUploader(document.get("uploader"));
 		model.setOwner(document.get("owner"));
 		model.setProjectId(document.get("projectId"));
 		model.setAssetProjectUrl(document.get("assetProjectUrl"));
@@ -400,9 +364,11 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 			KeywordModel km = new KeywordModel(null, csCategory, 0, null);
 			model.setCategory(km);
 		}
-		model.setBuyer(document.get("buyer"));
 		model.setStatus(document.get("status"));
-		model.setTitle(document.get("title"));
+		model.setName(document.get("name"));
+		if (document.get("name") != null) {
+			model.setName(document.get("title"));
+		}
 		model.setDomain(document.get("domain"));
 		List<IndexableField> fields = document.getFields();
 		Map<String, String> metaData = new HashMap<String, String>();

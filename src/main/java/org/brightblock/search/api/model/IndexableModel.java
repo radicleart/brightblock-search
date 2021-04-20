@@ -23,12 +23,12 @@ public class IndexableModel implements SearchResultModel, Comparable<IndexableMo
 
 	private static final long serialVersionUID = 7471051478505916999L;
 	private String projectId;
-	@JsonAlias({ "name" }) private String title;
+	@JsonAlias({ "title" }) private String name;
 	private String description;
 	private Long created;
 	private Long updated;
-	private Long mintedOn;
 	private String owner;
+	private String uploader;
 	private String assetHash;
 	private String imageUrl;
 	private String assetUrl;
@@ -40,12 +40,9 @@ public class IndexableModel implements SearchResultModel, Comparable<IndexableMo
 	private KeywordModel category;
 	private List<KeywordModel> keywords;
 	private String status;
-	private String buyer;
 	private Long tokenId;
-	private Long nftIndex;
-	private Map<String, String> metaData;
-	private TradeInfoModel tradeInfo;
 	private NftMedia nftMedia;
+	private Map<String, String> metaData;
 	
 	@Override
 	public int compareTo(IndexableModel o) {

@@ -160,9 +160,6 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 
 	@Override
 	public void indexSingleRecord(IndexableModel indexData) {
-		if (indexData.getNftIndex() == null) {
-			return;
-		}
 		IndexWriter writer = null;
 		long freeMemBefore = Runtime.getRuntime().freeMemory();
 		long timeStart = new Date().getTime();
@@ -286,10 +283,6 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 			for (IndexableContainerModel userControlRecord : userRecords) { // index a portion of the namespace for test  purposes..
 				indexCount = 0;
 				for (IndexableModel record : userControlRecord.getRecords()) {
-					if (record.getNftIndex() == null) {
-						logger.info("Skipping unminted record: " + record.getTitle());
-						continue;
-					}
 					addToIndex(writer, record);
 					indexCount++;
 				}
@@ -307,7 +300,7 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 		Document document = null;
 		try {
 			document = new Document();
-			document.add(new TextField("title", record.getTitle(), Field.Store.YES));
+			document.add(new TextField("name", record.getName(), Field.Store.YES));
 			document.add(new StringField("assetHash", record.getAssetHash(), Field.Store.YES));
 			if (record.getProjectId()!= null) {
 				document.add(new TextField("projectId", record.getProjectId(), Field.Store.YES));
@@ -317,18 +310,11 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 			} else {
 				document.add(new TextField("objType", "artwork", Field.Store.YES));
 			}
-			if (record.getNftIndex() != null) {
-				document.add(new StoredField("nftIndex", record.getNftIndex()));
-			}
-			logger.info("Adding to index: " + record.getNftIndex() + " : " + document.get("nftIndex"));
 			if (record.getTokenId() != null) {
 				document.add(new StoredField("tokenId", record.getTokenId()));
 			}
 			if (record.getUpdated() != null) {
 				document.add(new NumericDocValuesField("updated", record.getUpdated()));
-			}
-			if (record.getMintedOn() != null) {
-				document.add(new NumericDocValuesField("mintedOn", record.getMintedOn()));
 			}
 			if (record.getPrivacy() != null) {
 				document.add(new TextField("privacy", record.getPrivacy(), Field.Store.YES));
@@ -347,9 +333,6 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 			}
 			if (record.getDescription() != null) {
 				document.add(new TextField("description", record.getDescription(), Field.Store.YES));
-			}
-			if (record.getBuyer() != null) {
-				document.add(new TextField("buyer", record.getBuyer(), Field.Store.YES));
 			}
 			if (record.getStatus() != null) {
 				document.add(new TextField("status", record.getStatus(), Field.Store.YES));
@@ -420,7 +403,7 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 			}
 			Term term = new Term("assetHash", String.valueOf(record.getAssetHash()));
 			writer.updateDocument(term, document);
-			logger.info("Indexed dapp search record: nftIndex: " + document.get("nftIndex") + " object: " +record.getOwner() + " object: " + record.getObjType() + " record title: " + record.getTitle() + " from domain: " + record.getDomain());
+			logger.info("Indexed dapp search record: nftIndex: " + document.get("nftIndex") + " object: " +record.getOwner() + " object: " + record.getObjType() + " record title: " + record.getName() + " from domain: " + record.getDomain());
 		} catch (Exception e) {
 			logger.error("Error idexing document from record: " + e.getMessage());
 		}
