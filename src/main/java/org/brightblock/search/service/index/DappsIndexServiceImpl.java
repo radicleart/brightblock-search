@@ -343,6 +343,9 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 			if (record.getAssetProjectUrl() != null) {
 				document.add(new TextField("assetProjectUrl", record.getAssetProjectUrl(), Field.Store.YES));
 			}
+			if (record.getMetaDataUrl() != null) {
+				document.add(new TextField("metaDataUrl", record.getMetaDataUrl(), Field.Store.YES));
+			}
 			if (record.getAssetUrl() != null) {
 				document.add(new TextField("assetUrl", record.getAssetUrl(), Field.Store.YES));
 			}

@@ -33,6 +33,7 @@ public class IndexableModel implements SearchResultModel, Comparable<IndexableMo
 	private String imageUrl;
 	private String assetUrl;
 	private String assetProjectUrl;
+	private String metaDataUrl;
 	private String privacy;
 	private String artist;
 	private String objType;
