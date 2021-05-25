@@ -39,6 +39,17 @@ application:
 ---
 
 spring:
+    profiles: linux-dev
+application:
+   mongoIp: mongodb://localhost
+radicle:
+   stax:
+      base-path: http://172.17.0.1:20443
+      sidecar-path: http://172.17.0.1:3999
+
+---
+
+spring:
    profiles: docker-dev
 radicle:
    mongo:
