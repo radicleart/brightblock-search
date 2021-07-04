@@ -4,14 +4,12 @@ import org.brightblock.search.api.model.DomainIndexModel;
 import org.brightblock.search.service.index.DappsSearchService;
 import org.brightblock.search.service.project.DomainIndexService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@CrossOrigin(origins = { "*" }, maxAge = 6000)
 public class DomainIndexController {
 
 	@Autowired private DomainIndexService projectService;
