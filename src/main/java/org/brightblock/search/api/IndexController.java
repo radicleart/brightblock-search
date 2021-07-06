@@ -17,6 +17,7 @@ import org.brightblock.search.service.project.DomainIndexService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,6 +30,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
+@CrossOrigin(origins = { "*" }, maxAge = 6000)
 public class IndexController {
 
 	@Autowired
@@ -37,7 +39,8 @@ public class IndexController {
 	private DappsIndexService dappsIndexService;
 	@Autowired
 	private DomainIndexService projectService;
-	@Autowired private ObjectMapper mapper;
+	@Autowired
+	private ObjectMapper mapper;
 
 	@GetMapping(value = "/dapps/clear")
 	public ResponseEntity<ApiModel> clearDapps(HttpServletRequest request) {
@@ -81,8 +84,9 @@ public class IndexController {
 	}
 
 	@PostMapping(value = "/indexJsonRootFile")
-	public ResponseEntity<ApiModel> indexJsonRootFile(HttpServletRequest request, @RequestBody JsonRootFile jsonRootFile) throws JsonMappingException, JsonProcessingException {
-		
+	public ResponseEntity<ApiModel> indexJsonRootFile(HttpServletRequest request,
+			@RequestBody JsonRootFile jsonRootFile) throws JsonMappingException, JsonProcessingException {
+
 		RootFile rootFile = convert(jsonRootFile.getJsonRootFile());
 		dappsIndexService.indexRecords(rootFile.getRecords());
 		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, "Building in background.");
@@ -91,7 +95,8 @@ public class IndexController {
 	}
 
 	private RootFile convert(String jsonResp) throws JsonMappingException, JsonProcessingException {
-		RootFile rates = mapper.readValue(jsonResp, new TypeReference<RootFile>() {});
+		RootFile rates = mapper.readValue(jsonResp, new TypeReference<RootFile>() {
+		});
 		return rates;
 	}
 
@@ -105,6 +110,14 @@ public class IndexController {
 
 	@PostMapping(value = "/addRecord")
 	public ResponseEntity<ApiModel> addRecord(HttpServletRequest request, @RequestBody IndexableModel indexData) {
+		dappsIndexService.indexSingleRecord(indexData);
+		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, "Building in background.");
+		model.setHeaders(request);
+		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
+	}
+
+	@PostMapping(value = "/indexMetaData")
+	public ResponseEntity<ApiModel> indexMetaData(HttpServletRequest request, @RequestBody IndexableModel indexData) {
 		dappsIndexService.indexSingleRecord(indexData);
 		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, "Building in background.");
 		model.setHeaders(request);
