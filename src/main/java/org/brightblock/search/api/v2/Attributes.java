@@ -11,8 +11,8 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor
-@TypeAlias(value = "NftMedia")
-public class NftMedia {
+@TypeAlias(value = "Attributes")
+public class Attributes {
 
 	private String coverArtist;
 	private MediaObject artworkFile;

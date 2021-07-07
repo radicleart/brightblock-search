@@ -116,8 +116,9 @@ public class IndexController {
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
 	}
 
-	@PostMapping(value = "/indexMetaData")
-	public ResponseEntity<ApiModel> indexMetaData(HttpServletRequest request, @RequestBody IndexableModel indexData) {
+	@PostMapping(value = "/indexMetaData/{projectId}")
+	public ResponseEntity<ApiModel> indexMetaData(HttpServletRequest request, @PathVariable String projectId, @RequestBody IndexableModel indexData) {
+		indexData.setProjectId(projectId);
 		dappsIndexService.indexSingleRecord(indexData);
 		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, "Building in background.");
 		model.setHeaders(request);

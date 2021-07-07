@@ -24,8 +24,8 @@ import org.brightblock.search.api.model.IndexableModel;
 import org.brightblock.search.api.model.KeywordModel;
 import org.brightblock.search.api.model.OwnersModel;
 import org.brightblock.search.api.model.SearchResultModel;
+import org.brightblock.search.api.v2.Attributes;
 import org.brightblock.search.api.v2.MediaObject;
-import org.brightblock.search.api.v2.NftMedia;
 import org.brightblock.search.service.project.CreatorsRepository;
 import org.brightblock.search.service.project.OwnersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -318,12 +318,12 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 		model.setUploader(document.get("uploader"));
 		model.setOwner(document.get("owner"));
 		model.setProjectId(document.get("projectId"));
-		model.setAssetProjectUrl(document.get("assetProjectUrl"));
+		model.setImage(document.get("image"));
 		model.setMetaDataUrl(document.get("metaDataUrl"));
-		model.setAssetUrl(document.get("assetUrl"));
+		model.setExternalUrl(document.get("externalUrl"));
 		model.setArtist(document.get("artist"));
 		
-		NftMedia nfm = new NftMedia();
+		Attributes nfm = new Attributes();
 		nfm.setCoverArtist(document.get("coverArtist"));
 		
 		MediaObject awf = new MediaObject();
@@ -347,7 +347,7 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 		awf.setType(document.get("aciType"));
 		nfm.setCoverImage(awf);
 		
-		model.setNftMedia(nfm);
+		model.setAttributes(nfm);
 		
 		String csKeywords = document.get("keywords");
 		if (csKeywords != null) {

@@ -29,7 +29,7 @@ import org.brightblock.search.api.model.DomainIndexModel;
 import org.brightblock.search.api.model.IndexableContainerModel;
 import org.brightblock.search.api.model.IndexableModel;
 import org.brightblock.search.api.model.KeywordModel;
-import org.brightblock.search.api.v2.NftMedia;
+import org.brightblock.search.api.v2.Attributes;
 import org.brightblock.search.service.blockstack.models.ZonefileModel;
 import org.brightblock.search.service.project.DomainIndexService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -340,21 +340,21 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 			if (record.getPrivacy() != null) {
 				document.add(new TextField("privacy", record.getPrivacy(), Field.Store.YES));
 			}
-			if (record.getAssetProjectUrl() != null) {
-				document.add(new TextField("assetProjectUrl", record.getAssetProjectUrl(), Field.Store.YES));
+			if (record.getImage() != null) {
+				document.add(new TextField("image", record.getImage(), Field.Store.YES));
 			}
 			if (record.getMetaDataUrl() != null) {
 				document.add(new TextField("metaDataUrl", record.getMetaDataUrl(), Field.Store.YES));
 			}
-			if (record.getAssetUrl() != null) {
-				document.add(new TextField("assetUrl", record.getAssetUrl(), Field.Store.YES));
+			if (record.getExternalUrl() != null) {
+				document.add(new TextField("externalUrl", record.getExternalUrl(), Field.Store.YES));
 			}
 			if (record.getCategory() != null) {
-				document.add(new TextField("category", record.getCategory().getId(), Field.Store.YES));
+				document.add(new TextField("category", record.getCategory().getName(), Field.Store.YES));
 			}
 			
-			if (record.getNftMedia() != null) {
-				NftMedia nfm = record.getNftMedia();
+			if (record.getAttributes() != null) {
+				Attributes nfm = record.getAttributes();
 				document.add(new StoredField("coverArtist", nfm.getCoverArtist()));
 				if (nfm.getArtworkClip() != null) {
 					document.add(new StoredField("awcSize", nfm.getArtworkClip().getSize()));
