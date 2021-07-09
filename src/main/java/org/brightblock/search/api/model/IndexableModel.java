@@ -6,8 +6,6 @@ import java.util.Map;
 import org.brightblock.search.api.v2.Attributes;
 import org.springframework.data.annotation.TypeAlias;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,7 +21,7 @@ public class IndexableModel implements SearchResultModel, Comparable<IndexableMo
 
 	private static final long serialVersionUID = 7471051478505916999L;
 	private String projectId;
-	@JsonAlias({ "title" }) private String name;
+	private String name;
 	private String description;
 	private Long created;
 	private Long updated;
@@ -40,7 +38,6 @@ public class IndexableModel implements SearchResultModel, Comparable<IndexableMo
 	private KeywordModel category;
 	private List<KeywordModel> keywords;
 	private String status;
-	private Long tokenId;
 	private Attributes attributes;
 	private Map<String, String> metaData;
 	

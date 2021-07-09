@@ -134,11 +134,11 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 	@Override
 	public List<SearchResultModel> searchIndex(int limit, String objType, String domain, String inField, String searchTerm) {
 		String query = "domain:" + domain + " AND objType:" + objType;
-		if (inField.equals("title")) {
+		if (inField.equals("name")) {
 			if (searchTerm == null || searchTerm.length() == 0) {
 				searchTerm = "*";
 			}
-			query += " AND (title:" + searchTerm + " OR category:" + searchTerm + " OR description:" + searchTerm + " OR keywords:" + searchTerm + ")";
+			query += " AND (name:" + searchTerm + " OR category:" + searchTerm + " OR description:" + searchTerm + " OR keywords:" + searchTerm + ")";
 		} else if (inField.equals("facet")) {
 			if (searchTerm != null && searchTerm.length() > 0) {
 				query += " AND " + searchTerm;
@@ -152,11 +152,11 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 	@Override
 	public List<SearchResultModel> searchIndex(int limit, String objType, String inField, String searchTerm) {
 		String query = "objType:" + objType;
-		if (inField.equals("title")) {
+		if (inField.equals("name")) {
 			if (searchTerm == null || searchTerm.length() == 0) {
 				searchTerm = "*";
 			}
-			query += " AND (title:" + searchTerm + " OR category:" + searchTerm + " OR description:" + searchTerm + " OR keywords:" + searchTerm + ")";
+			query += " AND (name:" + searchTerm + " OR category:" + searchTerm + " OR description:" + searchTerm + " OR keywords:" + searchTerm + ")";
 		} else if (inField.equals("facet")) {
 			if (searchTerm != null && searchTerm.length() > 0) {
 				query += " AND " + searchTerm;
@@ -168,16 +168,21 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 	}
 
 	@Override
+	public List<SearchResultModel> searchIndex(String defaultField, int limit, String searchTerm) {
+		return doSearch(limit, searchTerm, defaultField);
+	}
+
+	@Override
 	public List<SearchResultModel> searchIndex(int limit, String inField, String searchTerm) {
-		if (inField.equals("title")) {
-			return doSearch(limit, "title:" + searchTerm, inField);
+		if (inField.equals("name")) {
+			return doSearch(limit, "name:" + searchTerm, inField);
 		} else {
 			String query = "objType:artwork OR objType:trading_cards OR objType:certificates OR objType:digital_property OR objType:written_word OR objType:news_media";
-			if (inField.equals("title")) {
+			if (inField.equals("name")) {
 				if (searchTerm == null || searchTerm.length() == 0) {
 					searchTerm = "*";
 				}
-				query += " AND (title:" + searchTerm + " OR category:" + searchTerm + " OR description:" + searchTerm + " OR keywords:" + searchTerm + ")";
+				query += " AND (name:" + searchTerm + " OR category:" + searchTerm + " OR description:" + searchTerm + " OR keywords:" + searchTerm + ")";
 			} else if (inField.equals("facet")) {
 				if (searchTerm != null && searchTerm.length() > 0) {
 					query += " AND " + searchTerm;
@@ -367,9 +372,6 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 		}
 		model.setStatus(document.get("status"));
 		model.setName(document.get("name"));
-		if (document.get("name") != null) {
-			model.setName(document.get("title"));
-		}
 		model.setDomain(document.get("domain"));
 		List<IndexableField> fields = document.getFields();
 		Map<String, String> metaData = new HashMap<String, String>();

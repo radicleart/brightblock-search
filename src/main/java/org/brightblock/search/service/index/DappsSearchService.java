@@ -15,6 +15,7 @@ public interface DappsSearchService
 	public List<SearchResultModel> searchIndex(int limit, String objType, String domain, String inField, String query);
 	public List<SearchResultModel> searchIndex(int limit, String objType, String inField, String query);
 	public List<SearchResultModel> searchIndex(int limit, String inField, String query);
+	public List<SearchResultModel> searchIndex(String defaultField, int limit, String query);
 	public List<SearchResultModel> findByProjectId(int limit, String projectId);
 	public SearchResultModel findByAssetHash(String assetHash);
 	public List<SearchResultModel> fetchAll();

@@ -9,10 +9,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.DoublePoint;
 import org.apache.lucene.document.Field;
-import org.apache.lucene.document.FloatPoint;
-import org.apache.lucene.document.IntPoint;
 import org.apache.lucene.document.NumericDocValuesField;
 import org.apache.lucene.document.StoredField;
 import org.apache.lucene.document.StringField;
@@ -310,9 +307,9 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 			} else {
 				document.add(new TextField("objType", "artwork", Field.Store.YES));
 			}
-			if (record.getTokenId() != null) {
-				document.add(new StoredField("tokenId", record.getTokenId()));
-			}
+//			if (record.getTokenId() != null) {
+//				document.add(new StoredField("tokenId", record.getTokenId()));
+//			}
 			if (record.getUpdated() != null) {
 				document.add(new NumericDocValuesField("updated", record.getUpdated()));
 			}
@@ -337,9 +334,9 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 			if (record.getStatus() != null) {
 				document.add(new TextField("status", record.getStatus(), Field.Store.YES));
 			}
-			if (record.getPrivacy() != null) {
-				document.add(new TextField("privacy", record.getPrivacy(), Field.Store.YES));
-			}
+//			if (record.getPrivacy() != null) {
+//				document.add(new TextField("privacy", record.getPrivacy(), Field.Store.YES));
+//			}
 			if (record.getImage() != null) {
 				document.add(new TextField("image", record.getImage(), Field.Store.YES));
 			}
@@ -354,25 +351,21 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 			}
 			
 			if (record.getAttributes() != null) {
-				Attributes nfm = record.getAttributes();
-				document.add(new StoredField("coverArtist", nfm.getCoverArtist()));
-				if (nfm.getArtworkClip() != null) {
-					document.add(new StoredField("awcSize", nfm.getArtworkClip().getSize()));
-					document.add(new StoredField("awcFileUrl", nfm.getArtworkClip().getFileUrl()));
-					document.add(new StoredField("awcStorage", nfm.getArtworkClip().getStorage()));
-					document.add(new StoredField("awcType", nfm.getArtworkClip().getType()));
+				Attributes attr = record.getAttributes();
+				if (attr.getArtworkClip() != null) {
+					document.add(new StoredField("awcSize", attr.getArtworkClip().getSize()));
+					document.add(new StoredField("awcFileUrl", attr.getArtworkClip().getFileUrl()));
+					document.add(new StoredField("awcType", attr.getArtworkClip().getType()));
 				}
-				if (nfm.getArtworkFile() != null) {
-					document.add(new StoredField("awfSize", nfm.getArtworkFile().getSize()));
-					document.add(new StoredField("awfFileUrl", nfm.getArtworkFile().getFileUrl()));
-					document.add(new StoredField("awfStorage", nfm.getArtworkFile().getStorage()));
-					document.add(new StoredField("awfType", nfm.getArtworkFile().getType()));
+				if (attr.getArtworkFile() != null) {
+					document.add(new StoredField("awfSize", attr.getArtworkFile().getSize()));
+					document.add(new StoredField("awfFileUrl", attr.getArtworkFile().getFileUrl()));
+					document.add(new StoredField("awfType", attr.getArtworkFile().getType()));
 				}
-				if (nfm.getCoverImage() != null) {
-					document.add(new StoredField("aciSize", nfm.getCoverImage().getSize()));
-					document.add(new StoredField("aciFileUrl", nfm.getCoverImage().getFileUrl()));
-					document.add(new StoredField("aciStorage", nfm.getCoverImage().getStorage()));
-					document.add(new StoredField("aciType", nfm.getCoverImage().getType()));
+				if (attr.getCoverImage() != null) {
+					document.add(new StoredField("aciSize", attr.getCoverImage().getSize()));
+					document.add(new StoredField("aciFileUrl", attr.getCoverImage().getFileUrl()));
+					document.add(new StoredField("aciType", attr.getCoverImage().getType()));
 				}
 			}
 			
@@ -386,27 +379,27 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 			} else {
 				document.add(new TextField("keywords", "no keywords", Field.Store.YES));
 			}
-			if (record.getMetaData() != null) {
-				for (String key : record.getMetaData().keySet()) {
-					try {
-						Object value = record.getMetaData().get(key);
-						if (value instanceof Integer) {
-							document.add(new IntPoint(key, (Integer)value));
-						} else if (value instanceof Float) {
-							document.add(new FloatPoint(key, (Integer)value));
-						} else if (value instanceof Double) {
-							document.add(new DoublePoint(key, (Integer)value));
-						} else {
-							document.add(new TextField(key, (String)value, Field.Store.YES));
-						}
-					} catch (Exception e) {
-						logger.error("Field error - only coping with strings just now: " + e.getMessage());
-					}
-				}
-			}
+//			if (record.getMetaData() != null) {
+//				for (String key : record.getMetaData().keySet()) {
+//					try {
+//						Object value = record.getMetaData().get(key);
+//						if (value instanceof Integer) {
+//							document.add(new IntPoint(key, (Integer)value));
+//						} else if (value instanceof Float) {
+//							document.add(new FloatPoint(key, (Integer)value));
+//						} else if (value instanceof Double) {
+//							document.add(new DoublePoint(key, (Integer)value));
+//						} else {
+//							document.add(new TextField(key, (String)value, Field.Store.YES));
+//						}
+//					} catch (Exception e) {
+//						logger.error("Field error - only coping with strings just now: " + e.getMessage());
+//					}
+//				}
+//			}
 			Term term = new Term("assetHash", String.valueOf(record.getAssetHash()));
 			writer.updateDocument(term, document);
-			logger.info("Indexed dapp search record: nftIndex: " + document.get("nftIndex") + " object: " +record.getOwner() + " object: " + record.getObjType() + " record title: " + record.getName() + " from domain: " + record.getDomain());
+			logger.info("Indexed dapp search record: nftIndex: " + document.get("nftIndex") + " object: " +record.getOwner() + " object: " + record.getObjType() + " record name: " + record.getName() + " from domain: " + record.getDomain());
 		} catch (Exception e) {
 			logger.error("Error idexing document from record: " + e.getMessage());
 		}

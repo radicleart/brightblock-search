@@ -130,7 +130,15 @@ public class SearchController {
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
 	}
 	
-	@GetMapping(value = "/v1/asset/{assetHash}")
+	@GetMapping(value = "/findByGeneralSearchTerm/{defaultField}")
+	public ResponseEntity<ApiModel> findByGernalSearchTerm(HttpServletRequest request, @PathVariable String defaultField) {
+		List<SearchResultModel> response = dappsSearchService.searchIndex(defaultField, 200, getQuery(request));
+		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, response);
+		model.setHeaders(request);
+		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
+	}
+	
+ 	@GetMapping(value = "/v1/asset/{assetHash}")
 	public SearchResultModel getAsset(HttpServletRequest request, @PathVariable String assetHash) {
 		try {
 			SearchResultModel asset = dappsSearchService.findByAssetHash(assetHash);
@@ -143,7 +151,7 @@ public class SearchController {
 	
 	@GetMapping(value = "/findByTitleOrDescriptionOrCategoryOrKeyword")
 	public ResponseEntity<ApiModel> searchDapps(HttpServletRequest request) {
-		List<SearchResultModel> response = dappsSearchService.searchIndex(200, "title", getQuery(request));
+		List<SearchResultModel> response = dappsSearchService.searchIndex(200, "name", getQuery(request));
 		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, response);
 		model.setHeaders(request);
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
