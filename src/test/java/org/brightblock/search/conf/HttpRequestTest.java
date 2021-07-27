@@ -25,11 +25,4 @@ public class HttpRequestTest {
         assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/",
                 String.class)).contains("Hello World");
     }
-
-    @Test
-    public void greetingShouldReturnSecurityMessage() throws Exception {
-//        assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/secure",
-//                String.class)).contains("Please Login");
-    }
-
 }
