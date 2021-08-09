@@ -26,17 +26,31 @@ import org.brightblock.search.api.model.OwnersModel;
 import org.brightblock.search.api.model.SearchResultModel;
 import org.brightblock.search.api.v2.Attributes;
 import org.brightblock.search.api.v2.MediaObject;
+import org.brightblock.search.service.index.posts.CacheQuery;
 import org.brightblock.search.service.project.CreatorsRepository;
 import org.brightblock.search.service.project.OwnersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestOperations;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements DappsSearchService {
 
 	private static final long HUNDRED_DAYS = 8640000000L;
+	@Autowired private RestOperations restTemplate;
+	@Autowired private ObjectMapper mapper;
 	@Autowired private OwnersRepository ownersRepository;
 	@Autowired private CreatorsRepository creatorsRepository;
+	@Value("${radicle.cache.hashurl}") String hashurl;
 
 	@Override
 	public List<SearchResultModel> fetchAll() {
@@ -126,13 +140,13 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 	}
 
 	@Override
-	public List<SearchResultModel> fetchAll(String fieldName) {
+	public List<IndexableModel> fetchAll(String fieldName) {
 		String query = "_exists_:" + fieldName;
 		return doSearch(200, query, fieldName);
 	}
 
 	@Override
-	public List<SearchResultModel> searchIndex(int limit, String objType, String domain, String inField, String searchTerm) {
+	public List<IndexableModel> searchIndex(int limit, String objType, String domain, String inField, String searchTerm) {
 		String query = "domain:" + domain + " AND objType:" + objType;
 		if (inField.equals("name")) {
 			if (searchTerm == null || searchTerm.length() == 0) {
@@ -150,7 +164,7 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 	}
 
 	@Override
-	public List<SearchResultModel> searchIndex(int limit, String objType, String inField, String searchTerm) {
+	public List<IndexableModel> searchIndex(int limit, String objType, String inField, String searchTerm) {
 		String query = "objType:" + objType;
 		if (inField.equals("name")) {
 			if (searchTerm == null || searchTerm.length() == 0) {
@@ -168,12 +182,12 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 	}
 
 	@Override
-	public List<SearchResultModel> searchIndex(String defaultField, int limit, String searchTerm) {
+	public List<IndexableModel> searchIndex(String defaultField, int limit, String searchTerm) {
 		return doSearch(limit, searchTerm, defaultField);
 	}
 
 	@Override
-	public List<SearchResultModel> searchIndex(int limit, String inField, String searchTerm) {
+	public List<IndexableModel> searchIndex(int limit, String inField, String searchTerm) {
 		if (inField.equals("name")) {
 			return doSearch(limit, "name:" + searchTerm, inField);
 		} else {
@@ -195,21 +209,49 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 	}
 
 	@Override
-	public List<SearchResultModel> findByProjectId(int limit, String searchTerm) {
+	public List<IndexableModel> findByProjectId(int limit, String searchTerm) throws JsonProcessingException {
 		String query = "projectId:" + searchTerm;
-		return doSearch(limit, query, "projectId");
+		return pullContractAssets(doSearch(limit, query, "projectId"));
+	}
+
+	private List<IndexableModel> pullContractAssets(List<IndexableModel> records) throws JsonProcessingException {
+		List<IndexableModel> indexableModels = new ArrayList<IndexableModel>();
+		List<String> hashes = new ArrayList<String>();
+		for (IndexableModel record : records) {
+			hashes.add(record.getAssetHash());
+		}
+		Map<String, String> tokens = readFromCache(hashes);
+		for (IndexableModel record : records) {
+			if (tokens.containsKey(record.getAssetHash())) {
+				record.setContractAssetJson(tokens.get(record.getAssetHash()));
+				indexableModels.add(record);
+			}
+		}
+		return indexableModels;
+	}
+
+	@SuppressWarnings("unchecked")
+	private Map<String, String> readFromCache(List<String> hashes) throws JsonProcessingException {
+		CacheQuery cq = new CacheQuery();
+		cq.setHashes(hashes);
+		String jsonInString = mapper.writeValueAsString(cq);
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<String> requestEntity = new HttpEntity<String>(jsonInString, headers);
+		ResponseEntity<Map> response = restTemplate.exchange(hashurl, HttpMethod.POST, requestEntity, Map.class);
+		return response.getBody();
 	}
 
 	@Override
-	public SearchResultModel findByAssetHash(String assetHash) {
+	public IndexableModel findByAssetHash(String assetHash) {
 		String query = "assetHash:" + assetHash;
-		List<SearchResultModel> results = doSearch(1, query, "assetHash");
+		List<IndexableModel> results = doSearch(1, query, "assetHash");
 		if (results == null || results.isEmpty()) return null;
 		return results.get(0);
 	}
 
 	@Override
-	public List<SearchResultModel> findByOwner(int limit, String searchTerm) {
+	public List<IndexableModel> findByOwner(int limit, String searchTerm) {
 		String query = "owner:" + searchTerm;
 		return doSearch(limit, query, "owner");
 	}
@@ -223,13 +265,13 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 	}
 
 	@Override
-	public List<SearchResultModel> searchObjectType(int limit, String searchTerm) {
+	public List<IndexableModel> searchObjectType(int limit, String searchTerm) {
 		String query = "objType:" + searchTerm;
-		List<SearchResultModel> models = doSearch(limit, query, "objType");
+		List<IndexableModel> models = doSearch(limit, query, "objType");
 		return models;
 	}
 
-	private List<SearchResultModel> doSearch(int limit, String query, String inField) {
+	private List<IndexableModel> doSearch(int limit, String query, String inField) {
 		try {
 			initArtMarket();
 			IndexReader indexReader = DirectoryReader.open(artIndex);
@@ -237,11 +279,11 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 			Query q = qp.parse(query);
 			IndexSearcher searcher = new IndexSearcher(indexReader);
 			TopDocs topDocs = searcher.search(q, limit);
-			List<SearchResultModel> models = new ArrayList<SearchResultModel>();
+			List<IndexableModel> models = new ArrayList<IndexableModel>();
 			Document document = null;
 			for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
 				document = searcher.doc(scoreDoc.doc);
-				SearchResultModel model = convertToRecord(document);
+				IndexableModel model = convertToRecord(document);
 				models.add(model);
 			}
 			return models;
@@ -295,7 +337,7 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 		}
 	}
 
-	private SearchResultModel convertToRecord(Document document) {
+	private IndexableModel convertToRecord(Document document) {
 		String objectType = document.get("objType");
 		if (objectType.equals("artwork")) {
 			return convertToArtwork(document);
@@ -304,7 +346,7 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 		}
 	}
 	
-	private SearchResultModel convertToArtwork(Document document) {
+	private IndexableModel convertToArtwork(Document document) {
 		IndexableModel model = new IndexableModel();
 		model.setDescription(document.get("description"));
 		model.setAssetHash(document.get("assetHash"));

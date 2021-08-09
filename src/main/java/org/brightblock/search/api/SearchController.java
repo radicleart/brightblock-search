@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.brightblock.search.api.model.DomainIndexModel;
+import org.brightblock.search.api.model.IndexableModel;
 import org.brightblock.search.api.model.SearchResultModel;
 import org.brightblock.search.rest.models.ApiModel;
 import org.brightblock.search.rest.models.ResponseCodes;
@@ -22,6 +23,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 @RestController
 //@CrossOrigin(origins = { "http://localhost:8085", "http://localhost:8082", "http://localhost:8080", "https://prom.risidio.com", "https://thisisnumberone.com", "https://staging.thisisnumberone.com", "https://tchange.risidio.com", "https://tchange.risidio.com", "https://xchange.risidio.com", "https://truma.risidio.com", "https://ruma.risidio.com", "https://loopbomb.risidio.com", "https://stacks.loopbomb.com", "https://stacksmate.com", "https://test.stacksmate.com" }, maxAge = 6000)
@@ -82,8 +85,8 @@ public class SearchController {
 	}
 
 	@GetMapping(value = "/findByProjectId")
-	public ResponseEntity<ApiModel> findByProjectId(HttpServletRequest request) {
-		List<SearchResultModel> records = dappsSearchService.findByProjectId(200, getQuery(request));
+	public ResponseEntity<ApiModel> findByProjectId(HttpServletRequest request) throws JsonProcessingException {
+		List<IndexableModel> records = dappsSearchService.findByProjectId(200, getQuery(request));
 		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, records);
 		model.setHeaders(request);
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
@@ -91,7 +94,7 @@ public class SearchController {
 
 	@GetMapping(value = "/findByOwner")
 	public ResponseEntity<ApiModel> findByOwner(HttpServletRequest request) {
-		List<SearchResultModel> records = dappsSearchService.findByOwner(200, getQuery(request));
+		List<IndexableModel> records = dappsSearchService.findByOwner(200, getQuery(request));
 		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, records);
 		model.setHeaders(request);
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
@@ -107,7 +110,7 @@ public class SearchController {
 
 	@GetMapping(value = "/findByDomainAndObjectTypeAndTitleOrDescriptionOrCategoryOrKeyword/{domain}/{objType}/{field}")
 	public ResponseEntity<ApiModel> searchDapps(HttpServletRequest request, @PathVariable String objType, @PathVariable String domain, @PathVariable String field) {
-		List<SearchResultModel> response = dappsSearchService.searchIndex(200, objType, domain, field, getQuery(request));
+		List<IndexableModel> response = dappsSearchService.searchIndex(200, objType, domain, field, getQuery(request));
 		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, response);
 		model.setHeaders(request);
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
@@ -115,7 +118,7 @@ public class SearchController {
 
 	@GetMapping(value = "/findByObjectTypeAndTitleOrDescriptionOrCategoryOrKeyword/{objType}/{field}")
 	public ResponseEntity<ApiModel> searchDapps(HttpServletRequest request, @PathVariable String objType, @PathVariable String field) {
-		List<SearchResultModel> response = dappsSearchService.searchIndex(200, objType, field, getQuery(request));
+		List<IndexableModel> response = dappsSearchService.searchIndex(200, objType, field, getQuery(request));
 		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, response);
 		model.setHeaders(request);
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
@@ -123,7 +126,7 @@ public class SearchController {
 	
 	@GetMapping(value = "/findByTitleOrDescriptionOrCategoryOrKeyword/{field}")
 	public ResponseEntity<ApiModel> searchDapps(HttpServletRequest request, @PathVariable String field) {
-		List<SearchResultModel> response = dappsSearchService.searchIndex(200, field, getQuery(request));
+		List<IndexableModel> response = dappsSearchService.searchIndex(200, field, getQuery(request));
 		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, response);
 		model.setHeaders(request);
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
@@ -131,7 +134,7 @@ public class SearchController {
 	
 	@GetMapping(value = "/findByGeneralSearchTerm/{defaultField}")
 	public ResponseEntity<ApiModel> findByGernalSearchTerm(HttpServletRequest request, @PathVariable String defaultField) {
-		List<SearchResultModel> response = dappsSearchService.searchIndex(defaultField, 200, getQuery(request));
+		List<IndexableModel> response = dappsSearchService.searchIndex(defaultField, 200, getQuery(request));
 		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, response);
 		model.setHeaders(request);
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
@@ -150,7 +153,7 @@ public class SearchController {
 	
 	@GetMapping(value = "/findByTitleOrDescriptionOrCategoryOrKeyword")
 	public ResponseEntity<ApiModel> searchDapps(HttpServletRequest request) {
-		List<SearchResultModel> response = dappsSearchService.searchIndex(200, "name", getQuery(request));
+		List<IndexableModel> response = dappsSearchService.searchIndex(200, "name", getQuery(request));
 		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, response);
 		model.setHeaders(request);
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
@@ -158,7 +161,7 @@ public class SearchController {
 	
 	@GetMapping(value = "/findByObject/{objectType}")
 	public ResponseEntity<ApiModel> searchByObjectType(HttpServletRequest request, @PathVariable String objectType) {
-		List<SearchResultModel> response = dappsSearchService.searchObjectType(200, objectType);
+		List<IndexableModel> response = dappsSearchService.searchObjectType(200, objectType);
 		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, response);
 		model.setHeaders(request);
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);

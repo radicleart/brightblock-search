@@ -9,6 +9,8 @@ radicle:
       mongoIp: mongodb://mongodb
       mongoPort: 27017
       mongoDbName: search
+   cache:
+      hashurl: http://docker.for.mac.localhost:8046/mesh/v2/tokenFirstsByQueryAsString
 
 ---
 
@@ -94,6 +96,8 @@ application:
 spring:
     profiles: staging
 radicle:
+   cache:
+      hashurl: http://172.17.0.1:8046/mesh/v2/tokenFirstsByQueryAsString
    mongo:
       mongoIp: mongodb://mongodb
       mongoPort: 27017
@@ -106,6 +110,8 @@ application:
 spring:
     profiles: production
 radicle:
+   cache:
+      hashurl: http://172.17.0.1:8046/mesh/v2/tokenFirstsByQueryAsString
    mongo:
       mongoIp: mongodb://mongodb
       mongoPort: 27017

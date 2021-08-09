@@ -35,6 +35,7 @@ public class IndexableModel implements SearchResultModel, Comparable<IndexableMo
 	private String artist;
 	private String objType;
 	private String domain;
+	private String contractAssetJson;
 	private KeywordModel category;
 	private List<KeywordModel> keywords;
 	private String status;
