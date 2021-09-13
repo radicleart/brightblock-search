@@ -343,6 +343,9 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 			if (record.getMetaDataUrl() != null) {
 				document.add(new TextField("metaDataUrl", record.getMetaDataUrl(), Field.Store.YES));
 			}
+			if (record.getCurrentRunKey() != null) {
+				document.add(new TextField("currentRunKey", record.getCurrentRunKey(), Field.Store.YES));
+			}
 			if (record.getExternalUrl() != null) {
 				document.add(new TextField("externalUrl", record.getExternalUrl(), Field.Store.YES));
 			}
@@ -353,19 +356,19 @@ public class DappsIndexServiceImpl extends BaseIndexingServiceImpl implements Da
 			if (record.getAttributes() != null) {
 				Attributes attr = record.getAttributes();
 				if (attr.getArtworkClip() != null) {
-					document.add(new StoredField("awcSize", attr.getArtworkClip().getSize()));
+					if (attr.getArtworkFile().getSize() != null) document.add(new StoredField("awcSize", attr.getArtworkClip().getSize()));
 					document.add(new StoredField("awcFileUrl", attr.getArtworkClip().getFileUrl()));
-					document.add(new StoredField("awcType", attr.getArtworkClip().getType()));
+					if (attr.getArtworkFile().getType() != null) document.add(new StoredField("awcType", attr.getArtworkClip().getType()));
 				}
 				if (attr.getArtworkFile() != null) {
-					document.add(new StoredField("awfSize", attr.getArtworkFile().getSize()));
+					if (attr.getArtworkFile().getSize() != null) document.add(new StoredField("awfSize", attr.getArtworkFile().getSize()));
 					document.add(new StoredField("awfFileUrl", attr.getArtworkFile().getFileUrl()));
-					document.add(new StoredField("awfType", attr.getArtworkFile().getType()));
+					if (attr.getArtworkFile().getType() != null) document.add(new StoredField("awfType", attr.getArtworkFile().getType()));
 				}
 				if (attr.getCoverImage() != null) {
-					document.add(new StoredField("aciSize", attr.getCoverImage().getSize()));
+					if (attr.getArtworkFile().getSize() != null) document.add(new StoredField("aciSize", attr.getCoverImage().getSize()));
 					document.add(new StoredField("aciFileUrl", attr.getCoverImage().getFileUrl()));
-					document.add(new StoredField("aciType", attr.getCoverImage().getType()));
+					if (attr.getArtworkFile().getType() != null) document.add(new StoredField("aciType", attr.getCoverImage().getType()));
 				}
 			}
 			

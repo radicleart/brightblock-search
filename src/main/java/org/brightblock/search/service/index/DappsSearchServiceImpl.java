@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.LongPoint;
@@ -207,11 +208,17 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 			return doSearch(limit, query, inField);
 		}
 	}
+	
 
 	@Override
 	public List<IndexableModel> findByProjectId(int limit, String searchTerm) throws JsonProcessingException {
 		String query = "projectId:" + searchTerm;
-		return pullContractAssets(doSearch(limit, query, "projectId"));
+		if (searchTerm.indexOf("-") > -1) {
+			query = "projectId:" + searchTerm.split("-")[0];
+		}
+		List<IndexableModel> models = doSearch(limit, query, "projectId");
+		models = models.stream().filter(f -> searchTerm.compareTo(f.getProjectId()) == 0).collect(Collectors.toList());
+		return pullContractAssets(models);
 	}
 
 	private List<IndexableModel> pullContractAssets(List<IndexableModel> records) throws JsonProcessingException {
@@ -367,6 +374,7 @@ public class DappsSearchServiceImpl extends BaseIndexingServiceImpl implements D
 		model.setProjectId(document.get("projectId"));
 		model.setImage(document.get("image"));
 		model.setMetaDataUrl(document.get("metaDataUrl"));
+		model.setCurrentRunKey(document.get("currentRunKey"));
 		model.setExternalUrl(document.get("externalUrl"));
 		model.setArtist(document.get("artist"));
 		
