@@ -59,7 +59,7 @@ radicle:
       mongoPort: 27017
       mongoDbName: search
 application:
-   blockstackBase: https://tapi.risidio.com
+   blockstackBase: https://tapi.brightblock.org
    domains:
       -  domain: localhost
          indexFiles: 
@@ -103,7 +103,7 @@ radicle:
       mongoPort: 27017
       mongoDbName: search
 application:
-   blockstackBase: https://tapi.risidio.com
+   blockstackBase: https://tapi.brightblock.org
 
 ---
 
@@ -117,4 +117,4 @@ radicle:
       mongoPort: 27017
       mongoDbName: search
 application:
-   blockstackBase: https://api.risidio.com
+   blockstackBase: https://api.brightblock.org
