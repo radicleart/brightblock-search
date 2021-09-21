@@ -92,6 +92,14 @@ public class SearchController {
 		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
 	}
 
+//	@GetMapping(value = "/findByProjectIdAndCollection")
+//	public ResponseEntity<ApiModel> findByProjectIdAndCollection(HttpServletRequest request) throws JsonProcessingException {
+//		List<IndexableModel> records = dappsSearchService.findByProjectId(200, getQuery(request));
+//		ApiModel model = ApiModel.getSuccess(ResponseCodes.OK, records);
+//		model.setHeaders(request);
+//		return new ResponseEntity<ApiModel>(model, HttpStatus.OK);
+//	}
+
 	@GetMapping(value = "/findByOwner")
 	public ResponseEntity<ApiModel> findByOwner(HttpServletRequest request) {
 		List<IndexableModel> records = dappsSearchService.findByOwner(200, getQuery(request));
